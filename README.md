@@ -1,6 +1,6 @@
-# @mrdv/ui
+# @mrintel/villain-ui
 
-[![npm version](https://img.shields.io/npm/v/@mrdv/ui.svg)](https://www.npmjs.com/package/@mrdv/ui)
+[![npm version](https://img.shields.io/npm/v/@mrintel/villain-ui.svg)](https://www.npmjs.com/package/@mrintel/villain-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A luxury Svelte 5 component library with a distinctive dark aesthetic. Built for modern web applications that demand elegance, performance, and exceptional user experience.
@@ -20,16 +20,16 @@ A luxury Svelte 5 component library with a distinctive dark aesthetic. Built for
 
 ```bash
 # npm
-npm install @mrdv/ui
+npm install @mrintel/villain-ui
 
 # pnpm
-pnpm add @mrdv/ui
+pnpm add @mrintel/villain-ui
 
 # yarn
-yarn add @mrdv/ui
+yarn add @mrintel/villain-ui
 ```
 
-> **Note on Imports:** All components are exported from the root package (`@mrdv/ui`). Category-specific subpath imports (e.g., `@mrdv/ui/buttons`) are not provided, as the library is designed for tree-shaking at the component level. Your bundler will automatically include only the components you import.
+> **Note on Imports:** All components are exported from the root package (`@mrintel/villain-ui`). Category-specific subpath imports (e.g., `@mrintel/villain-ui/buttons`) are not provided, as the library is designed for tree-shaking at the component level. Your bundler will automatically include only the components you import.
 
 ### Peer Dependencies
 
@@ -46,7 +46,7 @@ npm install svelte@^5.0.0 tailwindcss@^4.0.0
 Import the theme CSS in your app's entry point (e.g., `+layout.svelte` in SvelteKit or `main.ts` in Vite):
 
 ```typescript
-import '@mrdv/ui/theme.css';
+import '@mrintel/villain-ui/theme.css';
 ```
 
 This explicit import strategy gives you full control over styling and allows you to:
@@ -61,7 +61,7 @@ This explicit import strategy gives you full control over styling and allows you
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
-  import '@mrdv/ui/theme.css';
+  import '@mrintel/villain-ui/theme.css';
 </script>
 
 <slot />
@@ -71,11 +71,11 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Button, Card } from '@mrdv/ui';
+  import { Button, Card } from '@mrintel/villain-ui';
 </script>
 
 <Card padding="lg">
-  <h1>Welcome to @mrdv/ui</h1>
+  <h1>Welcome to @mrintel/villain-ui</h1>
   <p>Build luxury interfaces with ease.</p>
   <Button variant="primary">Get Started</Button>
 </Card>
@@ -89,7 +89,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Button } from '@mrdv/ui';
+  import { Button } from '@mrintel/villain-ui';
 </script>
 
 <Button variant="primary" size="md">Primary Button</Button>
@@ -102,7 +102,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { IconButton } from '@mrdv/ui';
+  import { IconButton } from '@mrintel/villain-ui';
 </script>
 
 <IconButton variant="primary" size="md" aria-label="Settings">
@@ -114,7 +114,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { ButtonGroup, Button } from '@mrdv/ui';
+  import { ButtonGroup, Button } from '@mrintel/villain-ui';
 </script>
 
 <ButtonGroup>
@@ -128,7 +128,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { LinkButton } from '@mrdv/ui';
+  import { LinkButton } from '@mrintel/villain-ui';
 </script>
 
 <LinkButton href="/docs" variant="primary">View Documentation</LinkButton>
@@ -138,7 +138,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { FloatingActionButton } from '@mrdv/ui';
+  import { FloatingActionButton } from '@mrintel/villain-ui';
 </script>
 
 <FloatingActionButton position="bottom-right" onclick={() => console.log('FAB clicked')}>
@@ -152,7 +152,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Input } from '@mrdv/ui';
+  import { Input } from '@mrintel/villain-ui';
   
   let email = $state('');
   let hasError = $state(false);
@@ -171,7 +171,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Textarea } from '@mrdv/ui';
+  import { Textarea } from '@mrintel/villain-ui';
   
   let comment = $state('');
 </script>
@@ -188,7 +188,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Select } from '@mrdv/ui';
+  import { Select } from '@mrintel/villain-ui';
   
   let selected = $state('');
   const options = [
@@ -205,7 +205,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Checkbox } from '@mrdv/ui';
+  import { Checkbox } from '@mrintel/villain-ui';
   
   let accepted = $state(false);
 </script>
@@ -217,7 +217,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Switch } from '@mrdv/ui';
+  import { Switch } from '@mrintel/villain-ui';
   
   let enabled = $state(false);
 </script>
@@ -229,7 +229,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { RadioGroup } from '@mrdv/ui';
+  import { RadioGroup } from '@mrintel/villain-ui';
   
   let selected = $state('');
   const options = [
@@ -246,7 +246,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { RangeSlider } from '@mrdv/ui';
+  import { RangeSlider } from '@mrintel/villain-ui';
   
   let volume = $state(50);
 </script>
@@ -258,7 +258,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { FileUpload } from '@mrdv/ui';
+  import { FileUpload } from '@mrintel/villain-ui';
   
   function handleUpload(files) {
     console.log('Files:', files);
@@ -277,7 +277,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { InputGroup } from '@mrdv/ui';
+  import { InputGroup } from '@mrintel/villain-ui';
 </script>
 
 <InputGroup>
@@ -299,7 +299,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Card } from '@mrdv/ui';
+  import { Card } from '@mrintel/villain-ui';
 </script>
 
 <Card padding="lg" hoverable>
@@ -319,7 +319,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Panel } from '@mrdv/ui';
+  import { Panel } from '@mrintel/villain-ui';
 </script>
 
 <Panel>
@@ -331,7 +331,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Grid, Card } from '@mrdv/ui';
+  import { Grid, Card } from '@mrintel/villain-ui';
 </script>
 
 <Grid columns={3} gap="lg">
@@ -345,7 +345,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Container } from '@mrdv/ui';
+  import { Container } from '@mrintel/villain-ui';
 </script>
 
 <Container maxWidth="lg">
@@ -357,7 +357,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { SectionHeader } from '@mrdv/ui';
+  import { SectionHeader } from '@mrintel/villain-ui';
 </script>
 
 <SectionHeader title="Features" subtitle="What makes us different" />
@@ -367,7 +367,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Divider } from '@mrdv/ui';
+  import { Divider } from '@mrintel/villain-ui';
 </script>
 
 <Divider />
@@ -380,7 +380,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Navbar } from '@mrdv/ui';
+  import { Navbar } from '@mrintel/villain-ui';
 </script>
 
 <Navbar>
@@ -404,7 +404,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Sidebar } from '@mrdv/ui';
+  import { Sidebar } from '@mrintel/villain-ui';
   
   let collapsed = $state(false);
 </script>
@@ -422,7 +422,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Tabs } from '@mrdv/ui';
+  import { Tabs } from '@mrintel/villain-ui';
   
   let activeTab = $state('tab1');
   const tabs = [
@@ -447,7 +447,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Breadcrumbs } from '@mrdv/ui';
+  import { Breadcrumbs } from '@mrintel/villain-ui';
   
   const items = [
     { label: 'Home', href: '/' },
@@ -464,7 +464,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Menu } from '@mrdv/ui';
+  import { Menu } from '@mrintel/villain-ui';
   
   const items = [
     { label: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
@@ -479,7 +479,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { DropdownMenu } from '@mrdv/ui';
+  import { DropdownMenu } from '@mrintel/villain-ui';
   
   const items = [
     { label: 'Edit', onclick: () => console.log('Edit') },
@@ -494,7 +494,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { ContextMenu } from '@mrdv/ui';
+  import { ContextMenu } from '@mrintel/villain-ui';
   
   const items = [
     { label: 'Copy', onclick: () => console.log('Copy') },
@@ -513,7 +513,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Modal, Button } from '@mrdv/ui';
+  import { Modal, Button } from '@mrintel/villain-ui';
   
   let open = $state(false);
 </script>
@@ -534,7 +534,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Alert } from '@mrdv/ui';
+  import { Alert } from '@mrintel/villain-ui';
 </script>
 
 <Alert variant="success" title="Success">
@@ -554,7 +554,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Spinner } from '@mrdv/ui';
+  import { Spinner } from '@mrintel/villain-ui';
 </script>
 
 <Spinner size="lg" />
@@ -564,7 +564,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Tooltip } from '@mrdv/ui';
+  import { Tooltip } from '@mrintel/villain-ui';
 </script>
 
 <Tooltip content="This is a helpful tip" position="top">
@@ -576,7 +576,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { ProgressBar } from '@mrdv/ui';
+  import { ProgressBar } from '@mrintel/villain-ui';
   
   let progress = $state(45);
 </script>
@@ -588,7 +588,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { SkeletonLoader } from '@mrdv/ui';
+  import { SkeletonLoader } from '@mrintel/villain-ui';
 </script>
 
 <SkeletonLoader variant="text" count={3} />
@@ -600,7 +600,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Toast } from '@mrdv/ui';
+  import { Toast } from '@mrintel/villain-ui';
   
   let show = $state(false);
 </script>
@@ -614,7 +614,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Drawer, Button } from '@mrdv/ui';
+  import { Drawer, Button } from '@mrintel/villain-ui';
   
   let open = $state(false);
 </script>
@@ -631,7 +631,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Popover } from '@mrdv/ui';
+  import { Popover } from '@mrintel/villain-ui';
 </script>
 
 <Popover>
@@ -649,7 +649,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Dropdown } from '@mrdv/ui';
+  import { Dropdown } from '@mrintel/villain-ui';
 </script>
 
 <Dropdown trigger="Select Option">
@@ -663,7 +663,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { CommandPalette } from '@mrdv/ui';
+  import { CommandPalette } from '@mrintel/villain-ui';
   
   let open = $state(false);
   const commands = [
@@ -681,7 +681,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Heading } from '@mrdv/ui';
+  import { Heading } from '@mrintel/villain-ui';
 </script>
 
 <Heading level={1}>Main Title</Heading>
@@ -693,7 +693,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Text } from '@mrdv/ui';
+  import { Text } from '@mrintel/villain-ui';
 </script>
 
 <Text variant="body">Regular body text</Text>
@@ -705,10 +705,10 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Code } from '@mrdv/ui';
+  import { Code } from '@mrintel/villain-ui';
 </script>
 
-<p>Install with <Code>npm install @mrdv/ui</Code></p>
+<p>Install with <Code>npm install @mrintel/villain-ui</Code></p>
 ```
 
 ### Data Display
@@ -717,7 +717,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Table } from '@mrdv/ui';
+  import { Table } from '@mrintel/villain-ui';
   
   const columns = [
     { key: 'name', label: 'Name' },
@@ -738,7 +738,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Pagination } from '@mrdv/ui';
+  import { Pagination } from '@mrintel/villain-ui';
   
   let currentPage = $state(1);
   const totalPages = 10;
@@ -751,7 +751,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Badge } from '@mrdv/ui';
+  import { Badge } from '@mrintel/villain-ui';
 </script>
 
 <Badge variant="success">Active</Badge>
@@ -763,7 +763,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Tag } from '@mrdv/ui';
+  import { Tag } from '@mrintel/villain-ui';
 </script>
 
 <Tag onRemove={() => console.log('Removed')}>JavaScript</Tag>
@@ -774,7 +774,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { List } from '@mrdv/ui';
+  import { List } from '@mrintel/villain-ui';
   
   const items = ['Item 1', 'Item 2', 'Item 3'];
 </script>
@@ -786,7 +786,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Avatar } from '@mrdv/ui';
+  import { Avatar } from '@mrintel/villain-ui';
 </script>
 
 <Avatar src="/avatar.jpg" alt="User" size="md" />
@@ -797,7 +797,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { CodeBlock } from '@mrdv/ui';
+  import { CodeBlock } from '@mrintel/villain-ui';
   
   const code = `function hello() {
   console.log('Hello, world!');
@@ -811,7 +811,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Stat } from '@mrdv/ui';
+  import { Stat } from '@mrintel/villain-ui';
 </script>
 
 <Stat label="Total Users" value="1,234" change="+12.5%" trend="up" />
@@ -823,7 +823,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Portal } from '@mrdv/ui';
+  import { Portal } from '@mrintel/villain-ui';
 </script>
 
 <Portal target="body">
@@ -835,7 +835,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Collapse } from '@mrdv/ui';
+  import { Collapse } from '@mrintel/villain-ui';
   
   let open = $state(false);
 </script>
@@ -849,7 +849,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Accordion } from '@mrdv/ui';
+  import { Accordion } from '@mrintel/villain-ui';
   
   const items = [
     { id: '1', title: 'Section 1', content: 'Content for section 1' },
@@ -866,7 +866,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { Carousel } from '@mrdv/ui';
+  import { Carousel } from '@mrintel/villain-ui';
   
   const items = [
     { id: '1', content: 'Slide 1' },
@@ -884,7 +884,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ```svelte
 <script>
-  import { ScrollArea } from '@mrdv/ui';
+  import { ScrollArea } from '@mrintel/villain-ui';
 </script>
 
 <ScrollArea height="300px">
@@ -896,7 +896,7 @@ This explicit import strategy gives you full control over styling and allows you
 
 ### CSS Variable System
 
-@mrdv/ui uses a comprehensive CSS variable system that allows complete customization without touching component code. All theme variables are defined in `theme.css` and can be overridden in your own CSS.
+@mrintel/villain-ui uses a comprehensive CSS variable system that allows complete customization without touching component code. All theme variables are defined in `theme.css` and can be overridden in your own CSS.
 
 ### Custom Theme Example
 
@@ -925,7 +925,7 @@ Create a custom CSS file (e.g., `custom-theme.css`) and import it **after** the 
 Import order in your app:
 
 ```typescript
-import '@mrdv/ui/theme.css';
+import '@mrintel/villain-ui/theme.css';
 import './custom-theme.css'; // Your overrides
 ```
 
@@ -1047,7 +1047,7 @@ The brand structure (depth system, spacing, motion curves) persists even when co
 
 ```bash
 git clone <repository-url>
-cd mrdv-ui
+cd villain-ui
 npm install
 ```
 
@@ -1069,28 +1069,6 @@ dist/
 └── theme.css         # Compiled theme styles
 ```
 
-## 📤 Publishing
-
-### Publishing Configuration
-
-The library uses the `files` field in `package.json` as the authoritative whitelist for published files. Only the `dist/` directory is included in the published package, ensuring a minimal package size with just the compiled library and theme.
-
-No `.npmignore` file is needed since the `files` whitelist approach is more explicit and maintainable.
-
-### Publishing to npm
-
-The library includes automated build scripts to ensure a clean publish:
-
-```bash
-# For public packages
-npm publish --access public
-
-# For private/scoped packages
-npm publish --access restricted
-```
-
-The `prepublishOnly` script automatically runs the build before publishing, ensuring only the latest compiled code is included.
-
 ### Manual Build Before Publishing
 
 If you want to verify the build manually:
@@ -1104,7 +1082,7 @@ This creates a `.tgz` file you can inspect before publishing.
 
 ## 📘 TypeScript Support
 
-@mrdv/ui is built with TypeScript in strict mode and includes complete type definitions.
+@mrintel/villain-ui is built with TypeScript in strict mode and includes complete type definitions.
 
 - ✅ Full TypeScript support
 - ✅ Strict mode enabled
@@ -1115,7 +1093,7 @@ This creates a `.tgz` file you can inspect before publishing.
 Import types directly from components:
 
 ```typescript
-import type { Button } from '@mrdv/ui';
+import type { Button } from '@mrintel/villain-ui';
 
 // Component props are fully typed
 const props: ComponentProps<typeof Button> = {
@@ -1127,7 +1105,7 @@ const props: ComponentProps<typeof Button> = {
 
 ## 🌐 Browser Support
 
-@mrdv/ui targets modern browsers that support:
+@mrintel/villain-ui targets modern browsers that support:
 
 - ✅ CSS Variables (Custom Properties)
 - ✅ CSS `backdrop-filter` for glass morphism

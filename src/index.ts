@@ -1,10 +1,10 @@
 /**
- * @mrdv/ui - A luxury Svelte 5 component library
+ * @mrintel/villain-ui - A luxury Svelte 5 component library
  * 
  * This is the main entry point for the component library.
  * 
  * Note: Theme styles are NOT automatically imported. Consumers must explicitly
- * import '@mrdv/ui/theme.css' in their application to use the default theme.
+ * import '@mrintel/villain-ui/theme.css' in their application to use the default theme.
  * This gives full control over styling and allows custom theme implementations.
  */
 
