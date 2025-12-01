@@ -793,18 +793,181 @@ This explicit import strategy gives you full control over styling and allows you
 <Avatar initials="JD" size="lg" />
 ```
 
-**CodeBlock** - Syntax-highlighted code block
+**CodeBlock** - Presentational component for displaying syntax-highlighted code
+
+A luxury-styled code display component that provides layout, styling, and optional features like line numbers, filename headers, and line highlighting. Consumers control syntax highlighting by providing pre-highlighted HTML via the default slot.
+
+**Key Features:**
+- Glass morphism aesthetic with custom scrollbars
+- Optional line numbers with highlighting support
+- Optional filename header display
+- Consumers choose their preferred syntax highlighter
+- Responsive overflow handling
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `filename` | `string` | `undefined` | Optional filename to display in the header |
+| `showLineNumbers` | `boolean` | `false` | Whether to show line numbers in the gutter |
+| `lineCount` | `number` | `0` | Total number of lines (required when `showLineNumbers` is `true`) |
+| `highlightLines` | `number[]` | `[]` | Array of 1-indexed line numbers to highlight in the gutter |
+
+**Important Notes:**
+- Consumers are responsible for sanitizing HTML to prevent XSS attacks
+- Apply `.line` class to each code line and `.highlighted` class to highlighted lines for consistent styling
+- Line numbers are 1-indexed (first line is 1, not 0)
+- When using `showLineNumbers`, provide the `lineCount` prop for proper rendering
+
+**Basic Usage:**
 
 ```svelte
 <script>
   import { CodeBlock } from '@mrintel/villain-ui';
   
-  const code = `function hello() {
-  console.log('Hello, world!');
-}`;
+  const highlightedCode = `<pre><code class="language-javascript">
+<span class="token keyword">function</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Hello, world!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>`;
 </script>
 
-<CodeBlock {code} language="javascript" showLineNumbers />
+<CodeBlock>
+  {@html highlightedCode}
+</CodeBlock>
+```
+
+**With Line Numbers:**
+
+```svelte
+<script>
+  import { CodeBlock } from '@mrintel/villain-ui';
+  
+  const code = `function greet(name) {
+  return \`Hello, \${name}!\`;
+}`;
+  
+  const lineCount = code.split('\n').length;
+  // Assume you have a highlighter that returns HTML
+  const highlightedCode = yourHighlighter(code, 'javascript');
+</script>
+
+<CodeBlock showLineNumbers {lineCount}>
+  {@html highlightedCode}
+</CodeBlock>
+```
+
+**With Highlighted Lines:**
+
+```svelte
+<script>
+  import { CodeBlock } from '@mrintel/villain-ui';
+  
+  const code = `function calculate(a, b) {
+  const sum = a + b;
+  return sum * 2;
+}`;
+  
+  const lineCount = 4;
+  const highlightedCode = yourHighlighter(code, 'javascript');
+  const highlightLines = [2]; // Highlight line 2
+</script>
+
+<CodeBlock showLineNumbers {lineCount} {highlightLines}>
+  {@html highlightedCode}
+</CodeBlock>
+```
+
+**With Filename:**
+
+```svelte
+<script>
+  import { CodeBlock } from '@mrintel/villain-ui';
+  
+  const code = `export function add(a: number, b: number): number {
+  return a + b;
+}`;
+  
+  const highlightedCode = yourHighlighter(code, 'typescript');
+</script>
+
+<CodeBlock filename="utils.ts">
+  {@html highlightedCode}
+</CodeBlock>
+```
+
+**Integration with Shiki:**
+
+```svelte
+<script>
+  import { CodeBlock } from '@mrintel/villain-ui';
+  import { codeToHtml } from 'shiki';
+  import { onMount } from 'svelte';
+  
+  const code = `function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}`;
+  
+  let highlightedCode = $state('');
+  let lineCount = $state(0);
+  
+  onMount(async () => {
+    highlightedCode = await codeToHtml(code, {
+      lang: 'javascript',
+      theme: 'github-dark'
+    });
+    lineCount = code.split('\n').length;
+  });
+</script>
+
+<CodeBlock filename="fibonacci.js" showLineNumbers {lineCount} highlightLines={[2, 3]}>
+  {@html highlightedCode}
+</CodeBlock>
+```
+
+**Integration with Prism.js:**
+
+```svelte
+<script>
+  import { CodeBlock } from '@mrintel/villain-ui';
+  import Prism from 'prismjs';
+  import 'prismjs/themes/prism-tomorrow.css';
+  
+  const code = `const greeting = (name) => {
+  console.log(\`Hello, \${name}!\`);
+};`;
+  
+  const lineCount = code.split('\n').length;
+  const highlightedCode = Prism.highlight(code, Prism.languages.javascript, 'javascript');
+</script>
+
+<CodeBlock showLineNumbers {lineCount}>
+  <pre><code class="language-javascript">{@html highlightedCode}</code></pre>
+</CodeBlock>
+```
+
+**Integration with Highlight.js:**
+
+```svelte
+<script>
+  import { CodeBlock } from '@mrintel/villain-ui';
+  import hljs from 'highlight.js';
+  import 'highlight.js/styles/github-dark.css';
+  
+  const code = `public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`;
+  
+  const lineCount = code.split('\n').length;
+  const highlightedCode = hljs.highlight(code, { language: 'java' }).value;
+</script>
+
+<CodeBlock filename="HelloWorld.java" showLineNumbers {lineCount}>
+  <pre><code class="language-java">{@html highlightedCode}</code></pre>
+</CodeBlock>
 ```
 
 **Stat** - Statistic display

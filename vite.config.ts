@@ -9,7 +9,15 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 export default defineConfig({
   plugins: [
     svelte(),
-    dts({ insertTypesEntry: true })
+    dts({ 
+      include: ["src"],
+      exclude: ["src/**/*.svelte"],
+      compilerOptions: {
+        allowJs: true
+      },
+      insertTypesEntry: true,
+      rollupTypes: true
+     })
   ],
   build: {
     lib: {
@@ -25,7 +33,7 @@ export default defineConfig({
       }
     },
     cssCodeSplit: false,
-    sourcemap: true,
+    sourcemap: false,
     emptyOutDir: true
   }
 });

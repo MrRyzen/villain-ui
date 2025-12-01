@@ -3,6 +3,7 @@
     // Module and target configuration
     "target": "ES2022",
     "module": "ESNext",
+    "types": ["svelte"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
