@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# macOS system files
+.DS_Store
+
+# Log files
+*.log
+
+# Vite cache
+.vite/
+
+# SvelteKit cache
+.svelte-kit/
+
+# Test coverage
+coverage/
+
+# Environment files
+.env
+.env.*
+
+# Local configuration
+*.local
+
+# Agent files
+CLAUDE.md
