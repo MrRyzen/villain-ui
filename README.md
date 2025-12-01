@@ -33,11 +33,13 @@ yarn add @mrintel/villain-ui
 
 ### Peer Dependencies
 
-Install the required peer dependencies if you haven't already:
+Install the required peer dependency:
 
 ```bash
-npm install svelte@^5.0.0 tailwindcss@^4.0.0
+npm install svelte@^5.0.0
 ```
+
+**Note on Tailwind CSS:** The library uses Tailwind CSS v4 internally for styling, but it is **not required** as a peer dependency. The compiled theme CSS is included in the package. You only need to install Tailwind CSS in your project if you want to extend the library's theme with custom Tailwind utilities or use Tailwind for your own application styling.
 
 ### Import Theme
 
