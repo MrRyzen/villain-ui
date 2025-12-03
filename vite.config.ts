@@ -28,7 +28,13 @@ export default defineConfig({
     rollupOptions: {
       external: ['svelte', 'svelte/internal'],
       output: {
-        assetFileNames: '[name][extname]',
+        assetFileNames: (assetInfo) => {
+          // Name CSS files as theme.css
+          if (assetInfo.names?.[0].endsWith('.css')) {
+            return 'theme[extname]';
+          }
+          return '[name][extname]';
+        },
         globals: {}
       }
     },
