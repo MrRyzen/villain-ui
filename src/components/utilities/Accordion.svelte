@@ -12,9 +12,10 @@
     items: AccordionItem[];
     openItems?: string | string[];
     mode?: 'single' | 'multiple';
+    onToggle?: (itemId: string, isOpen: boolean) => void;
   }
 
-  let { items, openItems = $bindable([]), mode = 'single' }: Props = $props();
+  let { items, openItems = $bindable([]), mode = 'single', onToggle }: Props = $props();
 
   // Normalize openItems to array
   let openItemsArray = $derived(
@@ -32,21 +33,26 @@
   }
 
   function toggleItem(id: string) {
+    const wasOpen = isItemOpen(id);
+
     if (mode === 'single') {
       // Single mode: only one item open at a time
-      if (isItemOpen(id)) {
+      if (wasOpen) {
         openItems = '';
       } else {
         openItems = id;
       }
     } else {
       // Multiple mode: toggle independently
-      if (isItemOpen(id)) {
+      if (wasOpen) {
         openItems = openItemsArray.filter(itemId => itemId !== id);
       } else {
         openItems = [...openItemsArray, id];
       }
     }
+
+    // Call onToggle callback if provided
+    onToggle?.(id, !wasOpen);
   }
 </script>
 

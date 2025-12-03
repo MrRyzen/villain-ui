@@ -1,9 +1,15 @@
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import sveltePreprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 export default {
-	// Preprocess with Vite for TypeScript and CSS support
-	preprocess: vitePreprocess(),
+	// Use both preprocessors: svelte-preprocess for PostCSS/Tailwind, vitePreprocess for dev
+	preprocess: [
+		sveltePreprocess({
+			postcss: true
+		}),
+		vitePreprocess()
+	],
 
 	compilerOptions: {
 		// Component library settings for Svelte 5

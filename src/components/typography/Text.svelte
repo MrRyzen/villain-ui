@@ -15,7 +15,7 @@
 	};
 
 	const styles = $derived(
-		`font-size: var(--text-${variant}-size); line-height: var(--text-${variant}-line-height); font-weight: var(--text-${variant}-weight); font-family: var(--font-body); color: ${colorMap[color]};`
+		`font-size: var(--text-${variant}-size); line-height: var(--text-${variant}-line-height); font-weight: var(--text-${variant}-weight); letter-spacing: var(--text-${variant}-letter-spacing); font-family: var(--font-body); color: ${colorMap[color]};`
 	);
 </script>
 

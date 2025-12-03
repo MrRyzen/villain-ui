@@ -12,14 +12,16 @@
     padding = 'md',
     rounded = true,
     glass = true,
-    children
+    class: className = '',
+    children,
+    ...restProps
   }: Props = $props();
 
   const paddingClasses = {
     none: 'p-0',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8'
+    sm: 'p-5',
+    md: 'p-8',
+    lg: 'p-10'
   };
 
   const glassClasses = glass ? 'glass-panel' : 'bg-[var(--color-panel)]';
@@ -27,6 +29,6 @@
   const baseClasses = 'transition-all duration-300 ease-[var(--ease-luxe)]';
 </script>
 
-<div class="{baseClasses} {glassClasses} {roundedClasses} {paddingClasses[padding]}">
+<div class="{baseClasses} {glassClasses} {roundedClasses} {paddingClasses[padding]} {className}" {...restProps}>
   {@render children?.()}
 </div>

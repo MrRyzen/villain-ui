@@ -12,7 +12,9 @@
     cols = 3,
     gap = 'md',
     responsive = true,
-    children
+    class: className = '',
+    children,
+    ...restProps
   }: Props = $props();
 
   const colsClasses = {
@@ -39,6 +41,6 @@
   const baseClasses = 'grid w-full';
 </script>
 
-<div class="{baseClasses} {responsiveClasses} {gapClasses[gap]}">
+<div class="{baseClasses} {responsiveClasses} {gapClasses[gap]} {className}" {...restProps}>
   {@render children?.()}
 </div>

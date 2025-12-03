@@ -28,3 +28,6 @@ coverage/
 
 # Agent files
 CLAUDE.md
+
+#Local Test app
+TEST_APP/

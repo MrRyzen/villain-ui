@@ -122,7 +122,7 @@
     <div
       bind:this={popoverElement}
       id={popoverId}
-      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-lg shadow-deep animate-[fade-up_0.2s_var(--ease-luxe)]"
+      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-[var(--radius-lg)] shadow-deep p-4 animate-[fade-up_0.2s_var(--ease-luxe)]"
       role="dialog"
     >
       {@render children?.()}

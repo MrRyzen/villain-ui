@@ -62,7 +62,7 @@
 
 {#if visible}
   <div
-    class="glass-panel rounded-lg p-4 flex gap-3 {variantClasses[variant]} animate-[fade-in_0.2s_var(--ease-luxe)]"
+    class="glass-panel rounded-[var(--radius-lg)] p-4 flex gap-3 {variantClasses[variant]} animate-[fade-in_0.2s_var(--ease-sharp)]"
     role={roleMap[variant]}
     aria-live={ariaLiveMap[variant]}
   >

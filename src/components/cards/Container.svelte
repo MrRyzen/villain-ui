@@ -12,7 +12,9 @@
     size = 'lg',
     centered = true,
     padding = true,
-    children
+    class: className = '',
+    children,
+    ...restProps
   }: Props = $props();
 
   const sizeClasses = {
@@ -28,6 +30,6 @@
   const baseClasses = 'w-full';
 </script>
 
-<div class="{baseClasses} {sizeClasses[size]} {centeredClasses} {paddingClasses}">
+<div class="{baseClasses} {sizeClasses[size]} {centeredClasses} {paddingClasses} {className}" {...restProps}>
   {@render children?.()}
 </div>

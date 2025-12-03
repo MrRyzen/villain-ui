@@ -93,14 +93,15 @@
   });
 </script>
 
-<div class="glass-panel rounded-lg overflow-hidden relative">
-  <div
-    class="flex transition-transform duration-300 ease-luxe"
-    style="transform: translateX(-{currentIndex * 100}%);"
-    ontouchstart={handleTouchStart}
-    ontouchmove={handleTouchMove}
-    ontouchend={handleTouchEnd}
-  >
+<div class="relative">
+  <div class="glass-panel rounded-[var(--radius-lg)] overflow-hidden">
+    <div
+      class="flex transition-transform duration-300 ease-luxe"
+      style="transform: translateX(-{currentIndex * 100}%);"
+      ontouchstart={handleTouchStart}
+      ontouchmove={handleTouchMove}
+      ontouchend={handleTouchEnd}
+    >
     {#each items as item (item.id)}
       <div class="min-w-full flex items-center justify-center p-8">
         {#if typeof item.content === 'string'}
@@ -110,13 +111,14 @@
         {/if}
       </div>
     {/each}
+    </div>
   </div>
 
   {#if showArrows && items.length}
     <button
       type="button"
       onclick={goToPrev}
-      class="absolute left-4 top-1/2 -translate-y-1/2 glass-panel rounded-full p-2 text-text hover:accent-glow transition-all"
+      class="absolute left-2 top-1/2 -translate-y-1/2 obsidian-surface metal-edge rounded-full p-2 text-text hover:accent-glow transition-all"
       aria-label="Previous item"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +129,7 @@
     <button
       type="button"
       onclick={goToNext}
-      class="absolute right-4 top-1/2 -translate-y-1/2 glass-panel rounded-full p-2 text-text hover:accent-glow transition-all"
+      class="absolute right-2 top-1/2 -translate-y-1/2 obsidian-surface metal-edge rounded-full p-2 text-text hover:accent-glow transition-all"
       aria-label="Next item"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

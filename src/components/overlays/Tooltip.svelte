@@ -7,14 +7,19 @@
     placement?: 'top' | 'bottom' | 'left' | 'right';
     delay?: number;
     trigger?: Snippet;
+    children?: Snippet;
   }
 
   let {
     content,
     placement = 'top',
     delay = 200,
-    trigger
+    trigger,
+    children
   }: Props = $props();
+
+  // Use children as fallback if trigger not provided
+  const renderedTrigger = $derived(trigger ?? children);
 
   let visible = $state(false);
   let actualPlacement = $state(placement);
@@ -99,7 +104,7 @@
     role="presentation"
     class="contents"
   >
-    {@render trigger?.()}
+    {@render renderedTrigger?.()}
   </div>
 
   {#if visible}
@@ -107,7 +112,7 @@
       bind:this={tooltipElement}
       id={tooltipId}
       role="tooltip"
-      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-md px-3 py-2 text-sm text-text whitespace-nowrap animate-[fade-in_0.15s_var(--ease-luxe)] pointer-events-none"
+      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap animate-[fade-in_0.15s_var(--ease-luxe)] pointer-events-none"
     >
       {content}
     </div>

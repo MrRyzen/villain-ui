@@ -12,9 +12,11 @@
   let {
     padding = 'md',
     hoverable = false,
+    class: className = '',
     children,
     header,
-    footer
+    footer,
+    ...restProps
   }: Props = $props();
 
   const paddingClasses = {
@@ -24,12 +26,12 @@
     lg: 'p-8'
   };
 
-  const baseClasses = 'glass-panel rounded-xl transition-all duration-300 ease-[var(--ease-luxe)]';
+  const baseClasses = 'glass-panel rounded-[var(--radius-lg)] transition-all duration-300 ease-[var(--ease-luxe)]';
 </script>
 
-<div class="{baseClasses} {hoverable ? 'hover-lift' : ''} {paddingClasses[padding]}">
+<div class="{baseClasses} {hoverable ? 'hover-lift' : ''} {paddingClasses[padding]} {className}" {...restProps}>
   {#if header}
-    <div class="pb-4 mb-4 border-b border-border">
+    <div class="pb-3 mb-3 border-b border-[var(--color-border-strong)]">
       {@render header()}
     </div>
   {/if}
@@ -39,7 +41,7 @@
   </div>
 
   {#if footer}
-    <div class="pt-4 mt-4 border-t border-border">
+    <div class="pt-3 mt-3 border-t border-[var(--color-border-strong)]">
       {@render footer()}
     </div>
   {/if}

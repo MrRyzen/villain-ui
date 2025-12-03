@@ -39,7 +39,7 @@
             {disabled}
             bind:group={value}
             onchange={onchange}
-            class="w-5 h-5 rounded-[var(--radius-pill)] border-2 border-[var(--color-border-strong)] bg-transparent appearance-none transition-all duration-200 ease-[var(--ease-luxe)] cursor-pointer checked:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:ring-offset-[var(--color-base-1)] relative {disabled ? 'cursor-not-allowed' : ''}"
+            class="w-6 h-6 rounded-[var(--radius-pill)] border-2 border-[var(--color-border-strong)] bg-transparent appearance-none transition-all duration-200 ease-[var(--ease-luxe)] cursor-pointer checked:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:ring-offset-[var(--color-base-1)] relative {disabled ? 'cursor-not-allowed' : ''}"
           />
           <span class="text-[var(--color-text)] text-sm select-none">
             {option.label}
@@ -61,7 +61,7 @@
           {disabled}
           bind:group={value}
           onchange={onchange}
-          class="w-5 h-5 rounded-[var(--radius-pill)] border-2 border-[var(--color-border-strong)] bg-transparent appearance-none transition-all duration-200 ease-[var(--ease-luxe)] cursor-pointer checked:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:ring-offset-[var(--color-base-1)] relative {disabled ? 'cursor-not-allowed' : ''}"
+          class="w-6 h-6 rounded-[var(--radius-pill)] border-2 border-[var(--color-border-strong)] bg-transparent appearance-none transition-all duration-200 ease-[var(--ease-luxe)] cursor-pointer checked:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:ring-offset-[var(--color-base-1)] relative {disabled ? 'cursor-not-allowed' : ''}"
         />
         <span class="text-[var(--color-text)] text-sm select-none">
           {option.label}
@@ -78,8 +78,8 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 0.625rem;
-    height: 0.625rem;
+    width: 0.75rem;
+    height: 0.75rem;
     border-radius: var(--radius-pill);
     background: var(--color-accent);
     box-shadow: var(--shadow-accent-glow);

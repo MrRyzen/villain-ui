@@ -132,7 +132,7 @@
       aria-labelledby={title ? titleId : undefined}
     >
       {#if title}
-        <div class="flex items-center justify-between p-6 border-b border-border">
+        <div class="flex items-center justify-between p-8 border-b border-border">
           <h2 id={titleId} class="text-xl font-semibold text-text">
             {title}
           </h2>
@@ -151,14 +151,14 @@
 
       <div class="flex-1 overflow-hidden">
         <ScrollArea height="100%">
-          <div class="p-6">
+          <div class="p-8">
             {@render children?.()}
           </div>
         </ScrollArea>
       </div>
 
       {#if footer}
-        <div class="flex items-center justify-end gap-3 p-6 border-t border-border">
+        <div class="flex items-center justify-end gap-4 p-8 border-t border-border">
           {@render footer?.()}
         </div>
       {/if}

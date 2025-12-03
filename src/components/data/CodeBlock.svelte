@@ -40,7 +40,7 @@
 	// Development-only validation
 </script>
 
-<div class="glass-panel rounded-lg overflow-hidden">
+<div class="glass-panel rounded-[var(--radius-lg)] overflow-hidden">
 	{#if filename}
 		<div
 			class="px-4 py-2 border-b border-border"

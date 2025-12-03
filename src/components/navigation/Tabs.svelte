@@ -35,7 +35,7 @@
     vertical: 'flex flex-col'
   };
 
-  const radiusClass = variant === 'pills' ? 'rounded-pill' : 'rounded-md';
+  const radiusClass = variant === 'pills' ? 'rounded-pill' : 'rounded-[var(--radius-md)]';
 </script>
 
 <div role="tablist" class="{orientationClasses[orientation]} gap-1 p-1">
@@ -46,7 +46,7 @@
       aria-disabled={tab.disabled}
       onclick={() => handleTabClick(tab.id, tab.disabled)}
       disabled={tab.disabled}
-      class="px-4 py-2 {radiusClass} font-body text-sm transition-all duration-300 ease-luxe {activeTab === tab.id ? 'bg-accent text-text accent-glow' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
+      class="px-6 py-3 {radiusClass} font-body text-sm transition-all duration-300 ease-luxe {activeTab === tab.id ? 'bg-accent text-text accent-glow' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
     >
       {tab.label}
     </button>

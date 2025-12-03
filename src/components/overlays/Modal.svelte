@@ -93,13 +93,13 @@
   >
     <div
       bind:this={modalElement}
-      class="glass-panel rounded-xl shadow-deep w-full {sizeClasses[size]} animate-[fade-up_0.3s_var(--ease-luxe)] flex flex-col max-h-[90vh]"
+      class="glass-panel rounded-[var(--radius-lg)] shadow-deep w-full {sizeClasses[size]} animate-[fade-up_0.3s_var(--ease-luxe)] flex flex-col max-h-[90vh]"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}
     >
       {#if title}
-        <div class="flex items-center justify-between p-6 border-b border-border">
+        <div class="flex items-center justify-between p-8 border-b border-border">
           <h2 id={titleId} class="text-xl font-semibold text-text">
             {title}
           </h2>
@@ -116,12 +116,12 @@
         </div>
       {/if}
 
-      <div class="flex-1 overflow-y-auto p-6 max-h-[70vh]" style="scrollbar-width: thin; scrollbar-color: var(--color-accent) var(--color-base-3);">
+      <div class="flex-1 overflow-y-auto p-8 max-h-[70vh]" style="scrollbar-width: thin; scrollbar-color: var(--color-accent) var(--color-base-3);">
         {@render children?.()}
       </div>
 
       {#if footer}
-        <div class="flex items-center justify-end gap-3 p-6 border-t border-border">
+        <div class="flex items-center justify-end gap-4 p-8 border-t border-border">
           {@render footer?.()}
         </div>
       {/if}

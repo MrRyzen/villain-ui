@@ -99,7 +99,7 @@
     ondrop={handleDrop}
     onclick={handleClick}
     onkeydown={(e) => e.key === 'Enter' && handleClick()}
-    class="glass-panel rounded-lg p-8 text-center cursor-pointer transition-all duration-300 ease-luxe {isDragging ? 'border-2 border-accent accent-glow bg-base-2' : ''} {disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"
+    class="glass-panel rounded-[var(--radius-lg)] p-8 text-center cursor-pointer transition-all duration-300 ease-luxe {isDragging ? 'border-2 border-accent accent-glow bg-base-2' : ''} {disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"
   >
     <div class="flex flex-col items-center gap-2">
       <svg

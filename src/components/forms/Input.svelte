@@ -23,7 +23,7 @@
     oninput
   }: Props = $props();
 
-  const baseClasses = 'glass-panel rounded-lg px-4 py-3 font-body text-text placeholder:text-text-muted transition-all duration-300 ease-luxe w-full';
+  const baseClasses = 'glass-panel rounded-[var(--radius-lg)] px-5 py-3.5 font-body text-text placeholder:text-text-muted transition-all duration-300 ease-luxe w-full';
   const focusClasses = 'focus:outline-none focus:border-accent focus:accent-glow';
   const errorClasses = error ? 'border-error' : '';
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : '';

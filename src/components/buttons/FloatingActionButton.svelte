@@ -25,8 +25,8 @@
   };
 
   const sizeClasses = {
-    md: 'w-14 h-14 text-base',
-    lg: 'w-16 h-16 text-lg'
+    md: 'w-16 h-16 text-base',
+    lg: 'w-18 h-18 text-lg'
   };
 
   const baseClasses = 'fixed z-50 flex items-center justify-center rounded-[var(--radius-pill)] bg-[var(--color-accent)] text-[var(--color-text)] accent-glow hover-lift shadow-[var(--shadow-deep)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer animate-[glow-pulse_3s_ease-in-out_infinite] hover:scale-110';

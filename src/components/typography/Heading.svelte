@@ -13,7 +13,7 @@
 		`transition-all duration-300 ${glow ? 'text-glow' : ''}`
 	);
 	const styles = $derived(
-		`font-size: var(--text-h${level}-size); line-height: var(--text-h${level}-line-height); font-weight: var(--text-h${level}-weight); font-family: var(--font-heading); color: var(--color-text);`
+		`font-size: var(--text-h${level}-size); line-height: var(--text-h${level}-line-height); font-weight: var(--text-h${level}-weight); letter-spacing: var(--text-h${level}-letter-spacing); font-family: var(--font-heading); color: var(--color-text);`
 	);
 </script>
 

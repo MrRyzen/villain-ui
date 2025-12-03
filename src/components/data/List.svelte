@@ -1,11 +1,19 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	interface ListItem {
+		id: string;
+		content: string | Snippet;
+	}
+
 	interface Props {
 		variant?: 'plain' | 'bordered' | 'divided';
 		hoverable?: boolean;
+		items?: ListItem[];
 		children?: import('svelte').Snippet;
 	}
 
-	let { variant = 'plain', hoverable = false, children }: Props = $props();
+	let { variant = 'plain', hoverable = false, items, children }: Props = $props();
 
 	const containerClasses = $derived(
 		variant === 'bordered'
@@ -19,12 +27,36 @@
 {#if variant === 'bordered'}
 	<div class={containerClasses}>
 		<ul class={listClasses}>
-			{@render children?.()}
+			{#if items}
+				{#each items as item (item.id)}
+					<li>
+						{#if typeof item.content === 'string'}
+							{item.content}
+						{:else}
+							{@render item.content()}
+						{/if}
+					</li>
+				{/each}
+			{:else}
+				{@render children?.()}
+			{/if}
 		</ul>
 	</div>
 {:else}
 	<ul class={listClasses}>
-		{@render children?.()}
+		{#if items}
+			{#each items as item (item.id)}
+				<li>
+					{#if typeof item.content === 'string'}
+						{item.content}
+					{:else}
+						{@render item.content()}
+					{/if}
+				</li>
+			{/each}
+		{:else}
+			{@render children?.()}
+		{/if}
 	</ul>
 {/if}
 
