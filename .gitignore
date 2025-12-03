@@ -28,6 +28,8 @@ coverage/
 
 # Agent files
 CLAUDE.md
+.CLAUDE/
 
 #Local Test app
 TEST_APP/
+*.tgz
