@@ -38,15 +38,6 @@
 	}: Props = $props();
 
 	// Development-only validation
-	// @ts-ignore - Vite env variable
-	if (import.meta.env.DEV) {
-		if (showLineNumbers && lineCount <= 0) {
-			console.warn(
-				'CodeBlock: showLineNumbers is enabled but lineCount is not a positive number. ' +
-				'Please provide a lineCount > 0 for proper line number rendering.'
-			);
-		}
-	}
 </script>
 
 <div class="glass-panel rounded-lg overflow-hidden">

@@ -1,11 +1,11 @@
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
+/** @type {import('@sveltejs/kit').Config} */
 export default {
 	// Preprocess with Vite for TypeScript and CSS support
 	preprocess: vitePreprocess(),
-	
+
 	compilerOptions: {
-		// Generate TypeScript definitions
-		// Component library settings
+		// Component library settings for Svelte 5
 	}
 };
