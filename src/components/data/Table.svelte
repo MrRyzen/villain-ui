@@ -50,7 +50,7 @@
 	}
 
 	.mrdv-table.hoverable :global(tbody tr:hover) {
-		background: rgba(127, 61, 255, 0.05);
+		background: rgba(107, 33, 168, 0.05);
 		transform: translateY(-1px);
 		box-shadow:
 			0 2px 8px rgba(0, 0, 0, 0.2),
@@ -62,7 +62,7 @@
 	}
 
 	.mrdv-table.striped.hoverable :global(tbody tr:nth-child(even):hover) {
-		background: rgba(127, 61, 255, 0.05);
+		background: rgba(107, 33, 168, 0.05);
 		transform: translateY(-1px);
 		box-shadow:
 			0 2px 8px rgba(0, 0, 0, 0.2),

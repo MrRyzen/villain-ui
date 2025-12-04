@@ -1,7 +1,7 @@
 <script lang="ts">
 	/**
 	 * Props for the CodeBlock component.
-	 * 
+	 *
 	 * This is a presentational component that provides layout and styling for syntax-highlighted code.
 	 * Consumers are responsible for providing pre-highlighted HTML via the default slot and ensuring
 	 * the content is properly sanitized to prevent XSS attacks.
@@ -24,6 +24,14 @@
 		 */
 		highlightLines?: number[];
 		/**
+		 * Whether to show the copy button. Default: true.
+		 */
+		showCopy?: boolean;
+		/**
+		 * Raw code text for copying. If not provided, copy functionality attempts to extract text from the rendered content.
+		 */
+		code?: string;
+		/**
 		 * Slot for pre-highlighted code HTML.
 		 */
 		children?: import('svelte').Snippet;
@@ -34,23 +42,50 @@
 		showLineNumbers = false,
 		lineCount = 0,
 		highlightLines = [],
+		showCopy = true,
+		code,
 		children
 	}: Props = $props();
 
-	// Development-only validation
+	let codeContainer: HTMLDivElement;
+	let copied = $state(false);
+
+	async function copyCode() {
+		try {
+			const textToCopy = code || codeContainer?.textContent || '';
+			await navigator.clipboard.writeText(textToCopy);
+			copied = true;
+			setTimeout(() => {
+				copied = false;
+			}, 2000);
+		} catch (err) {
+			console.error('Failed to copy code:', err);
+		}
+	}
 </script>
 
-<div class="glass-panel rounded-[var(--radius-lg)] overflow-hidden">
-	{#if filename}
+<div class="glass-panel rounded-[var(--radius-lg)] overflow-hidden relative">
+	{#if filename || showCopy}
 		<div
-			class="px-4 py-2 border-b border-border"
+			class="px-4 py-2 border-b border-border flex items-center justify-between"
 			style="background: var(--color-base-2); color: var(--color-text-soft); font-family: var(--font-mono); font-size: 0.875rem;"
 		>
-			{filename}
+			<span>{filename || ''}</span>
+			{#if showCopy}
+				<button
+					onclick={copyCode}
+					class="copy-button px-3 py-1 rounded-sm transition-all"
+					style="background: var(--color-base-3); color: var(--color-text-soft); border: 1px solid var(--color-border); font-size: 0.75rem;"
+					aria-label="Copy code"
+				>
+					{copied ? 'Copied!' : 'Copy'}
+				</button>
+			{/if}
 		</div>
 	{/if}
 
 	<div
+		bind:this={codeContainer}
 		class="p-4 overflow-x-auto"
 		style="background: var(--color-base-1); font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6;"
 	>
@@ -64,7 +99,7 @@
 						<div
 							class:highlighted={highlightLines.includes(lineNum)}
 							style={highlightLines.includes(lineNum)
-								? 'background: rgba(127, 61, 255, 0.1);'
+								? 'background: rgba(107, 33, 168, 0.1);'
 								: ''}
 						>
 							{lineNum}
@@ -102,19 +137,26 @@
 		background: var(--color-accent-soft);
 	}
 
-	/* Highlight gutter numbers */
-	.highlighted {
-		background: rgba(127, 61, 255, 0.1);
+	/* Copy button hover effect */
+	.copy-button:hover {
+		background: var(--color-accent) !important;
+		color: var(--color-text) !important;
+		border-color: var(--color-accent) !important;
 	}
 
-	/* 
+	/* Highlight gutter numbers */
+	.highlighted {
+		background: rgba(107, 33, 168, 0.1);
+	}
+
+	/*
 	 * Consumer-provided line highlighting:
 	 * Consumers should apply the `.line` class to each code line element
 	 * and the `.highlighted` class to lines that should be highlighted.
 	 * This ensures consistent styling with the component's luxury aesthetic.
 	 */
 	:global(.line.highlighted) {
-		background: rgba(127, 61, 255, 0.1);
+		background: rgba(107, 33, 168, 0.1);
 		display: inline-block;
 		width: 100%;
 	}

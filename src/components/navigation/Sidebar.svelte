@@ -104,7 +104,7 @@
 <style>
   aside :global(a.active),
   aside :global(button.active) {
-    background: rgba(127, 61, 255, 0.15);
+    background: rgba(107, 33, 168, 0.15);
     color: var(--color-accent);
     border-left: 3px solid var(--color-accent);
     font-weight: 600;

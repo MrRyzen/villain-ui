@@ -3,12 +3,12 @@
 [![npm version](https://img.shields.io/npm/v/@mrintel/villain-ui.svg)](https://www.npmjs.com/package/@mrintel/villain-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A luxury Svelte 5 component library with a distinctive dark aesthetic. Built for modern web applications that demand elegance, performance, and exceptional user experience.
+A luxury Svelte 5 component library featuring a **Modern Villain Luxury** aesthetic. Built on Onyx Black backgrounds with Royal Purple accents, glass morphism, and neon edges for modern web applications that demand commanding elegance and exceptional user experience.
 
 ## ✨ Features
 
 - **🚀 Svelte 5 with Runes** - Built on the latest Svelte 5 reactivity system with full TypeScript support
-- **🎨 Luxury Dark Aesthetic** - Premium glass morphism, accent glows, and sophisticated depth
+- **🎨 Modern Villain Luxury** - Onyx Black base with Royal Purple accents, glass morphism, and commanding neon edges
 - **🎭 Tailwind CSS v4** - Powered by the latest Tailwind with CSS variable theming
 - **🌳 Tree-Shakeable** - Import only what you need for optimal bundle size
 - **🎯 Fully Typed** - Strict TypeScript mode with complete type definitions
@@ -1428,6 +1428,7 @@ A luxury-styled code display component that provides layout, styling, and option
 
 **Key Features:**
 - Glass morphism aesthetic with custom scrollbars
+- **Built-in copy button** with visual feedback
 - Optional line numbers with highlighting support
 - Optional filename header display
 - Consumers choose their preferred syntax highlighter
@@ -1441,6 +1442,8 @@ A luxury-styled code display component that provides layout, styling, and option
 | `showLineNumbers` | `boolean` | `false` | Whether to show line numbers in the gutter |
 | `lineCount` | `number` | `0` | Total number of lines (required when `showLineNumbers` is `true`) |
 | `highlightLines` | `number[]` | `[]` | Array of 1-indexed line numbers to highlight in the gutter |
+| `showCopy` | `boolean` | `true` | Whether to show the copy button |
+| `code` | `string` | `undefined` | Raw code text for copying (if not provided, extracts from rendered content) |
 
 **Important Notes:**
 - Consumers are responsible for sanitizing HTML to prevent XSS attacks
@@ -1453,7 +1456,11 @@ A luxury-styled code display component that provides layout, styling, and option
 ```svelte
 <script>
   import { CodeBlock } from '@mrintel/villain-ui';
-  
+
+  const code = `function hello() {
+  console.log('Hello, world!');
+}`;
+
   const highlightedCode = `<pre><code class="language-javascript">
 <span class="token keyword">function</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Hello, world!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -1461,7 +1468,13 @@ A luxury-styled code display component that provides layout, styling, and option
 </code></pre>`;
 </script>
 
-<CodeBlock>
+<!-- Copy button shown by default, uses raw code text -->
+<CodeBlock {code}>
+  {@html highlightedCode}
+</CodeBlock>
+
+<!-- Hide copy button if needed -->
+<CodeBlock showCopy={false}>
   {@html highlightedCode}
 </CodeBlock>
 ```
@@ -1691,16 +1704,16 @@ A luxury-styled code display component that provides layout, styling, and option
 The library includes comprehensive global styles that provide the foundation for the luxury dark aesthetic. When you import `theme.css`, you get:
 
 **Base HTML/Body Styling:**
-- Dark background (`--color-base-0`: #050505)
+- Dark background (`--color-base-0`: #0a0a0a - Onyx Black)
 - Optimized font rendering with antialiasing
 - Body text styling with Inter font family
 - Proper box-sizing and reset for consistent rendering
 
 **Typography System:**
-- Automatic heading styles (h1-h6) with Poppins font family
+- Automatic heading styles (h1-h6) with Inter font family
 - Optimized font sizes, line heights, weights, and letter spacing
 - Zero default margins/padding for precise control
-- Monospace font (IBM Plex Mono) for code elements
+- Monospace font (JetBrains Mono) for code elements
 
 **Built-in Animations:**
 The theme includes several keyframe animations ready to use:
@@ -1785,41 +1798,43 @@ The library uses calculated, precision border radii for the "villain" aesthetic:
 
 #### Colors
 
-**Base Colors (Dark Background Layers)**
-- `--color-base-0`: #050505 - Deepest black background
-- `--color-base-1`: #0A0A0A - Surface layer
-- `--color-base-2`: #111111 - Panel layer
-- `--color-base-3`: #161616 - Elevated surfaces
+**Base Colors (Modern Villain Luxury)**
+- `--color-base-0`: #0a0a0a - Onyx Black (deepest background)
+- `--color-base-1`: #121212 - Elevated surface
+- `--color-base-2`: #1a1a1a - Panel layer
+- `--color-base-3`: #242424 - Highest elevation
 - `--color-surface`: Alias for base-1
 - `--color-panel`: Alias for base-2
-- `--color-overlay`: rgba(0, 0, 0, 0.65) - Modal backdrop
+- `--color-overlay`: rgba(0, 0, 0, 0.75) - Modal backdrop
 
-**Accent Colors (Purple Luxury)**
-- `--color-accent`: #7F3DFF - Primary purple accent
-- `--color-accent-soft`: #A974FF - Lighter accent variant
-- `--color-accent-dark`: #4C1AA8 - Darker accent variant
+**Accent Colors (Royal Purple & Crimson)**
+- `--color-accent`: #6b21a8 - Royal Purple (primary)
+- `--color-accent-soft`: #8b5cf6 - Lighter purple variant
+- `--color-accent-dark`: #581c87 - Darker purple variant
+- `--color-secondary`: #3b82f6 - Electric Blue
+- `--color-crimson`: #ef4444 - Crimson Red accent
 
 **Text Colors**
-- `--color-text`: #EDEDED - Primary text
-- `--color-text-soft`: #ADADAD - Secondary text
-- `--color-text-muted`: #7A7A7A - Muted/disabled text
+- `--color-text`: #e0e0e0 - Primary text (refined gray)
+- `--color-text-soft`: #a3a3a3 - Secondary text
+- `--color-text-muted`: #737373 - Muted/disabled text
 
-**State Colors (Muted, Commanding)**
-- `--color-success`: #00C28A - Darker emerald
-- `--color-warning`: #D4A844 - Muted gold
-- `--color-error`: #C73E5A - Deep crimson
+**State Colors (Bold & Commanding)**
+- `--color-success`: #10b981 - Emerald green
+- `--color-warning`: #f59e0b - Amber
+- `--color-error`: #ef4444 - Crimson Red
 
-**Border Colors**
-- `--color-border`: rgba(255, 255, 255, 0.08) - Default border
-- `--color-border-strong`: rgba(255, 255, 255, 0.16) - Emphasized border
-- `--color-border-metal`: rgba(255, 255, 255, 0.25) - Specular metal edge
+**Border Colors (Neon Edges)**
+- `--color-border`: rgba(255, 255, 255, 0.10) - Default border
+- `--color-border-strong`: rgba(255, 255, 255, 0.20) - Emphasized border
+- `--color-border-glow`: rgba(107, 33, 168, 0.30) - Purple glow edge
 
 #### Typography
 
-**Font Families**
-- `--font-heading`: 'Poppins', sans-serif - Display typography
+**Font Families (Modern Villain Luxury)**
+- `--font-heading`: 'Inter', sans-serif - Unified typography for headings
 - `--font-body`: 'Inter', sans-serif - Body text
-- `--font-mono`: 'IBM Plex Mono', monospace - Code
+- `--font-mono`: 'JetBrains Mono', monospace - Code and numeric display
 
 **Heading Text Scales (h1-h6)**
 - `--text-h1-size`: 3.5rem (56px)
@@ -1869,14 +1884,14 @@ The library uses calculated, precision border radii for the "villain" aesthetic:
 
 #### Layout
 
-**Border Radii (Precision Geometry)**
+**Border Radii (Rounded 2XL Corners)**
 - `--radius-none`: 0px
-- `--radius-sm`: 3px - Subtle taper
-- `--radius-md`: 6px - Controlled precision
-- `--radius-lg`: 8px - Engineered corners
-- `--radius-xl`: 10px - Maximum rounding
-- `--radius-2xl`: 14px - Large surfaces
-- `--radius-pill`: 999px - Full round (use sparingly)
+- `--radius-sm`: 6px - Small rounded
+- `--radius-md`: 10px - Medium rounded
+- `--radius-lg`: 14px - Large rounded
+- `--radius-xl`: 18px - Extra large
+- `--radius-2xl`: 24px - **2XL signature rounded corners**
+- `--radius-pill`: 999px - Full round
 
 **Spacing**
 - `--spacing`: 0.25rem - Base spacing unit
@@ -1889,12 +1904,14 @@ The library uses calculated, precision border radii for the "villain" aesthetic:
 #### Effects
 
 **Shadows (Glow & Depth)**
-- `--shadow-accent-glow`: Layered purple glow effect (20px/40px/60px)
-- `--shadow-deep`: 0 10px 40px rgba(0, 0, 0, 0.5)
-- `--shadow-text-glow`: Text-specific accent glow (20px/40px)
+- `--shadow-accent-glow`: Layered Royal Purple glow effect (20px/40px/60px)
+- `--shadow-crimson-glow`: Crimson Red glow effect (20px/40px)
+- `--shadow-deep`: 0 10px 40px rgba(0, 0, 0, 0.6)
+- `--shadow-text-glow`: Text-specific Royal Purple glow (20px/40px)
 
-**Glass Effect**
-- `--glass-panel-background`: rgba(17, 17, 17, 0.7) - Semi-transparent panel
+**Glass Effect (Modern Blur)**
+- `--glass-panel-background`: rgba(255, 255, 255, 0.05) - Subtle glass panel
+- `--glass-panel-blur`: 12px - Modern blur effect
 
 #### Motion
 

@@ -65,7 +65,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(127, 61, 255, 0.1),
+      rgba(107, 33, 168, 0.1),
       transparent
     );
     animation: shimmer 1.5s ease-in-out infinite;

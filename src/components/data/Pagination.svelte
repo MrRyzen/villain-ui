@@ -123,7 +123,7 @@
 	}
 
 	button.active {
-		box-shadow: 0 0 20px rgba(127, 61, 255, 0.5);
+		box-shadow: 0 0 20px rgba(107, 33, 168, 0.5);
 	}
 
 	button.inactive {
@@ -133,7 +133,7 @@
 	}
 
 	button.inactive:hover {
-		background: rgba(127, 61, 255, 0.1);
+		background: rgba(107, 33, 168, 0.1);
 		border-color: var(--color-accent);
 	}
 </style>

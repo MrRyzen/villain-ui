@@ -102,6 +102,6 @@
 	}
 
 	:global(ul.hoverable > li:hover) {
-		background: rgba(127, 61, 255, 0.05);
+		background: rgba(107, 33, 168, 0.05);
 	}
 </style>

@@ -1,63 +1,71 @@
 @import 'tailwindcss';
 
 @theme {
-  /* ===== Core Brand Base ===== */
-  --color-base-0: #050505;
-  --color-base-1: #0A0A0A;
-  --color-base-2: #111111;
-  --color-base-3: #161616;
+  /* ===== Core Brand Base (Modern Villain Luxury) ===== */
+  --color-base-0: #0a0a0a;  /* Onyx Black - deepest background */
+  --color-base-1: #121212;  /* Elevated surface */
+  --color-base-2: #1a1a1a;  /* Panel layer */
+  --color-base-3: #242424;  /* Highest elevation */
 
-  /* ===== Primary Accent ===== */
-  --color-accent: #7F3DFF;
-  --color-accent-soft: #A974FF;
-  --color-accent-dark: #4C1AA8;
+  /* ===== Primary Accent (Royal Purple) ===== */
+  --color-accent: #6b21a8;       /* Royal Purple - primary */
+  --color-accent-soft: #8b5cf6;  /* Lighter purple variant */
+  --color-accent-dark: #581c87;  /* Darker purple variant */
+
+  /* ===== Secondary Accents ===== */
+  --color-secondary: #3b82f6;    /* Electric Blue */
+  --color-crimson: #ef4444;      /* Crimson Red accent */
 
   /* ===== Text Colors ===== */
-  --color-text: #EDEDED;
-  --color-text-soft: #ADADAD;
-  --color-text-muted: #7A7A7A;
+  --color-text: #e0e0e0;         /* Primary text - refined gray */
+  --color-text-soft: #a3a3a3;    /* Secondary text */
+  --color-text-muted: #737373;   /* Muted/disabled text */
 
-  /* ===== State Colors (Villain Luxury: Muted, Commanding) ===== */
-  --color-success: #00C28A;  /* Darker emerald - command approved */
-  --color-warning: #D4A844;  /* Muted gold - tactical alert */
-  --color-error: #C73E5A;    /* Deep crimson - critical threat */
+  /* ===== State Colors (Villain Luxury: Bold & Commanding) ===== */
+  --color-success: #10b981;  /* Emerald green - success */
+  --color-warning: #f59e0b;  /* Amber - warning */
+  --color-error: #ef4444;    /* Crimson Red - error/danger */
 
   /* ===== Surface Colors ===== */
   --color-surface: var(--color-base-1);
   --color-panel: var(--color-base-2);
-  --color-overlay: rgba(0, 0, 0, 0.65);
+  --color-overlay: rgba(0, 0, 0, 0.75);
 
-  /* ===== Border Colors ===== */
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-strong: rgba(255, 255, 255, 0.16);
-  --color-border-metal: rgba(255, 255, 255, 0.25); /* Specular metal edge */
+  /* ===== Border Colors (Neon Edges) ===== */
+  --color-border: rgba(255, 255, 255, 0.10);
+  --color-border-strong: rgba(255, 255, 255, 0.20);
+  --color-border-glow: rgba(107, 33, 168, 0.30); /* Purple glow edge */
 
-  /* ===== Glow/Lighting Shadows ===== */
-  --shadow-accent-glow: 
-    0 0 20px rgba(127, 61, 255, 0.4),
-    0 0 40px rgba(127, 61, 255, 0.2),
-    0 0 60px rgba(127, 61, 255, 0.1);
-  --shadow-deep: 0 10px 40px rgba(0, 0, 0, 0.5);
-  --shadow-text-glow: 
-    0 0 20px rgba(127, 61, 255, 0.5),
-    0 0 40px rgba(127, 61, 255, 0.3);
+  /* ===== Glow/Lighting Shadows (Royal Purple Theme) ===== */
+  --shadow-accent-glow:
+    0 0 20px rgba(107, 33, 168, 0.5),
+    0 0 40px rgba(107, 33, 168, 0.3),
+    0 0 60px rgba(107, 33, 168, 0.15);
+  --shadow-crimson-glow:
+    0 0 20px rgba(239, 68, 68, 0.5),
+    0 0 40px rgba(239, 68, 68, 0.3);
+  --shadow-deep: 0 10px 40px rgba(0, 0, 0, 0.6);
+  --shadow-text-glow:
+    0 0 20px rgba(107, 33, 168, 0.6),
+    0 0 40px rgba(107, 33, 168, 0.4);
 
-  /* ===== Glass/Panel Effects ===== */
-  --glass-panel-background: rgba(17, 17, 17, 0.7);
+  /* ===== Glass/Panel Effects (Modern Blur) ===== */
+  --glass-panel-background: rgba(255, 255, 255, 0.05);
+  --glass-panel-blur: 12px;
 
-  /* ===== Border Radii (Precision Geometry: Calculated, Not Round) ===== */
+  /* ===== Border Radii (Rounded 2XL Corners) ===== */
   --radius-none: 0px;
-  --radius-sm: 3px;   /* Subtle taper */
-  --radius-md: 6px;   /* Controlled precision */
-  --radius-lg: 8px;   /* Engineered corners */
-  --radius-xl: 10px;  /* Maximum rounding - still calculated */
-  --radius-2xl: 14px; /* Reserved for large surfaces */
-  --radius-pill: 999px; /* Intentional full-round (use sparingly) */
+  --radius-sm: 6px;   /* Small rounded */
+  --radius-md: 10px;  /* Medium rounded */
+  --radius-lg: 14px;  /* Large rounded */
+  --radius-xl: 18px;  /* Extra large */
+  --radius-2xl: 24px; /* 2XL - signature rounded corners */
+  --radius-pill: 999px; /* Full round */
 
-  /* ===== Typography ===== */
-  --font-heading: 'Poppins', sans-serif;
+  /* ===== Typography (Modern Villain Luxury) ===== */
+  --font-heading: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
 
   /* Typography Scale */
   --text-h1-size: 3.5rem;
@@ -209,16 +217,16 @@
 
   @keyframes glow-pulse {
     0%, 100% {
-      box-shadow: 
-        0 0 20px rgba(127, 61, 255, 0.4),
-        0 0 40px rgba(127, 61, 255, 0.2),
-        0 0 60px rgba(127, 61, 255, 0.1);
+      box-shadow:
+        0 0 20px rgba(107, 33, 168, 0.5),
+        0 0 40px rgba(107, 33, 168, 0.3),
+        0 0 60px rgba(107, 33, 168, 0.15);
     }
     50% {
-      box-shadow: 
-        0 0 30px rgba(127, 61, 255, 0.6),
-        0 0 60px rgba(127, 61, 255, 0.3),
-        0 0 90px rgba(127, 61, 255, 0.15);
+      box-shadow:
+        0 0 30px rgba(107, 33, 168, 0.7),
+        0 0 60px rgba(107, 33, 168, 0.4),
+        0 0 90px rgba(107, 33, 168, 0.2);
     }
   }
 
@@ -364,7 +372,7 @@ code, pre {
 }
 
 .glass-panel {
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(var(--glass-panel-blur));
   background: var(--glass-panel-background);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-deep);

@@ -58,7 +58,7 @@
 {:else}
 	<div
 		class={classes}
-		style="background: linear-gradient(135deg, var(--color-accent) 0%, rgba(127, 61, 255, 0.7) 100%); color: var(--color-text); font-weight: 600; text-transform: uppercase; font-size: {fontSizes[size]};"
+		style="background: linear-gradient(135deg, var(--color-accent) 0%, rgba(107, 33, 168, 0.7) 100%); color: var(--color-text); font-weight: 600; text-transform: uppercase; font-size: {fontSizes[size]};"
 		role="img"
 		aria-label={alt}
 	>
