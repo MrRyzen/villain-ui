@@ -12,6 +12,7 @@
     closeOnEscape?: boolean;
     children?: Snippet;
     footer?: Snippet;
+    icon?: Snippet;
   }
 
   let {
@@ -22,7 +23,8 @@
     closeOnBackdrop = true,
     closeOnEscape = true,
     children,
-    footer
+    footer,
+    icon
   }: Props = $props();
 
   let drawerElement = $state<HTMLDivElement>();
@@ -133,7 +135,12 @@
     >
       {#if title}
         <div class="flex items-center justify-between p-8 border-b border-border">
-          <h2 id={titleId} class="text-xl font-semibold text-text">
+          <h2 id={titleId} class="text-xl font-semibold text-text flex items-center gap-3">
+            {#if icon}
+              <span class="inline-flex items-center justify-center">
+                {@render icon()}
+              </span>
+            {/if}
             {title}
           </h2>
           <button

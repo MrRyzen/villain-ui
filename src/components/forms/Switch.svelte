@@ -7,6 +7,7 @@
     label?: string;
     id?: string;
     onchange?: (event: Event) => void;
+    icon?: import('svelte').Snippet;
   }
 
   let {
@@ -14,7 +15,8 @@
     disabled = false,
     label,
     id = createId('switch'),
-    onchange
+    onchange,
+    icon
   }: Props = $props();
 </script>
 
@@ -29,6 +31,11 @@
     onchange={onchange}
     class="w-14 h-7 rounded-pill bg-base-3 border border-border appearance-none transition-all duration-300 ease-luxe cursor-pointer checked:bg-accent checked:accent-glow focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {disabled ? 'cursor-not-allowed' : ''}"
   />
+  {#if icon}
+    <span class="inline-flex items-center justify-center text-text-soft">
+      {@render icon()}
+    </span>
+  {/if}
   {#if label}
     <span class="text-text text-sm select-none">
       {label}

@@ -9,7 +9,12 @@
     href?: string;
     target?: '_blank' | '_self' | '_parent' | '_top';
     onclick?: (event: MouseEvent) => void;
+    icon?: import('svelte').Snippet;
+    iconPosition?: 'before' | 'after';
+    iconBefore?: import('svelte').Snippet;
+    iconAfter?: import('svelte').Snippet;
     children?: import('svelte').Snippet;
+    class?: string;
   }
 
   let {
@@ -20,10 +25,18 @@
     href,
     target,
     onclick,
+    icon,
+    iconPosition = 'before',
+    iconBefore,
+    iconAfter,
     class: className = '',
     children,
     ...restProps
   }: Props = $props();
+
+  // If icon is provided without iconBefore/iconAfter, use iconPosition
+  const displayIconBefore = $derived(iconBefore || (icon && iconPosition === 'before' ? icon : undefined));
+  const displayIconAfter = $derived(iconAfter || (icon && iconPosition === 'after' ? icon : undefined));
 
   const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer no-underline';
   const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
@@ -40,7 +53,19 @@
     tabindex={disabled ? -1 : undefined}
     {...restProps}
   >
-    {@render children?.()}
+    {#if displayIconBefore}
+      <span class="inline-flex items-center justify-center">
+        {@render displayIconBefore()}
+      </span>
+    {/if}
+    {#if children}
+      {@render children()}
+    {/if}
+    {#if displayIconAfter}
+      <span class="inline-flex items-center justify-center">
+        {@render displayIconAfter()}
+      </span>
+    {/if}
   </a>
 {:else}
   <button
@@ -50,6 +75,18 @@
     class={classes}
     {...restProps}
   >
-    {@render children?.()}
+    {#if displayIconBefore}
+      <span class="inline-flex items-center justify-center">
+        {@render displayIconBefore()}
+      </span>
+    {/if}
+    {#if children}
+      {@render children()}
+    {/if}
+    {#if displayIconAfter}
+      <span class="inline-flex items-center justify-center">
+        {@render displayIconAfter()}
+      </span>
+    {/if}
   </button>
 {/if}

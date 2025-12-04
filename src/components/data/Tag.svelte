@@ -4,9 +4,10 @@
 		dismissible?: boolean;
 		ondismiss?: () => void;
 		children?: import('svelte').Snippet;
+		icon?: import('svelte').Snippet;
 	}
 
-	let { variant = 'default', dismissible = false, ondismiss, children }: Props = $props();
+	let { variant = 'default', dismissible = false, ondismiss, children, icon }: Props = $props();
 
 	const variantClasses = {
 		default:
@@ -25,6 +26,11 @@
 </script>
 
 <span class={classes}>
+	{#if icon}
+		<span class="inline-flex items-center justify-center">
+			{@render icon()}
+		</span>
+	{/if}
 	{@render children?.()}
 
 	{#if dismissible}

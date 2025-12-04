@@ -83,6 +83,158 @@ This explicit import strategy gives you full control over styling and allows you
 </Card>
 ```
 
+## ✨ Key Features
+
+### Icon Support with Snippets
+
+Comprehensive icon snippet support across the entire component library for maximum flexibility:
+
+**Forms:**
+- **Input**: `icon`, `iconPosition` ("before"/"after"), `iconPrefix`, `iconSuffix` props for flexible icon placement in text inputs
+- **Select, Textarea**: Single `icon` snippet positioned at the left with automatic padding
+- **Checkbox, Switch**: Simple `icon` prop for visual enhancement
+- **RadioGroup**: Per-option `icon` in options array for rich radio lists
+- **FileUpload**: Custom `icon` prop to override default upload icon
+
+**Buttons & Navigation:**
+- **Button, LinkButton**: `icon` + `iconPosition`, or separate `iconBefore`/`iconAfter` props for flexible positioning
+- **Breadcrumbs**: Per-item `icon` in items array for visual breadcrumb trails
+- **Pagination**: `prevIcon` and `nextIcon` props for custom navigation arrows
+
+**Data Display:**
+- **Badge, Tag**: Simple `icon` prop for status indicators and tags
+- **List**: Per-item `icon` in items array for icon lists
+- **Avatar**: Image/initials support (not snippet-based)
+
+**Overlays:**
+- **Alert**: `icon` override for custom alert icons
+- **Modal, Toast, Drawer**: `icon` prop for title icons
+
+**Navigation:**
+- **Tabs**: Per-tab `icon` in tabs array
+- **Menu**: Built-in icon support
+
+#### Icon API Patterns
+
+The library uses three consistent icon patterns:
+
+**1. Simple icon prop** - Single `icon?: Snippet` for components with one icon position:
+```svelte
+<Tag>
+  {#snippet icon()}
+    <StarIcon class="w-4 h-4" />
+  {/snippet}
+  Featured
+</Tag>
+```
+
+**2. Positional icon props** - `icon` + `iconPosition` or separate `iconBefore`/`iconAfter`:
+```svelte
+<Button iconPosition="after">
+  {#snippet icon()}
+    <ArrowRightIcon class="w-5 h-5" />
+  {/snippet}
+  Next
+</Button>
+
+<!-- Or with separate snippets -->
+<LinkButton>
+  {#snippet iconBefore()}
+    <HomeIcon class="w-5 h-5" />
+  {/snippet}
+  Home
+  {#snippet iconAfter()}
+    <ExternalLinkIcon class="w-4 h-4" />
+  {/snippet}
+</LinkButton>
+```
+
+**3. Prefix/Suffix icon props** - For text inputs with icons inside the field:
+```svelte
+<Input placeholder="Search...">
+  {#snippet iconPrefix()}
+    <SearchIcon class="w-5 h-5" />
+  {/snippet}
+</Input>
+
+<!-- Or use icon + iconPosition -->
+<Input iconPosition="before" placeholder="Email">
+  {#snippet icon()}
+    <MailIcon class="w-5 h-5" />
+  {/snippet}
+</Input>
+```
+
+**4. Per-item icons** - Icons specified in item/option arrays:
+```svelte
+<script>
+  const items = [
+    { 
+      value: 'option1', 
+      label: 'Option 1',
+      icon: () => `{@render MyIcon()}`
+    }
+  ];
+</script>
+
+<List {items} />
+<RadioGroup {items} bind:value={selected} />
+<Breadcrumbs {items} />
+```
+
+#### Best Practices
+
+- **Consistent sizing**: Use `w-5 h-5` or `w-4 h-4` across your application for visual harmony
+- **Color inheritance**: Icons automatically inherit text color via `currentColor`
+- **Library agnostic**: Works with any icon library (Heroicons, Lucide, Phosphor, etc.) or inline SVG
+- **Optional everywhere**: All icon snippets are optional - components work perfectly without them
+
+### Active State Support
+
+**Navbar** and **Sidebar** components now automatically style active navigation items:
+
+- Add the `active` class to links/buttons for current page indication
+- Or use the new `currentPath` prop for automatic active state management (see Layout Best Practices)
+- **How `currentPath` works**: Components scan for `<a>` and `<button>` elements, match their `href` or `data-href` attribute against `currentPath`, and automatically add/remove the `active` class
+- **Manual classes preserved**: Manually applied `active` classes take precedence and are never removed by automatic management
+- **Falsy currentPath**: When `currentPath` becomes falsy, only auto-managed `active` classes are cleared
+- **Button support**: Buttons need a `data-href` attribute to participate in automatic active state (e.g., `<button data-href="/action">Action</button>`)
+- Navbar: Shows accent color with underline indicator
+- Sidebar: Shows accent background, left border, and glow effect
+- Works seamlessly with SvelteKit's page stores or manual state management
+
+### Improved Layout Management
+
+**Automatic Sidebar Positioning** - Sidebar now automatically detects Navbar presence and adjusts its top position to start just below the Navbar. Zero configuration needed!
+
+**How it works:**
+- Sidebar uses a `data-navbar` attribute selector to find the Navbar element
+- Reads the Navbar's `offsetHeight` and dynamically sets its own `top` style property
+- A ResizeObserver watches for Navbar height changes (responsive behavior, window resize)
+- When Navbar is absent, Sidebar starts from the top (top: 0)
+
+**Z-index layering** ensures proper visual hierarchy:
+- **Navbar**: `z-50` (highest, sits on top)
+- **Sidebar**: `z-40` (below navbar, above content)
+- **Modals, tooltips, overlays**: `z-50+` (above everything)
+
+**Example - Zero Configuration:**
+```svelte
+<!-- Navbar automatically gets data-navbar attribute -->
+<Navbar position="sticky" height="md">
+  <!-- Navbar content -->
+</Navbar>
+
+<!-- Sidebar automatically detects Navbar and positions below it -->
+<Sidebar open={true} side="left" width="md">
+  <!-- Sidebar content -->
+</Sidebar>
+
+<!-- No manual margin-top needed on Sidebar! -->
+```
+
+**Responsive behavior**: The Sidebar's positioning updates automatically when the Navbar height changes (e.g., responsive breakpoints, content changes). This ensures consistent layout across all screen sizes.
+
 ## 📚 Components
 
 ### Buttons
@@ -98,6 +250,41 @@ This explicit import strategy gives you full control over styling and allows you
 <Button variant="secondary" size="md">Secondary Button</Button>
 <Button variant="ghost" size="sm">Ghost Button</Button>
 <Button variant="primary" size="lg" disabled>Disabled</Button>
+
+<!-- Simple icon usage -->
+<Button variant="primary">
+  {#snippet icon()}
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+    </svg>
+  {/snippet}
+  Add Item
+</Button>
+
+<!-- Icon after text -->
+<Button variant="secondary" iconPosition="after">
+  Download
+  {#snippet icon()}
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+    </svg>
+  {/snippet}
+</Button>
+
+<!-- Advanced: Different icons before and after -->
+<Button variant="primary">
+  {#snippet iconBefore()}
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  {/snippet}
+  Upload Photo
+  {#snippet iconAfter()}
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+  {/snippet}
+</Button>
 ```
 
 **IconButton** - Compact button for icon-only interactions
@@ -136,6 +323,36 @@ This explicit import strategy gives you full control over styling and allows you
 <LinkButton href="/docs" variant="primary">View Documentation</LinkButton>
 ```
 
+**Icon Examples:**
+```svelte
+<!-- LinkButton with icon before text -->
+<LinkButton href="/docs" variant="primary">
+  {#snippet icon()}
+    <BookOpenIcon class="w-5 h-5" />
+  {/snippet}
+  View Documentation
+</LinkButton>
+
+<!-- LinkButton with icon after text -->
+<LinkButton href="/download" variant="secondary" iconPosition="after">
+  Download
+  {#snippet icon()}
+    <DownloadIcon class="w-5 h-5" />
+  {/snippet}
+</LinkButton>
+
+<!-- LinkButton with different icons before and after -->
+<LinkButton href="/external" variant="ghost" target="_blank">
+  {#snippet iconBefore()}
+    <ExternalLinkIcon class="w-4 h-4" />
+  {/snippet}
+  External Link
+  {#snippet iconAfter()}
+    <ArrowRightIcon class="w-4 h-4" />
+  {/snippet}
+</LinkButton>
+```
+
 **FloatingActionButton** - Prominent floating action button
 
 ```svelte
@@ -169,6 +386,48 @@ This explicit import strategy gives you full control over styling and allows you
 />
 ```
 
+**Icon Examples:**
+```svelte
+<!-- Input with prefix icon (search) -->
+<Input 
+  type="text" 
+  label="Search" 
+  placeholder="Search..."
+  bind:value={searchQuery}
+>
+  {#snippet iconPrefix()}
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+  {/snippet}
+</Input>
+
+<!-- Input with suffix icon (password visibility toggle) -->
+<Input 
+  type="password" 
+  label="Password" 
+  bind:value={password}
+>
+  {#snippet iconSuffix()}
+    <button onclick={togglePasswordVisibility}>
+      <EyeIcon class="w-5 h-5" />
+    </button>
+  {/snippet}
+</Input>
+
+<!-- Input with simple icon prop and position -->
+<Input 
+  type="email" 
+  label="Email" 
+  iconPosition="before"
+  bind:value={email}
+>
+  {#snippet icon()}
+    <MailIcon class="w-5 h-5" />
+  {/snippet}
+</Input>
+```
+
 **Textarea** - Multi-line text input
 
 ```svelte
@@ -184,6 +443,19 @@ This explicit import strategy gives you full control over styling and allows you
   rows={5}
   bind:value={comment}
 />
+```
+
+**Icon Example:**
+```svelte
+<Textarea 
+  label="Message" 
+  rows={5}
+  bind:value={message}
+>
+  {#snippet icon()}
+    <MessageIcon class="w-5 h-5" />
+  {/snippet}
+</Textarea>
 ```
 
 **Select** - Dropdown selection
@@ -203,6 +475,21 @@ This explicit import strategy gives you full control over styling and allows you
 <Select label="Choose an option" {options} bind:value={selected} />
 ```
 
+**Icon Example:**
+```svelte
+<Select 
+  label="Country" 
+  {options} 
+  bind:value={selectedCountry}
+>
+  {#snippet icon()}
+    <GlobeIcon class="w-5 h-5" />
+  {/snippet}
+</Select>
+```
+
+**Note:** Select and Textarea each support a single left-aligned `icon` snippet with automatic padding, not separate prefix/suffix slots.
+
 **Checkbox** - Boolean selection
 
 ```svelte
@@ -215,6 +502,16 @@ This explicit import strategy gives you full control over styling and allows you
 <Checkbox label="I accept the terms and conditions" bind:checked={accepted} />
 ```
 
+**Icon Example:**
+```svelte
+<Checkbox bind:checked={accepted}>
+  {#snippet icon()}
+    <ShieldCheckIcon class="w-4 h-4" />
+  {/snippet}
+  I accept the terms and conditions
+</Checkbox>
+```
+
 **Switch** - Toggle switch
 
 ```svelte
@@ -225,6 +522,16 @@ This explicit import strategy gives you full control over styling and allows you
 </script>
 
 <Switch label="Enable notifications" bind:checked={enabled} />
+```
+
+**Icon Example:**
+```svelte
+<Switch bind:checked={darkMode}>
+  {#snippet icon()}
+    <MoonIcon class="w-4 h-4" />
+  {/snippet}
+  Dark Mode
+</Switch>
 ```
 
 **RadioGroup** - Single selection from multiple options
@@ -242,6 +549,34 @@ This explicit import strategy gives you full control over styling and allows you
 </script>
 
 <RadioGroup label="Select size" {options} bind:value={selected} />
+```
+
+**Icon Example:**
+```svelte
+<script>
+  const options = [
+    { 
+      value: 'card', 
+      label: 'Credit Card',
+      icon: () => {
+        return `<svg class="w-5 h-5" ...>...</svg>`;
+      }
+    },
+    { 
+      value: 'paypal', 
+      label: 'PayPal',
+      icon: () => {
+        return `<svg class="w-5 h-5" ...>...</svg>`;
+      }
+    }
+  ];
+</script>
+
+<RadioGroup 
+  label="Payment Method" 
+  {options} 
+  bind:value={paymentMethod} 
+/>
 ```
 
 **RangeSlider** - Numeric range selection
@@ -273,6 +608,18 @@ This explicit import strategy gives you full control over styling and allows you
   onchange={handleUpload}
   label="Upload Images"
 />
+```
+
+**Icon Example:**
+```svelte
+<FileUpload 
+  bind:files={uploadedFiles}
+  accept="image/*"
+>
+  {#snippet icon()}
+    <CloudUploadIcon class="w-8 h-8" />
+  {/snippet}
+</FileUpload>
 ```
 
 **InputGroup** - Grouped input with addons
@@ -383,6 +730,8 @@ This explicit import strategy gives you full control over styling and allows you
 ```svelte
 <script>
   import { Navbar } from '@mrintel/villain-ui';
+  
+  let currentPath = $state('/');
 </script>
 
 <Navbar>
@@ -391,9 +740,9 @@ This explicit import strategy gives you full control over styling and allows you
   {/snippet}
   
   {#snippet links()}
-    <a href="/">Home</a>
-    <a href="/about">About</a>
-    <a href="/contact">Contact</a>
+    <a href="/" class={currentPath === '/' ? 'active' : ''}>Home</a>
+    <a href="/about" class={currentPath === '/about' ? 'active' : ''}>About</a>
+    <a href="/contact" class={currentPath === '/contact' ? 'active' : ''}>Contact</a>
   {/snippet}
   
   {#snippet actions()}
@@ -402,6 +751,8 @@ This explicit import strategy gives you full control over styling and allows you
 </Navbar>
 ```
 
+**Note:** Add the `active` class to links or buttons to indicate the current page. The Navbar automatically styles active items with accent color and an underline indicator.
+
 **Sidebar** - Side navigation with collapsible state
 
 ```svelte
@@ -409,16 +760,41 @@ This explicit import strategy gives you full control over styling and allows you
   import { Sidebar } from '@mrintel/villain-ui';
   
   let collapsed = $state(false);
+  let currentPath = $state('/dashboard');
 </script>
 
 <Sidebar bind:collapsed>
   <nav>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/settings">Settings</a>
-    <a href="/profile">Profile</a>
+    <a href="/dashboard" class={currentPath === '/dashboard' ? 'active' : ''}>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+      {#if !collapsed}
+        <span>Dashboard</span>
+      {/if}
+    </a>
+    <a href="/settings" class={currentPath === '/settings' ? 'active' : ''}>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      {#if !collapsed}
+        <span>Settings</span>
+      {/if}
+    </a>
+    <a href="/profile" class={currentPath === '/profile' ? 'active' : ''}>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg>
+      {#if !collapsed}
+        <span>Profile</span>
+      {/if}
+    </a>
   </nav>
 </Sidebar>
 ```
+
+**Note:** Add the `active` class to links or buttons to indicate the current page. The Sidebar automatically styles active items with accent background, border, and glow effect. Icons and text are automatically styled by the component.
 
 **Tabs** - Tabbed interface
 
@@ -428,7 +804,13 @@ This explicit import strategy gives you full control over styling and allows you
   
   let activeTab = $state('tab1');
   const tabs = [
-    { id: 'tab1', label: 'Overview' },
+    { 
+      id: 'tab1', 
+      label: 'Overview',
+      icon: () => {
+        // Return snippet rendering SVG
+      }
+    },
     { id: 'tab2', label: 'Analytics' },
     { id: 'tab3', label: 'Reports' }
   ];
@@ -456,6 +838,33 @@ This explicit import strategy gives you full control over styling and allows you
     { label: 'Products', href: '/products' },
     { label: 'Category', href: '/products/category' },
     { label: 'Item' }
+  ];
+</script>
+
+<Breadcrumbs {items} />
+```
+
+**Icon Example:**
+```svelte
+<script>
+  import { Breadcrumbs } from '@mrintel/villain-ui';
+  import { HomeIcon, FolderIcon, DocumentIcon } from 'your-icon-library';
+  
+  const items = [
+    { 
+      label: 'Home', 
+      href: '/',
+      icon: () => `{@render HomeIcon()}` // Snippet for home icon
+    },
+    { 
+      label: 'Projects', 
+      href: '/projects',
+      icon: () => `{@render FolderIcon()}` // Snippet for folder icon
+    },
+    { 
+      label: 'Document',
+      icon: () => `{@render DocumentIcon()}` // Current page, no href
+    }
   ];
 </script>
 
@@ -532,6 +941,31 @@ This explicit import strategy gives you full control over styling and allows you
 </Modal>
 ```
 
+**Icon Example:**
+```svelte
+<script>
+  import { Modal, Button } from '@mrintel/villain-ui';
+  import { ExclamationTriangleIcon } from 'your-icon-library';
+  
+  let open = $state(false);
+</script>
+
+<Button onclick={() => open = true}>Delete Item</Button>
+
+<Modal bind:open title="Confirm Deletion">
+  {#snippet icon()}
+    <ExclamationTriangleIcon class="w-6 h-6 text-error" />
+  {/snippet}
+  
+  <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+  
+  {#snippet footer()}
+    <Button variant="ghost" onclick={() => open = false}>Cancel</Button>
+    <Button variant="primary" onclick={() => { deleteItem(); open = false; }}>Delete</Button>
+  {/snippet}
+</Modal>
+```
+
 **Alert** - Alert message with variants
 
 ```svelte
@@ -549,6 +983,17 @@ This explicit import strategy gives you full control over styling and allows you
 
 <Alert variant="error" title="Error">
   An error occurred.
+</Alert>
+
+<!-- With custom icon -->
+<Alert variant="info" title="Custom Icon">
+  {#snippet icon()}
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+      <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+    </svg>
+  {/snippet}
+  This alert uses a custom icon snippet.
 </Alert>
 ```
 
@@ -612,6 +1057,41 @@ This explicit import strategy gives you full control over styling and allows you
 </Toast>
 ```
 
+**Icon Examples:**
+```svelte
+<script>
+  import { Toast } from '@mrintel/villain-ui';
+  import { CheckCircleIcon, XCircleIcon } from 'your-icon-library';
+  
+  let showSuccess = $state(false);
+  let showError = $state(false);
+</script>
+
+<!-- Success toast with custom icon -->
+<Toast bind:show={showSuccess} variant="success" duration={3000}>
+  {#snippet icon()}
+    <CheckCircleIcon class="w-5 h-5" />
+  {/snippet}
+  Changes saved successfully!
+</Toast>
+
+<!-- Error toast with custom icon -->
+<Toast bind:show={showError} variant="error" duration={5000}>
+  {#snippet icon()}
+    <XCircleIcon class="w-5 h-5" />
+  {/snippet}
+  Failed to save changes. Please try again.
+</Toast>
+
+<!-- Info toast with custom icon -->
+<Toast bind:show={showInfo} variant="info">
+  {#snippet icon()}
+    <InformationCircleIcon class="w-5 h-5" />
+  {/snippet}
+  New features available! Check them out.
+</Toast>
+```
+
 **Drawer** - Slide-out drawer panel
 
 ```svelte
@@ -626,6 +1106,30 @@ This explicit import strategy gives you full control over styling and allows you
 <Drawer bind:open position="right">
   <h2>Drawer Content</h2>
   <p>This slides in from the side.</p>
+</Drawer>
+```
+
+**Icon Example:**
+```svelte
+<script>
+  import { Drawer, Button } from '@mrintel/villain-ui';
+  import { Cog6ToothIcon } from 'your-icon-library';
+  
+  let open = $state(false);
+</script>
+
+<Button onclick={() => open = true}>Open Settings</Button>
+
+<Drawer bind:open position="right" title="Settings">
+  {#snippet icon()}
+    <Cog6ToothIcon class="w-6 h-6" />
+  {/snippet}
+  
+  <div class="space-y-4">
+    <h3>Application Settings</h3>
+    <p>Configure your preferences here.</p>
+    <!-- Settings content -->
+  </div>
 </Drawer>
 ```
 
@@ -749,6 +1253,45 @@ This explicit import strategy gives you full control over styling and allows you
 <Pagination bind:currentPage {totalPages} />
 ```
 
+**Icon Examples:**
+```svelte
+<script>
+  import { Pagination } from '@mrintel/villain-ui';
+  import { ChevronLeftIcon, ChevronRightIcon } from 'your-icon-library';
+  
+  let currentPage = $state(1);
+</script>
+
+<!-- Pagination with custom prev/next icons -->
+<Pagination 
+  {currentPage} 
+  totalPages={10}
+  onPageChange={(page) => currentPage = page}
+>
+  {#snippet prevIcon()}
+    <ChevronLeftIcon class="w-5 h-5" />
+  {/snippet}
+  {#snippet nextIcon()}
+    <ChevronRightIcon class="w-5 h-5" />
+  {/snippet}
+</Pagination>
+
+<!-- Icon-only pagination (no "Previous"/"Next" text) -->
+<Pagination 
+  {currentPage} 
+  totalPages={10}
+  showLabels={false}
+  onPageChange={(page) => currentPage = page}
+>
+  {#snippet prevIcon()}
+    <ChevronLeftIcon class="w-5 h-5" />
+  {/snippet}
+  {#snippet nextIcon()}
+    <ChevronRightIcon class="w-5 h-5" />
+  {/snippet}
+</Pagination>
+```
+
 **Badge** - Status badge
 
 ```svelte
@@ -759,6 +1302,16 @@ This explicit import strategy gives you full control over styling and allows you
 <Badge variant="success">Active</Badge>
 <Badge variant="warning">Pending</Badge>
 <Badge variant="error">Error</Badge>
+
+<!-- With icon -->
+<Badge variant="accent">
+  {#snippet icon()}
+    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+    </svg>
+  {/snippet}
+  Verified
+</Badge>
 ```
 
 **Tag** - Removable tag
@@ -772,6 +1325,41 @@ This explicit import strategy gives you full control over styling and allows you
 <Tag>TypeScript</Tag>
 ```
 
+**Icon Examples:**
+```svelte
+<!-- Tag with icon -->
+<Tag variant="accent">
+  {#snippet icon()}
+    <StarIcon class="w-4 h-4" />
+  {/snippet}
+  Featured
+</Tag>
+
+<!-- Dismissible tag with icon -->
+<Tag dismissible ondismiss={() => console.log('Removed')}>
+  {#snippet icon()}
+    <TagIcon class="w-4 h-4" />
+  {/snippet}
+  JavaScript
+</Tag>
+
+<!-- Multiple tags with different icons -->
+<div class="flex gap-2">
+  <Tag>
+    {#snippet icon()}
+      <CheckCircleIcon class="w-4 h-4" />
+    {/snippet}
+    Verified
+  </Tag>
+  <Tag variant="accent">
+    {#snippet icon()}
+      <FireIcon class="w-4 h-4" />
+    {/snippet}
+    Trending
+  </Tag>
+</div>
+```
+
 **List** - Styled list
 
 ```svelte
@@ -782,6 +1370,45 @@ This explicit import strategy gives you full control over styling and allows you
 </script>
 
 <List {items} variant="ordered" />
+```
+
+**Icon Example:**
+```svelte
+<script>
+  import { List } from '@mrintel/villain-ui';
+  import { CheckIcon, XIcon, ClockIcon } from 'your-icon-library';
+  
+  const items = [
+    { 
+      label: 'Task completed', 
+      icon: () => `{@render CheckIcon({ class: 'w-5 h-5 text-success' })}` 
+    },
+    { 
+      label: 'Task pending', 
+      icon: () => `{@render ClockIcon({ class: 'w-5 h-5 text-warning' })}` 
+    },
+    { 
+      label: 'Task failed', 
+      icon: () => `{@render XIcon({ class: 'w-5 h-5 text-error' })}` 
+    }
+  ];
+</script>
+
+<List {items} variant="unordered" />
+
+<!-- Or with custom rendering -->
+<List variant="unordered">
+  {#each items as item}
+    <li class="flex items-center gap-3">
+      {#if item.icon}
+        <span class="inline-flex items-center justify-center">
+          {@render item.icon()}
+        </span>
+      {/if}
+      {item.label}
+    </li>
+  {/each}
+</List>
 ```
 
 **Avatar** - User avatar
@@ -1059,6 +1686,38 @@ A luxury-styled code display component that provides layout, styling, and option
 
 ## 🎨 Theming
 
+### Global Styles
+
+The library includes comprehensive global styles that provide the foundation for the luxury dark aesthetic. When you import `theme.css`, you get:
+
+**Base HTML/Body Styling:**
+- Dark background (`--color-base-0`: #050505)
+- Optimized font rendering with antialiasing
+- Body text styling with Inter font family
+- Proper box-sizing and reset for consistent rendering
+
+**Typography System:**
+- Automatic heading styles (h1-h6) with Poppins font family
+- Optimized font sizes, line heights, weights, and letter spacing
+- Zero default margins/padding for precise control
+- Monospace font (IBM Plex Mono) for code elements
+
+**Built-in Animations:**
+The theme includes several keyframe animations ready to use:
+- `fade-in` - Simple opacity fade
+- `fade-out` - Opacity fade out
+- `fade-up` - Fade in with upward movement
+- `glow-pulse` - Pulsing accent glow effect
+- `slide-in-left/right/top/bottom` - Directional slide animations
+
+**Custom Utility Classes:**
+- `.text-glow` - Apply accent text glow effect
+- `.glass-panel` - Glass morphism with backdrop blur and borders
+- `.accent-glow` - Accent color box-shadow glow
+- `.hover-lift` - Lift element on hover with glow
+- `.metal-edge` - Specular metallic border highlights
+- `.obsidian-surface` - Flat black surface with subtle gradient reflection
+
 ### CSS Variable System
 
 @mrintel/villain-ui uses a comprehensive CSS variable system that allows complete customization without touching component code. All theme variables are defined in `theme.css` and can be overridden in your own CSS.
@@ -1109,13 +1768,16 @@ import './custom-theme.css'; // Your overrides
 
 ### Border Radius Customization
 
+The library uses calculated, precision border radii for the "villain" aesthetic:
+
 ```css
 :root {
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-2xl: 28px;
+  --radius-sm: 3px;   /* Subtle taper */
+  --radius-md: 6px;   /* Controlled precision */
+  --radius-lg: 8px;   /* Engineered corners */
+  --radius-xl: 10px;  /* Maximum rounding - still calculated */
+  --radius-2xl: 14px; /* Reserved for large surfaces */
+  --radius-pill: 999px; /* Intentional full-round (use sparingly) */
 }
 ```
 
@@ -1123,88 +1785,427 @@ import './custom-theme.css'; // Your overrides
 
 #### Colors
 
-**Base Colors**
-- `--color-base-0` through `--color-base-3`: Background layers
-- `--color-surface`: Default surface color
-- `--color-panel`: Panel background
-- `--color-overlay`: Modal/overlay backdrop
+**Base Colors (Dark Background Layers)**
+- `--color-base-0`: #050505 - Deepest black background
+- `--color-base-1`: #0A0A0A - Surface layer
+- `--color-base-2`: #111111 - Panel layer
+- `--color-base-3`: #161616 - Elevated surfaces
+- `--color-surface`: Alias for base-1
+- `--color-panel`: Alias for base-2
+- `--color-overlay`: rgba(0, 0, 0, 0.65) - Modal backdrop
 
-**Accent Colors**
-- `--color-accent`: Primary accent color
-- `--color-accent-soft`: Lighter accent variant
-- `--color-accent-dark`: Darker accent variant
+**Accent Colors (Purple Luxury)**
+- `--color-accent`: #7F3DFF - Primary purple accent
+- `--color-accent-soft`: #A974FF - Lighter accent variant
+- `--color-accent-dark`: #4C1AA8 - Darker accent variant
 
 **Text Colors**
-- `--color-text`: Primary text color
-- `--color-text-soft`: Secondary text color
-- `--color-text-muted`: Muted/disabled text
+- `--color-text`: #EDEDED - Primary text
+- `--color-text-soft`: #ADADAD - Secondary text
+- `--color-text-muted`: #7A7A7A - Muted/disabled text
 
-**State Colors**
-- `--color-success`: Success state
-- `--color-warning`: Warning state
-- `--color-error`: Error state
+**State Colors (Muted, Commanding)**
+- `--color-success`: #00C28A - Darker emerald
+- `--color-warning`: #D4A844 - Muted gold
+- `--color-error`: #C73E5A - Deep crimson
 
 **Border Colors**
-- `--color-border`: Default border
-- `--color-border-strong`: Emphasized border
+- `--color-border`: rgba(255, 255, 255, 0.08) - Default border
+- `--color-border-strong`: rgba(255, 255, 255, 0.16) - Emphasized border
+- `--color-border-metal`: rgba(255, 255, 255, 0.25) - Specular metal edge
 
 #### Typography
 
 **Font Families**
-- `--font-heading`: Heading font stack
-- `--font-body`: Body text font stack
-- `--font-mono`: Monospace font stack
+- `--font-heading`: 'Poppins', sans-serif - Display typography
+- `--font-body`: 'Inter', sans-serif - Body text
+- `--font-mono`: 'IBM Plex Mono', monospace - Code
 
-**Text Scales** (h1-h6, body, caption)
-- `--text-{level}-size`: Font size
-- `--text-{level}-line-height`: Line height
-- `--text-{level}-weight`: Font weight
+**Heading Text Scales (h1-h6)**
+- `--text-h1-size`: 3.5rem (56px)
+- `--text-h1-line-height`: 1.2
+- `--text-h1-weight`: 700
+- `--text-h1-letter-spacing`: -0.02em
+
+- `--text-h2-size`: 2.5rem (40px)
+- `--text-h2-line-height`: 1.25
+- `--text-h2-weight`: 600
+- `--text-h2-letter-spacing`: -0.015em
+
+- `--text-h3-size`: 2rem (32px)
+- `--text-h3-line-height`: 1.3
+- `--text-h3-weight`: 600
+- `--text-h3-letter-spacing`: -0.01em
+
+- `--text-h4-size`: 1.5rem (24px)
+- `--text-h4-line-height`: 1.35
+- `--text-h4-weight`: 600
+- `--text-h4-letter-spacing`: -0.01em
+
+- `--text-h5-size`: 1.25rem (20px)
+- `--text-h5-line-height`: 1.4
+- `--text-h5-weight`: 500
+- `--text-h5-letter-spacing`: -0.005em
+
+- `--text-h6-size`: 1rem (16px)
+- `--text-h6-line-height`: 1.5
+- `--text-h6-weight`: 500
+- `--text-h6-letter-spacing`: 0
+
+**Body Text Scales**
+- `--text-body-size`: 1rem
+- `--text-body-line-height`: 1.6
+- `--text-body-weight`: 400
+- `--text-body-letter-spacing`: 0.01em
+
+- `--text-caption-size`: 0.875rem
+- `--text-caption-line-height`: 1.5
+- `--text-caption-weight`: 400
+- `--text-caption-letter-spacing`: 0.015em
+
+**Tailwind-Compatible Text Sizes**
+- `--text-xs` through `--text-9xl` with corresponding line heights
+- Example: `--text-2xl`: 1.5rem, `--text-2xl--line-height`: 2rem
 
 #### Layout
 
-**Border Radii**
-- `--radius-none` through `--radius-2xl`, `--radius-pill`
+**Border Radii (Precision Geometry)**
+- `--radius-none`: 0px
+- `--radius-sm`: 3px - Subtle taper
+- `--radius-md`: 6px - Controlled precision
+- `--radius-lg`: 8px - Engineered corners
+- `--radius-xl`: 10px - Maximum rounding
+- `--radius-2xl`: 14px - Large surfaces
+- `--radius-pill`: 999px - Full round (use sparingly)
 
 **Spacing**
+- `--spacing`: 0.25rem - Base spacing unit
 - `--spacing-4.5`: 1.125rem
 - `--spacing-18`: 4.5rem
 
+**Z-Index Scale**
+- `--z-0` through `--z-50` (increments of 10)
+
 #### Effects
 
-**Shadows**
-- `--shadow-accent-glow`: Accent glow effect
-- `--shadow-deep`: Deep shadow
-- `--shadow-text-glow`: Text glow effect
+**Shadows (Glow & Depth)**
+- `--shadow-accent-glow`: Layered purple glow effect (20px/40px/60px)
+- `--shadow-deep`: 0 10px 40px rgba(0, 0, 0, 0.5)
+- `--shadow-text-glow`: Text-specific accent glow (20px/40px)
 
 **Glass Effect**
-- `--glass-panel-background`: Glass panel background
+- `--glass-panel-background`: rgba(17, 17, 17, 0.7) - Semi-transparent panel
 
 #### Motion
 
 **Easing Curves**
-- `--ease-luxe`: Primary luxury easing
-- `--ease-sharp`: Sharp transitions
+- `--ease-luxe`: cubic-bezier(0.23, 1, 0.32, 1) - Smooth luxury motion
+- `--ease-sharp`: cubic-bezier(0.4, 0.1, 0.2, 1) - Snappy transitions
+
+**Duration Scale**
+- `--duration-75` through `--duration-1000` (75ms, 100ms, 150ms, 200ms, 300ms, 500ms, 700ms, 1000ms)
+
+**Opacity Scale**
+- `--opacity-0` through `--opacity-100` in increments of 5-10
 
 ### Custom Utility Classes
 
-The library provides custom utility classes you can use:
+The library provides custom utility classes you can use directly in your markup:
 
-- `.text-glow` - Apply accent glow to text
-- `.glass-panel` - Glass morphism effect with backdrop blur
-- `.accent-glow` - Accent color glow effect
-- `.hover-lift` - Lift and glow on hover
+**Visual Effects:**
+- `.text-glow` - Apply accent glow to text with shadow effect
+- `.accent-glow` - Accent color glow box-shadow effect
+- `.glass-panel` - Glass morphism with backdrop blur (14px), semi-transparent background, border, and deep shadow
+- `.hover-lift` - Lift element 2px on hover with combined glow and shadow
+
+**Surface Treatments:**
+- `.metal-edge` - Specular metallic highlights on top and left borders
+- `.obsidian-surface` - Flat black surface with subtle diagonal gradient reflection
 
 Example usage:
 
 ```svelte
-<div class="glass-panel accent-glow">
+<div class="glass-panel accent-glow hover-lift">
   <h2 class="text-glow">Glowing Title</h2>
+  <div class="obsidian-surface metal-edge">
+    <p>Premium surface treatment</p>
+  </div>
 </div>
+```
+
+### Animation System
+
+The theme includes pre-defined keyframe animations ready to use with Tailwind's `animate-*` utilities or custom CSS:
+
+**Opacity Animations:**
+- `fade-in` - Fade from 0 to full opacity
+- `fade-out` - Fade from full to 0 opacity
+
+**Combined Animations:**
+- `fade-up` - Fade in while moving up 20px
+
+**Glow Effects:**
+- `glow-pulse` - Pulsing accent glow (40%-60% intensity cycle)
+
+**Directional Slides:**
+- `slide-in-left` - Slide in from left with fade
+- `slide-in-right` - Slide in from right with fade
+- `slide-in-top` - Slide in from top with fade
+- `slide-in-bottom` - Slide in from bottom with fade
+
+Example usage:
+
+```css
+.my-element {
+  animation: fade-up 0.3s var(--ease-luxe);
+}
+
+.my-modal {
+  animation: fade-in 0.2s var(--ease-sharp);
+}
+
+.my-button:hover {
+  animation: glow-pulse 2s infinite;
+}
 ```
 
 ### Theme Persistence
 
 The brand structure (depth system, spacing, motion curves) persists even when colors change, maintaining the luxury aesthetic regardless of your chosen palette.
+
+## 🏗️ Layout Best Practices
+
+### Navbar + Sidebar Layout
+
+When using both Navbar and Sidebar together, they automatically coordinate their positioning. The Sidebar detects the Navbar's presence and adjusts its top position to start just below it. Here's the recommended structure:
+
+```svelte
+<script>
+  import { page } from '$app/stores';
+  import { Navbar, Sidebar } from '@mrintel/villain-ui';
+  
+  let sidebarOpen = $state(true);
+  $: currentPath = $page.url.pathname;
+</script>
+
+<!-- Navbar sits on top with z-50 and gets data-navbar attribute automatically -->
+<Navbar position="sticky" height="md" currentPath={currentPath}>
+  {#snippet logo()}
+    <YourLogo />
+  {/snippet}
+  
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/contact">Contact</a>
+</Navbar>
+
+<!-- Sidebar automatically detects Navbar and positions below it (z-40) -->
+<Sidebar bind:open={sidebarOpen} side="left" width="md" currentPath={currentPath}>
+  <nav>
+    <a href="/dashboard">
+      <DashboardIcon class="w-5 h-5" />
+      <span>Dashboard</span>
+    </a>
+    <a href="/analytics">
+      <ChartIcon class="w-5 h-5" />
+      <span>Analytics</span>
+    </a>
+    <a href="/settings">
+      <SettingsIcon class="w-5 h-5" />
+      <span>Settings</span>
+    </a>
+  </nav>
+</Sidebar>
+
+<!-- Main content with appropriate margin/padding -->
+<main class="ml-64 p-6">
+  <!-- Adjust ml-64 based on sidebar width (sm: 56, md: 64, lg: 80) -->
+  <!-- No margin-top needed - Sidebar handles its own positioning! -->
+  <slot />
+</main>
+```
+
+**Tips:**
+- **Automatic positioning**: Sidebar detects Navbar via `data-navbar` attribute and adjusts its `top` position automatically. No manual `margin-top` needed on Sidebar.
+- **Z-index layering**: Navbar (z-50) appears above Sidebar (z-40), which appears above regular content
+- **Responsive behavior**: Sidebar's position updates automatically when Navbar height changes (window resize, responsive breakpoints)
+- **Main content spacing**: Add `margin-left` to your main content based on sidebar width:
+  - `width="sm"` (224px/56 Tailwind units): Use `ml-56`
+  - `width="md"` (256px/64 Tailwind units): Use `ml-64` (default)
+  - `width="lg"` (320px/80 Tailwind units): Use `ml-80`
+  - Collapsed sidebar: Reduce margin to `ml-14`, `ml-16`, or `ml-20` respectively
+- **Mobile responsive**: Use Tailwind responsive classes: `md:ml-64` to adjust layout on mobile
+- **Collapsed sidebar**: Consider making sidebar collapsed by default on mobile: `let sidebarOpen = $state(window.innerWidth >= 768)`
+- **Without Navbar**: When Navbar is not present, Sidebar automatically starts from the top (top: 0)
+- **Active state**: Use the `currentPath` prop on both components for automatic active state management (see Active State Management section)
+
+#### Layout Variations
+
+**Navbar Only (No Sidebar):**
+```svelte
+<Navbar position="sticky" currentPath={currentPath}>
+  <!-- Navigation links -->
+</Navbar>
+
+<main class="p-6">
+  <!-- No margin-left needed -->
+  <slot />
+</main>
+```
+
+**Sidebar Only (No Navbar):**
+```svelte
+<Sidebar open={true} currentPath={currentPath}>
+  <!-- Navigation links -->
+</Sidebar>
+
+<main class="ml-64 p-6">
+  <!-- Sidebar starts from top automatically -->
+  <slot />
+</main>
+```
+
+**Both with Collapsible Sidebar:**
+```svelte
+<script>
+  let sidebarOpen = $state(true);
+  $: mainMargin = sidebarOpen ? 'ml-64' : 'ml-16'; // Adjust for collapsed width
+</script>
+
+<Navbar position="sticky" currentPath={currentPath}>
+  <button onclick={() => sidebarOpen = !sidebarOpen}>
+    <MenuIcon />
+  </button>
+  <!-- Other nav items -->
+</Navbar>
+
+<Sidebar bind:open={sidebarOpen} currentPath={currentPath}>
+  <!-- Navigation links -->
+</Sidebar>
+
+<main class="{mainMargin} p-6 transition-all duration-300">
+  <slot />
+</main>
+```
+
+### Active State Management with currentPath Prop
+
+Navbar and Sidebar components now support automatic active state management via the optional `currentPath` prop. When provided, the components automatically add the `active` class to child `<a>` and `<button>` elements whose `href` attribute matches the current path. This eliminates the need for manual class management while preserving support for manual `.active` class usage.
+
+#### How It Works
+
+- When `currentPath` is provided, components use a `$effect` to query child links and buttons
+- Elements with `href` matching `currentPath` automatically receive the `active` class
+- The effect tracks which elements it manages to avoid removing manually-added `active` classes
+- Works with both `href` attributes and `data-href` attributes (for buttons)
+- Reactive: updates automatically when `currentPath` changes
+- SSR-safe: only runs client-side
+
+#### With SvelteKit
+
+```svelte
+<script>
+  import { page } from '$app/stores';
+  import { Navbar, Sidebar } from '@mrintel/villain-ui';
+  
+  // Automatically reactive - updates when route changes
+  $: currentPath = $page.url.pathname;
+</script>
+
+<!-- Navbar with automatic active state -->
+<Navbar currentPath={currentPath}>
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/contact">Contact</a>
+</Navbar>
+
+<!-- Sidebar with automatic active state -->
+<Sidebar currentPath={currentPath}>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/settings">Settings</a>
+  <a href="/profile">Profile</a>
+</Sidebar>
+
+<!-- No need to manually add class={currentPath === '/dashboard' ? 'active' : ''} -->
+```
+
+#### With SvelteKit (Advanced Matching)
+
+```svelte
+<script>
+  import { page } from '$app/stores';
+  import { Sidebar } from '@mrintel/villain-ui';
+  
+  // For nested routes, you might want to match path prefixes
+  $: currentPath = $page.url.pathname;
+  
+  // Helper to check if a path is active (including sub-routes)
+  function isActive(path: string) {
+    return currentPath === path || currentPath.startsWith(path + '/');
+  }
+</script>
+
+<Sidebar currentPath={currentPath}>
+  <a href="/dashboard">Dashboard</a>
+  <!-- For nested routes, use manual class for prefix matching -->
+  <a href="/settings" class={isActive('/settings') ? 'active' : ''}>
+    Settings
+  </a>
+</Sidebar>
+```
+
+#### With Manual State
+
+```svelte
+<script>
+  import { Navbar } from '@mrintel/villain-ui';
+  
+  let currentPath = $state('/home');
+  
+  function navigate(path: string) {
+    currentPath = path;
+    // Your custom navigation logic
+  }
+</script>
+
+<Navbar currentPath={currentPath}>
+  <a href="/home" onclick={(e) => { e.preventDefault(); navigate('/home'); }}>Home</a>
+  <a href="/about" onclick={(e) => { e.preventDefault(); navigate('/about'); }}>About</a>
+  <a href="/contact" onclick={(e) => { e.preventDefault(); navigate('/contact'); }}>Contact</a>
+</Navbar>
+```
+
+#### Hybrid Approach (Manual + Automatic)
+
+```svelte
+<script>
+  import { page } from '$app/stores';
+  import { Sidebar } from '@mrintel/villain-ui';
+  
+  $: currentPath = $page.url.pathname;
+</script>
+
+<Sidebar currentPath={currentPath}>
+  <!-- These use automatic active state via currentPath -->
+  <a href="/dashboard">Dashboard</a>
+  <a href="/analytics">Analytics</a>
+  
+  <!-- This uses manual active class (takes precedence) -->
+  <a href="/special" class="active">Special Page (Always Active)</a>
+  
+  <!-- Buttons work too with data-href -->
+  <button data-href="/action" onclick={handleAction}>Action</button>
+</Sidebar>
+```
+
+#### Best Practices
+
+- Use `currentPath` prop for simple exact-match scenarios (most common)
+- For nested routes or prefix matching, combine `currentPath` with manual classes
+- Manual `.active` classes always take precedence over automatic management
+- The `currentPath` prop is optional - components work perfectly without it
+- For buttons, use `data-href` attribute to enable automatic active state
+- Consider using `$page.url.pathname` in SvelteKit for automatic reactivity
 
 ## 🛠️ Development
 

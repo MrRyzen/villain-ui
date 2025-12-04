@@ -2,10 +2,11 @@
 	interface Props {
 		variant?: 'default' | 'success' | 'warning' | 'error' | 'accent';
 		size?: 'sm' | 'md';
+		icon?: import('svelte').Snippet;
 		children?: import('svelte').Snippet;
 	}
 
-	let { variant = 'default', size = 'md', children }: Props = $props();
+	let { variant = 'default', size = 'md', icon, children }: Props = $props();
 
 	const variantClasses = {
 		default: 'bg-[var(--color-base-3)] text-[var(--color-text-soft)] border-[var(--color-base-3)]',
@@ -28,5 +29,10 @@
 </script>
 
 <span class={classes}>
+	{#if icon}
+		<span class="inline-flex items-center justify-center">
+			{@render icon()}
+		</span>
+	{/if}
 	{@render children?.()}
 </span>

@@ -8,6 +8,7 @@
     onclose?: () => void;
     /** Index in toast stack for vertical offset. Pass the toast's position in a list to enable stacking. */
     index?: number;
+    icon?: import('svelte').Snippet;
   }
 
   let {
@@ -17,7 +18,8 @@
     position = 'bottom-right',
     dismissible = true,
     onclose,
-    index = 0
+    index = 0,
+    icon
   }: Props = $props();
 
   let visible = $state(true);
@@ -114,9 +116,13 @@
       aria-atomic="true"
     >
       <div class="flex-shrink-0 {variantIconClasses[variant]}">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={variantIcons[variant]} />
-        </svg>
+        {#if icon}
+          {@render icon()}
+        {:else}
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={variantIcons[variant]} />
+          </svg>
+        {/if}
       </div>
 
       <div class="flex-1 text-sm text-[var(--color-text)]">

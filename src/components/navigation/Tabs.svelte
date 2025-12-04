@@ -3,6 +3,7 @@
   interface Tab {
     id: string;
     label: string;
+    icon?: import('svelte').Snippet;
     disabled?: boolean;
   }
 
@@ -46,8 +47,13 @@
       aria-disabled={tab.disabled}
       onclick={() => handleTabClick(tab.id, tab.disabled)}
       disabled={tab.disabled}
-      class="px-6 py-3 {radiusClass} font-body text-sm transition-all duration-300 ease-luxe {activeTab === tab.id ? 'bg-accent text-text accent-glow' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
+      class="flex items-center gap-2 px-6 py-3 {radiusClass} font-body text-sm transition-all duration-300 ease-luxe {activeTab === tab.id ? 'bg-accent text-text accent-glow' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
     >
+      {#if tab.icon}
+        <span class="inline-flex items-center justify-center">
+          {@render tab.icon()}
+        </span>
+      {/if}
       {tab.label}
     </button>
   {/each}

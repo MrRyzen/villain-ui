@@ -5,6 +5,7 @@
     variant?: 'info' | 'success' | 'warning' | 'error';
     title?: string;
     dismissible?: boolean;
+    icon?: Snippet;
     onclose?: () => void;
     children?: Snippet;
   }
@@ -13,6 +14,7 @@
     variant = 'info',
     title,
     dismissible = false,
+    icon,
     onclose,
     children
   }: Props = $props();
@@ -67,9 +69,13 @@
     aria-live={ariaLiveMap[variant]}
   >
     <div class="shrink-0 {variantTextClasses[variant]}">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={variantIcons[variant]} />
-      </svg>
+      {#if icon}
+        {@render icon()}
+      {:else}
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={variantIcons[variant]} />
+        </svg>
+      {/if}
     </div>
 
     <div class="flex-1 min-w-0">

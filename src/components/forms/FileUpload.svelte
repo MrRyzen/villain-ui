@@ -15,6 +15,7 @@
     label?: string;
     id?: string;
     onchange?: (event: { target: { files: FileList } }) => void;
+    icon?: import('svelte').Snippet;
   }
 
   let {
@@ -24,7 +25,8 @@
     disabled = false,
     label,
     id = createId('file-upload'),
-    onchange
+    onchange,
+    icon
   }: Props = $props();
 
   let isDragging = $state(false);
@@ -102,22 +104,28 @@
     class="glass-panel rounded-[var(--radius-lg)] p-8 text-center cursor-pointer transition-all duration-300 ease-luxe {isDragging ? 'border-2 border-accent accent-glow bg-base-2' : ''} {disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"
   >
     <div class="flex flex-col items-center gap-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="text-text-soft"
-      >
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <polyline points="17 8 12 3 7 8" />
-        <line x1="12" y1="3" x2="12" y2="15" />
-      </svg>
+      {#if icon}
+        <span class="inline-flex items-center justify-center text-text-soft">
+          {@render icon()}
+        </span>
+      {:else}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="text-text-soft"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+      {/if}
       
       <div>
         <p class="text-text text-sm font-medium">

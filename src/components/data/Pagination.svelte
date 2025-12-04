@@ -4,9 +4,15 @@
 		totalPages: number;
 		maxVisible?: number;
 		onpagechange?: (page: number) => void;
+		prevIcon?: import('svelte').Snippet;
+		nextIcon?: import('svelte').Snippet;
+		showLabels?: boolean;
 	}
 
-	let { currentPage = $bindable(1), totalPages, maxVisible = 7, onpagechange }: Props = $props();
+	let { currentPage = $bindable(1), totalPages, maxVisible = 7, onpagechange, prevIcon, nextIcon, showLabels }: Props = $props();
+
+	const displayPrevLabel = $derived(showLabels !== false);
+	const displayNextLabel = $derived(showLabels !== false);
 
 	const visiblePages = $derived((() => {
 		const pages: (number | 'ellipsis')[] = [];
@@ -63,12 +69,17 @@
 <nav role="navigation" aria-label="Pagination" class="flex items-center gap-2">
 	<!-- Previous Button -->
 	<button
-		class="px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-body)] hover:bg-[rgba(127,61,255,0.1)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
+		class="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-body)] hover:bg-[rgba(127,61,255,0.1)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
 		onclick={() => goToPage(currentPage - 1)}
 		disabled={currentPage === 1}
 		aria-disabled={currentPage === 1}
 	>
-		Previous
+		{#if prevIcon}
+			<span class="inline-flex items-center justify-center">
+				{@render prevIcon()}
+			</span>
+		{/if}
+		{#if displayPrevLabel}Previous{/if}
 	</button>
 
 	<!-- Page Numbers -->
@@ -90,12 +101,17 @@
 
 	<!-- Next Button -->
 	<button
-		class="px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-body)] hover:bg-[rgba(127,61,255,0.1)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
+		class="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-body)] hover:bg-[rgba(127,61,255,0.1)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
 		onclick={() => goToPage(currentPage + 1)}
 		disabled={currentPage === totalPages}
 		aria-disabled={currentPage === totalPages}
 	>
-		Next
+		{#if displayNextLabel}Next{/if}
+		{#if nextIcon}
+			<span class="inline-flex items-center justify-center">
+				{@render nextIcon()}
+			</span>
+		{/if}
 	</button>
 </nav>
 

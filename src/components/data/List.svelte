@@ -4,6 +4,7 @@
 	interface ListItem {
 		id: string;
 		content: string | Snippet;
+		icon?: Snippet;
 	}
 
 	interface Props {
@@ -29,7 +30,12 @@
 		<ul class={listClasses}>
 			{#if items}
 				{#each items as item (item.id)}
-					<li>
+					<li class="flex items-center gap-2">
+						{#if item.icon}
+							<span class="inline-flex items-center justify-center">
+								{@render item.icon()}
+							</span>
+						{/if}
 						{#if typeof item.content === 'string'}
 							{item.content}
 						{:else}
@@ -46,7 +52,12 @@
 	<ul class={listClasses}>
 		{#if items}
 			{#each items as item (item.id)}
-				<li>
+				<li class="flex items-center gap-2">
+					{#if item.icon}
+						<span class="inline-flex items-center justify-center">
+							{@render item.icon()}
+						</span>
+					{/if}
 					{#if typeof item.content === 'string'}
 						{item.content}
 					{:else}
