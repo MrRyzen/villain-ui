@@ -220,13 +220,36 @@ The library uses three consistent icon patterns:
 
 **Example - Zero Configuration:**
 ```svelte
+<script>
+  let sidebarOpen = $state(true);
+</script>
+
 <!-- Navbar automatically gets data-navbar attribute -->
 <Navbar position="sticky" height="md">
-  <!-- Navbar content -->
+  {#snippet toggleButton()}
+    <IconButton variant="ghost" onclick={() => sidebarOpen = !sidebarOpen}>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </IconButton>
+  {/snippet}
+  
+  {#snippet logo()}
+    <span>MyApp</span>
+  {/snippet}
+  
+  {#snippet navigation()}
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+  {/snippet}
+  
+  {#snippet actions()}
+    <Button variant="primary">Sign In</Button>
+  {/snippet}
 </Navbar>
 
 <!-- Sidebar automatically detects Navbar and positions below it -->
-<Sidebar open={true} side="left" width="md">
+<Sidebar bind:open={sidebarOpen} side="left" width="md">
   <!-- Sidebar content -->
 </Sidebar>
 
@@ -662,7 +685,73 @@ The library uses three consistent icon patterns:
     <Button variant="primary">Action</Button>
   {/snippet}
 </Card>
+
+<!-- Card as a link with lift effect and icon -->
+<Card href="/features" liftOnHover padding="lg">
+  {#snippet icon()}
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+  {/snippet}
+  
+  <h3>Feature Name</h3>
+  <p>Clickable card with enhanced hover lift effect.</p>
+</Card>
 ```
+
+**Props:**
+- `href?: string` - Makes the card a clickable link (renders as `<a>` tag)
+- `target?: string` - Link target attribute (e.g., '_blank')
+- `rel?: string` - Link rel attribute (defaults to 'noopener noreferrer' for target='_blank')
+- `liftOnHover?: boolean` - Apply enhanced lift effect on hover using `.hover-lift-enhanced` utility
+- `hoverable?: boolean` - Basic hover effect (deprecated, use `liftOnHover` instead)
+- `padding?: 'none' | 'sm' | 'md' | 'lg'` - Internal padding (default: 'md')
+- `icon?: Snippet` - Optional icon displayed with `.card-icon` utility
+- `header?: Snippet` - Optional header content
+- `footer?: Snippet` - Optional footer content
+- `children?: Snippet` - Main card content
+- `class?: string` - Additional CSS classes
+
+**Note:** When using `liftOnHover`, the card applies the `.hover-lift-enhanced` utility for a dramatic lift with accent border and glow. The `icon` snippet uses the `.card-icon` utility class for centered, accent-colored icon display.
+
+**LinkCard** - Convenience wrapper for clickable cards
+
+```svelte
+<script>
+  import { LinkCard } from '@mrintel/villain-ui';
+</script>
+
+<!-- Minimal boilerplate for a fully clickable, lifting card -->
+<LinkCard href="/features">
+  {#snippet icon()}
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+  {/snippet}
+  
+  <h3>Quick Feature Card</h3>
+  <p>LinkCard automatically enables liftOnHover and sets padding='md'.</p>
+</LinkCard>
+
+<!-- With custom padding -->
+<LinkCard href="/docs" padding="lg">
+  <h3>Documentation</h3>
+  <p>All the Card props work here too.</p>
+</LinkCard>
+```
+
+**Props:**
+- `href: string` - Link destination (required)
+- `target?: string` - Link target attribute
+- `rel?: string` - Link rel attribute (auto-defaults for security)
+- `padding?: 'none' | 'sm' | 'md' | 'lg'` - Internal padding (default: 'md')
+- `icon?: Snippet` - Optional icon using `.card-icon` utility
+- `header?: Snippet` - Optional header content
+- `footer?: Snippet` - Optional footer content
+- `children?: Snippet` - Main card content
+- `class?: string` - Additional CSS classes
+
+**Note:** `LinkCard` is a convenience wrapper around `Card` that automatically sets `liftOnHover={true}` and provides sensible defaults for clickable cards. Use it when you want a fully clickable card with the `.hover-lift-enhanced` effect without manually configuring those props. All other Card props are supported.
 
 **Panel** - Simple content panel
 
@@ -671,10 +760,28 @@ The library uses three consistent icon patterns:
   import { Panel } from '@mrintel/villain-ui';
 </script>
 
+<!-- Recommended: Use variant prop for styling -->
+<Panel variant="glass" padding="lg">
+  <p>Enhanced glass morphism panel</p>
+</Panel>
+
+<!-- Default panel with basic glass styling -->
 <Panel>
   <p>Panel content with default styling</p>
 </Panel>
+
+<!-- Legacy: glass prop (deprecated, use variant='glass' instead) -->
+<Panel glass={false}>
+  <p>Solid background panel (backwards compatible)</p>
+</Panel>
 ```
+
+**Panel Props:**
+- `variant?: 'default' | 'glass'` - Primary styling selector. Use `'glass'` for enhanced glass morphism with accent glow.
+- `padding?: 'none' | 'sm' | 'md' | 'lg'` - Internal padding (default: `'md'`)
+- `rounded?: boolean` - Apply rounded corners (default: `true`)
+- `glass?: boolean` - **Deprecated**. Use `variant='glass'` instead. Only affects `variant='default'` for backwards compatibility.
+- `class?: string` - Additional CSS classes
 
 **Grid** - Responsive grid layout
 
@@ -729,20 +836,30 @@ The library uses three consistent icon patterns:
 
 ```svelte
 <script>
-  import { Navbar } from '@mrintel/villain-ui';
+  import { Navbar, Button, IconButton } from '@mrintel/villain-ui';
+  import { page } from '$app/stores';
   
-  let currentPath = $state('/');
+  let sidebarOpen = $state(false);
+  let currentPath = $derived($page.url.pathname);
 </script>
 
-<Navbar>
-  {#snippet logo()}
-    <Logo />
+<Navbar {currentPath}>
+  {#snippet toggleButton()}
+    <IconButton variant="ghost" size="sm" onclick={() => sidebarOpen = !sidebarOpen}>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </IconButton>
   {/snippet}
   
-  {#snippet links()}
-    <a href="/" class={currentPath === '/' ? 'active' : ''}>Home</a>
-    <a href="/about" class={currentPath === '/about' ? 'active' : ''}>About</a>
-    <a href="/contact" class={currentPath === '/contact' ? 'active' : ''}>Contact</a>
+  {#snippet logo()}
+    <span style="color: var(--color-accent)">MyApp</span>
+  {/snippet}
+  
+  {#snippet navigation()}
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
   {/snippet}
   
   {#snippet actions()}
@@ -751,50 +868,103 @@ The library uses three consistent icon patterns:
 </Navbar>
 ```
 
-**Note:** Add the `active` class to links or buttons to indicate the current page. The Navbar automatically styles active items with accent color and an underline indicator.
+**Props:**
+- `position?: 'sticky' | 'fixed'` - Navbar positioning (default: 'sticky')
+- `height?: 'sm' | 'md' | 'lg'` - Navbar height (default: 'md')
+- `navigationAlign?: 'left' | 'center'` - Navigation alignment (default: 'center')
+- `toggleButton?: Snippet` - Toggle button slot (typically for sidebar/mobile menu)
+- `logo?: Snippet` - Logo content snippet
+- `navigation?: Snippet` - Primary navigation links slot
+- `actions?: Snippet` - Action buttons or profile controls slot
+- `children?: Snippet` - Fallback navigation content (used if `navigation` not provided)
+- `currentPath?: string` - Current route path for automatic active state highlighting
+
+**Note:** The `currentPath` prop enables automatic active state management. Links matching the current path will receive the `active` class automatically.
 
 **Sidebar** - Side navigation with collapsible state
 
 ```svelte
 <script>
   import { Sidebar } from '@mrintel/villain-ui';
+  import { page } from '$app/stores';
   
-  let collapsed = $state(false);
-  let currentPath = $state('/dashboard');
+  let open = $state(true);
+  let currentPath = $derived($page.url.pathname);
 </script>
 
-<Sidebar bind:collapsed>
-  <nav>
-    <a href="/dashboard" class={currentPath === '/dashboard' ? 'active' : ''}>
+<Sidebar bind:open {currentPath}>
+  {#snippet header()}
+    <div>App Name</div>
+  {/snippet}
+  
+  <!-- Recommended markup pattern for predictable collapsed behavior -->
+  <a href="/dashboard">
+    <span class="sidebar-item-icon">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
       </svg>
-      {#if !collapsed}
-        <span>Dashboard</span>
-      {/if}
-    </a>
-    <a href="/settings" class={currentPath === '/settings' ? 'active' : ''}>
+    </span>
+    <span class="sidebar-item-label">Dashboard</span>
+  </a>
+  
+  <a href="/settings">
+    <span class="sidebar-item-icon">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
-      {#if !collapsed}
-        <span>Settings</span>
-      {/if}
-    </a>
-    <a href="/profile" class={currentPath === '/profile' ? 'active' : ''}>
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
-      {#if !collapsed}
-        <span>Profile</span>
-      {/if}
-    </a>
-  </nav>
+    </span>
+    <span class="sidebar-item-label">Settings</span>
+  </a>
+  
+  <!-- Items without icons will show first letter in collapsed mode -->
+  <a href="/profile">
+    <span class="sidebar-item-label">Profile</span>
+  </a>
 </Sidebar>
 ```
 
-**Note:** Add the `active` class to links or buttons to indicate the current page. The Sidebar automatically styles active items with accent background, border, and glow effect. Icons and text are automatically styled by the component.
+**Props:**
+- `open?: boolean` (bindable) - Sidebar open/collapsed state (default: true)
+- `side?: 'left' | 'right'` - Sidebar position (default: 'left')
+- `width?: 'sm' | 'md' | 'lg'` - Sidebar width when open (default: 'md')
+- `header?: Snippet` - Header content snippet
+- `children?: Snippet` - Sidebar navigation content
+- `currentPath?: string` - Current route path for automatic active state highlighting
+
+**Collapsed Mode Behavior:**
+- Items with `.sidebar-item-icon` will show the icon centered when collapsed
+- Items without icons will show the first letter of `.sidebar-item-label` (or text content) in a circular badge
+- Use `.sidebar-item-icon` and `.sidebar-item-label` classes for predictable behavior
+- `currentPath?: string` - Current route path for automatic active state highlighting
+
+**Collapsed State Behavior:** 
+
+When `open={false}`, the sidebar automatically adapts its display:
+- **Items with icons**: Shows centered icons (enlarged to `1.5rem`) with text hidden
+- **Items without icons**: Shows first letter in an accent-colored circle as a fallback
+- **Header**: Remains visible with reduced padding and centered text
+
+The component automatically detects icons by looking for `<svg>`, `[class*="icon"]`, or `[data-icon]` elements. All transitions use smooth animations with `var(--ease-luxe)`.
+
+**Active State Management**
+
+Navigation components (`Navbar`, `Sidebar`) support automatic active state highlighting via the `currentPath` prop. Pass the current route path, and the component will automatically add the `active` class to matching links and buttons based on `href` or `data-href` attributes. This eliminates manual active class management.
+
+Example:
+```svelte
+<script>
+  import { page } from '$app/stores'; // SvelteKit
+  let currentPath = $derived($page.url.pathname);
+</script>
+
+<Navbar {currentPath}>
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+</Navbar>
+```
+
+The component matches exact paths and nested routes (e.g., `/buttons` matches `/buttons/icon-button`).
 
 **Tabs** - Tabbed interface
 
@@ -807,9 +977,7 @@ The library uses three consistent icon patterns:
     { 
       id: 'tab1', 
       label: 'Overview',
-      icon: () => {
-        // Return snippet rendering SVG
-      }
+      icon: OverviewIcon // Snippet reference
     },
     { id: 'tab2', label: 'Analytics' },
     { id: 'tab3', label: 'Reports' }
@@ -854,16 +1022,16 @@ The library uses three consistent icon patterns:
     { 
       label: 'Home', 
       href: '/',
-      icon: () => `{@render HomeIcon()}` // Snippet for home icon
+      icon: HomeIcon // Snippet reference
     },
     { 
       label: 'Projects', 
       href: '/projects',
-      icon: () => `{@render FolderIcon()}` // Snippet for folder icon
+      icon: FolderIcon // Snippet reference
     },
     { 
       label: 'Document',
-      icon: () => `{@render DocumentIcon()}` // Current page, no href
+      icon: DocumentIcon // Snippet reference
     }
   ];
 </script>
@@ -878,45 +1046,89 @@ The library uses three consistent icon patterns:
   import { Menu } from '@mrintel/villain-ui';
   
   const items = [
-    { label: 'Dashboard', icon: DashboardIcon, href: '/dashboard' },
-    { label: 'Settings', icon: SettingsIcon, href: '/settings' }
+    { 
+      id: 'dashboard',
+      label: 'Dashboard', 
+      icon: DashboardIcon, // Snippet reference
+      onclick: () => goto('/dashboard')
+    },
+    { 
+      id: 'settings',
+      label: 'Settings', 
+      icon: SettingsIcon, // Snippet reference
+      onclick: () => goto('/settings')
+    }
   ];
 </script>
 
 <Menu {items} />
 ```
 
+**Props:**
+- `items?: MenuItem[]` - Array of menu items
+- `children?: Snippet` - Alternative to items array for custom content
+
+**MenuItem Interface:**
+- `id: string` - Unique identifier
+- `label: string` - Display text
+- `icon?: Snippet` - Optional icon snippet
+- `disabled?: boolean` - Disable item
+- `onclick?: () => void` - Click handler
+
 **DropdownMenu** - Dropdown menu with items
 
 ```svelte
 <script>
-  import { DropdownMenu } from '@mrintel/villain-ui';
+  import { DropdownMenu, Menu, Button } from '@mrintel/villain-ui';
   
-  const items = [
-    { label: 'Edit', onclick: () => console.log('Edit') },
-    { label: 'Delete', onclick: () => console.log('Delete') }
+  const menuItems = [
+    { id: 'edit', label: 'Edit', onclick: () => console.log('Edit') },
+    { id: 'delete', label: 'Delete', onclick: () => console.log('Delete') }
   ];
 </script>
 
-<DropdownMenu {items} trigger="Options" />
+<DropdownMenu>
+  {#snippet trigger()}
+    <Button>Options</Button>
+  {/snippet}
+  
+  <Menu items={menuItems} />
+</DropdownMenu>
 ```
+
+**Props:**
+- `open?: boolean` (bindable) - Dropdown open state
+- `placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'` - Menu position
+- `trigger?: Snippet` - Trigger button content
+- `children?: Snippet` - Dropdown menu content
 
 **ContextMenu** - Right-click context menu
 
 ```svelte
 <script>
-  import { ContextMenu } from '@mrintel/villain-ui';
+  import { ContextMenu, Menu } from '@mrintel/villain-ui';
   
-  const items = [
-    { label: 'Copy', onclick: () => console.log('Copy') },
-    { label: 'Paste', onclick: () => console.log('Paste') }
+  const menuItems = [
+    { id: 'copy', label: 'Copy', onclick: () => console.log('Copy') },
+    { id: 'paste', label: 'Paste', onclick: () => console.log('Paste') }
   ];
 </script>
 
-<ContextMenu {items}>
-  <div>Right click me</div>
+<ContextMenu>
+  {#snippet trigger()}
+    <div>Right click me</div>
+  {/snippet}
+  
+  <Menu items={menuItems} />
 </ContextMenu>
 ```
+
+**Props:**
+- `open?: boolean` (bindable) - Context menu open state
+- `x?: number` (bindable) - Menu X position
+- `y?: number` (bindable) - Menu Y position
+- `trigger?: Snippet` - Content that triggers context menu on right-click
+- `children?: Snippet` - Context menu content
 
 ### Overlays & Feedback
 
@@ -1193,7 +1405,19 @@ The library uses three consistent icon patterns:
 <Heading level={1}>Main Title</Heading>
 <Heading level={2}>Section Title</Heading>
 <Heading level={3}>Subsection</Heading>
+
+<!-- Gradient variant for hero and section titles -->
+<Heading level={1} variant="gradient">Hero Title with Gradient</Heading>
+<Heading level={2} variant="gradient" glow>Section with Gradient and Glow</Heading>
 ```
+
+**Props:**
+- `level: 1 | 2 | 3 | 4 | 5 | 6` - Semantic heading level (required)
+- `variant?: 'gradient'` - Apply gradient styling using the `.text-gradient` utility
+- `glow?: boolean` - Add text glow effect (works well with gradient variant)
+- `class?: string` - Additional CSS classes
+
+**Note:** The `gradient` variant applies the `.text-gradient` utility class, creating a purple-to-soft-purple gradient effect. Combine with `glow` for enhanced visual impact on hero sections.
 
 **Text** - Text with variants
 
@@ -1302,6 +1526,11 @@ The library uses three consistent icon patterns:
 <Badge variant="success">Active</Badge>
 <Badge variant="warning">Pending</Badge>
 <Badge variant="error">Error</Badge>
+<Badge variant="accent">Accent</Badge>
+
+<!-- Feature variant - styled like a feature pill -->
+<Badge variant="feature">New Feature</Badge>
+<Badge variant="feature">Beta</Badge>
 
 <!-- With icon -->
 <Badge variant="accent">
@@ -1313,6 +1542,13 @@ The library uses three consistent icon patterns:
   Verified
 </Badge>
 ```
+
+**Props:**
+- `variant?: 'default' | 'success' | 'warning' | 'error' | 'accent' | 'feature'` - Badge style (default: 'default')
+- `icon?: Snippet` - Optional icon content
+- `class?: string` - Additional CSS classes
+
+**Note:** The `feature` variant creates a pill-shaped badge with accent background and glow, similar to the `.feature-tag` utility class. Use it to highlight new features, beta badges, or promotional tags.
 
 **Tag** - Removable tag
 
@@ -1725,11 +1961,19 @@ The theme includes several keyframe animations ready to use:
 
 **Custom Utility Classes:**
 - `.text-glow` - Apply accent text glow effect
+- `.text-gradient` - Gradient text with purple-to-soft-purple gradient and transparent fill
 - `.glass-panel` - Glass morphism with backdrop blur and borders
 - `.accent-glow` - Accent color box-shadow glow
-- `.hover-lift` - Lift element on hover with glow
+- `.hover-lift` - Lift element on hover with glow and shadow
+- `.hover-lift-enhanced` - Enhanced lift on hover with accent border and glow (stronger effect)
+- `.card-icon` - Centered icon container with accent color and 4xl sizing
+- `.hero-section` - Centered hero section layout with padding (4rem top, 3rem bottom, 3rem margin-bottom). Used by the `Hero` component as its base layout.
+- `.feature-tags` - Horizontal flexbox container for feature tags with center alignment and wrapping. Used by the `Hero` component for its features slot.
+- `.feature-tag` - Pill-shaped feature badge with accent background, border glow, and hover effect
 - `.metal-edge` - Specular metallic border highlights
 - `.obsidian-surface` - Flat black surface with subtle gradient reflection
+- `.sidebar-collapsed-icon` - Centered icon display for collapsed sidebar states
+- `.sidebar-collapsed-letter` - Accent-colored circle with first letter for collapsed sidebar items without icons
 
 ### CSS Variable System
 

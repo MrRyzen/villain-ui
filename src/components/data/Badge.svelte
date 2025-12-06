@@ -1,6 +1,6 @@
 <script lang="ts">
 	interface Props {
-		variant?: 'default' | 'success' | 'warning' | 'error' | 'accent';
+		variant?: 'default' | 'success' | 'warning' | 'error' | 'accent' | 'feature';
 		size?: 'sm' | 'md';
 		icon?: import('svelte').Snippet;
 		children?: import('svelte').Snippet;
@@ -15,7 +15,8 @@
 		warning:
 			'bg-[rgba(255,200,97,0.15)] text-[var(--color-warning)] border-[var(--color-warning)]',
 		error: 'bg-[rgba(255,74,106,0.15)] text-[var(--color-error)] border-[var(--color-error)]',
-		accent: 'bg-[rgba(127,61,255,0.15)] text-[var(--color-accent-soft)] border-[var(--color-accent)] accent-glow'
+		accent: 'bg-[rgba(127,61,255,0.15)] text-[var(--color-accent-soft)] border-[var(--color-accent)] accent-glow',
+		feature: 'bg-[rgba(107,33,168,0.2)] text-[var(--color-accent-soft)] border-[var(--color-border-glow)] shadow-[0_0_12px_rgba(107,33,168,0.2)]'
 	};
 
 	const sizeClasses = {

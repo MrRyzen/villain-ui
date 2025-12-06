@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { variantClasses, sizeClasses } from './buttonClasses';
+  import { variantClasses, sizeClasses, disabledClasses } from './buttonClasses';
 
-  interface Props {
+  export interface Props {
     variant?: 'primary' | 'secondary' | 'ghost';
     size?: 'sm' | 'md' | 'lg';
     disabled?: boolean;
@@ -9,8 +9,6 @@
     href?: string;
     target?: '_blank' | '_self' | '_parent' | '_top';
     onclick?: (event: MouseEvent) => void;
-    icon?: import('svelte').Snippet;
-    iconPosition?: 'before' | 'after';
     iconBefore?: import('svelte').Snippet;
     iconAfter?: import('svelte').Snippet;
     children?: import('svelte').Snippet;
@@ -25,8 +23,6 @@
     href,
     target,
     onclick,
-    icon,
-    iconPosition = 'before',
     iconBefore,
     iconAfter,
     class: className = '',
@@ -34,12 +30,7 @@
     ...restProps
   }: Props = $props();
 
-  // If icon is provided without iconBefore/iconAfter, use iconPosition
-  const displayIconBefore = $derived(iconBefore || (icon && iconPosition === 'before' ? icon : undefined));
-  const displayIconAfter = $derived(iconAfter || (icon && iconPosition === 'after' ? icon : undefined));
-
   const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer no-underline';
-  const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
   const classes = $derived(`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? disabledClasses : ''} ${className}`);
 </script>
 
@@ -53,17 +44,17 @@
     tabindex={disabled ? -1 : undefined}
     {...restProps}
   >
-    {#if displayIconBefore}
+    {#if iconBefore}
       <span class="inline-flex items-center justify-center">
-        {@render displayIconBefore()}
+        {@render iconBefore()}
       </span>
     {/if}
     {#if children}
       {@render children()}
     {/if}
-    {#if displayIconAfter}
+    {#if iconAfter}
       <span class="inline-flex items-center justify-center">
-        {@render displayIconAfter()}
+        {@render iconAfter()}
       </span>
     {/if}
   </a>
@@ -75,17 +66,17 @@
     class={classes}
     {...restProps}
   >
-    {#if displayIconBefore}
+    {#if iconBefore}
       <span class="inline-flex items-center justify-center">
-        {@render displayIconBefore()}
+        {@render iconBefore()}
       </span>
     {/if}
     {#if children}
       {@render children()}
     {/if}
-    {#if displayIconAfter}
+    {#if iconAfter}
       <span class="inline-flex items-center justify-center">
-        {@render displayIconAfter()}
+        {@render iconAfter()}
       </span>
     {/if}
   </button>

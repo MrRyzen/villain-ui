@@ -4,7 +4,11 @@
   interface Props {
     position?: 'sticky' | 'fixed';
     height?: 'sm' | 'md' | 'lg';
+    navigationAlign?: 'left' | 'center';
+    toggleButton?: Snippet;
     logo?: Snippet;
+    navigation?: Snippet;
+    actions?: Snippet;
     children?: Snippet;
     currentPath?: string;
   }
@@ -12,7 +16,11 @@
   let {
     position = 'sticky',
     height = 'md',
+    navigationAlign = 'center',
+    toggleButton,
     logo,
+    navigation,
+    actions,
     children,
     currentPath
   }: Props = $props();
@@ -54,7 +62,11 @@
       const dataHref = element.getAttribute('data-href');
       const targetPath = href || dataHref;
 
-      if (targetPath === currentPath) {
+      // Match exact path or nested routes (e.g., /buttons matches /buttons/icon-button)
+      const isActive = targetPath === currentPath || 
+                      (targetPath && currentPath.startsWith(targetPath + '/'));
+
+      if (isActive) {
         // Only add to autoManagedElements if we're adding the class ourselves
         if (!element.classList.contains('active')) {
           element.classList.add('active');
@@ -69,17 +81,42 @@
 </script>
 
 <nav bind:this={rootElement} data-navbar class="{baseClasses} {positionClasses[position]} {heightClasses[height]}">
-  {#if logo}
-    <div class="flex-shrink-0">
+  <!-- Left Section: Toggle Button and Logo -->
+  <div class="flex items-center gap-3">
+    {#if toggleButton}
+      {@render toggleButton()}
+    {/if}
+    {#if logo}
       {@render logo()}
+    {/if}
+  </div>
+  
+  <!-- Center Section: Navigation Links -->
+  {#if navigation}
+    <div class="flex-1 flex items-center {navigationAlign === 'center' ? 'justify-center' : ''} gap-6 {logo ? 'ml-4' : ''}">
+      {@render navigation()}
+    </div>
+  {:else if children}
+    <div class="flex-1 flex items-center {navigationAlign === 'center' ? 'justify-center' : ''} gap-4 {logo ? 'ml-4' : ''}">
+      {@render children()}
     </div>
   {/if}
-  <div class="flex items-center gap-4 {logo ? 'flex-1' : ''}">
-    {@render children?.()}
-  </div>
+  
+  <!-- Right Section: Actions -->
+  {#if actions}
+    <div class="flex items-center gap-3">
+      {@render actions()}
+    </div>
+  {/if}
 </nav>
 
 <style>
+  nav :global(.navbar-logo) {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: var(--text-lg);
+  }
+
   nav :global(a.active),
   nav :global(button.active) {
     color: var(--color-accent);

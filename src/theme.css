@@ -387,10 +387,68 @@ code, pre {
 }
 
 .hover-lift:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow:
     var(--shadow-accent-glow),
     var(--shadow-deep);
+}
+
+.hover-lift-enhanced {
+  transition: all 0.3s var(--ease-sharp);
+}
+
+.hover-lift-enhanced:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent) !important;
+  box-shadow: var(--shadow-accent-glow);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-soft) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card-icon {
+  font-size: var(--text-4xl);
+  margin-bottom: 1rem;
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 4rem 0 3rem;
+  margin-bottom: 3rem;
+}
+
+.feature-tags {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.feature-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  border: 1px solid var(--color-border-glow);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--color-accent-soft);
+  transition: all 0.3s var(--ease-sharp);
+}
+
+.feature-tag:hover {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  box-shadow: var(--shadow-accent-glow);
 }
 
 /* Metal Edge Effect - Thin specular highlights */
@@ -407,4 +465,24 @@ code, pre {
     var(--color-base-1) 50%,
     var(--color-base-0) 100%
   );
+}
+
+/* Sidebar Utilities */
+.sidebar-collapsed-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--text-2xl);
+}
+
+.sidebar-collapsed-letter {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-pill);
+  background: rgba(107, 33, 168, 0.2);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
 }

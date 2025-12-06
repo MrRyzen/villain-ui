@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { variantClasses, sizeClasses } from './buttonClasses';
+  import { variantClasses, sizeClasses, disabledClasses } from './buttonClasses';
 
-  interface Props {
+  export interface Props {
     href: string;
     variant?: 'primary' | 'secondary' | 'ghost';
     size?: 'sm' | 'md' | 'lg';
@@ -9,10 +9,9 @@
     target?: '_self' | '_blank' | '_parent' | '_top';
     rel?: string;
     children?: import('svelte').Snippet;
-    icon?: import('svelte').Snippet;
-    iconPosition?: 'before' | 'after';
     iconBefore?: import('svelte').Snippet;
     iconAfter?: import('svelte').Snippet;
+    class?: string;
   }
 
   let {
@@ -23,18 +22,12 @@
     target,
     rel,
     children,
-    icon,
-    iconPosition = 'before',
     iconBefore,
-    iconAfter
+    iconAfter,
+    class: className = ''
   }: Props = $props();
 
-  // If icon is provided without iconBefore/iconAfter, use iconPosition
-  const displayIconBefore = $derived(iconBefore || (icon && iconPosition === 'before' ? icon : undefined));
-  const displayIconAfter = $derived(iconAfter || (icon && iconPosition === 'after' ? icon : undefined));
-
   const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] no-underline';
-  const disabledClasses = 'opacity-50 pointer-events-none';
 
   const computedRel = $derived(target === '_blank' ? (rel || 'noopener noreferrer') : rel);
 </script>
@@ -43,17 +36,17 @@
   href={disabled ? undefined : href}
   {target}
   rel={computedRel}
-  class="{baseClasses} {variantClasses[variant]} {sizeClasses[size]} {disabled ? disabledClasses : ''}"
+  class="{baseClasses} {variantClasses[variant]} {sizeClasses[size]} {disabled ? disabledClasses : ''} {className}"
 >
-  {#if displayIconBefore}
+  {#if iconBefore}
     <span class="inline-flex items-center justify-center">
-      {@render displayIconBefore()}
+      {@render iconBefore()}
     </span>
   {/if}
   {@render children?.()}
-  {#if displayIconAfter}
+  {#if iconAfter}
     <span class="inline-flex items-center justify-center">
-      {@render displayIconAfter()}
+      {@render iconAfter()}
     </span>
   {/if}
 </a>

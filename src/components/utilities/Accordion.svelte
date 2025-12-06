@@ -8,14 +8,14 @@
     content: string | Snippet;
   }
 
-  interface Props {
+  export interface Props {
     items: AccordionItem[];
     openItems?: string | string[];
     mode?: 'single' | 'multiple';
-    onToggle?: (itemId: string, isOpen: boolean) => void;
+    ontoggle?: (itemId: string, isOpen: boolean) => void;
   }
 
-  let { items, openItems = $bindable([]), mode = 'single', onToggle }: Props = $props();
+  let { items, openItems = $bindable([]), mode = 'single', ontoggle }: Props = $props();
 
   // Normalize openItems to array
   let openItemsArray = $derived(
@@ -51,8 +51,8 @@
       }
     }
 
-    // Call onToggle callback if provided
-    onToggle?.(id, !wasOpen);
+    // Call ontoggle callback if provided
+    ontoggle?.(id, !wasOpen);
   }
 </script>
 

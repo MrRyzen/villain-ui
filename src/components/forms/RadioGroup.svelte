@@ -1,12 +1,13 @@
 <script lang="ts">
-  interface Props {
+  export interface Props {
     value?: string;
-    options: Array<{ value: string; label: string; icon?: import('svelte').Snippet }>;
+    options: Array<{ value: string; label: string; iconBefore?: import('svelte').Snippet }>;
     name: string;
     disabled?: boolean;
     orientation?: 'vertical' | 'horizontal';
     label?: string;
     onchange?: (event: Event) => void;
+    class?: string;
   }
 
   let {
@@ -16,14 +17,15 @@
     disabled = false,
     orientation = 'vertical',
     label,
-    onchange
+    onchange,
+    class: className = ''
   }: Props = $props();
 
   const containerClasses = $derived(orientation === 'vertical' ? 'flex flex-col gap-3' : 'flex flex-row gap-4');
 </script>
 
 {#if label}
-  <fieldset class={disabled ? 'opacity-50' : ''}>
+  <fieldset class="{disabled ? 'opacity-50' : ''} {className}">
     <legend class="text-[var(--color-text-soft)] text-sm mb-3 block">
       {label}
     </legend>
@@ -41,9 +43,9 @@
             onchange={onchange}
             class="w-6 h-6 rounded-[var(--radius-pill)] border-2 border-[var(--color-border-strong)] bg-transparent appearance-none transition-all duration-200 ease-[var(--ease-luxe)] cursor-pointer checked:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:ring-offset-[var(--color-base-1)] relative {disabled ? 'cursor-not-allowed' : ''}"
           />
-          {#if option.icon}
+          {#if option.iconBefore}
             <span class="inline-flex items-center justify-center text-text-soft">
-              {@render option.icon()}
+              {@render option.iconBefore()}
             </span>
           {/if}
           <span class="text-[var(--color-text)] text-sm select-none">
@@ -54,7 +56,7 @@
     </div>
   </fieldset>
 {:else}
-  <div class={containerClasses}>
+  <div class="{containerClasses} {className}">
     {#each options as option}
       {@const radioId = `${name}-${option.value}`}
       <label for={radioId} class="flex items-center gap-2 cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : ''}">
@@ -68,9 +70,9 @@
           onchange={onchange}
           class="w-6 h-6 rounded-[var(--radius-pill)] border-2 border-[var(--color-border-strong)] bg-transparent appearance-none transition-all duration-200 ease-[var(--ease-luxe)] cursor-pointer checked:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:ring-offset-2 focus:ring-offset-[var(--color-base-1)] relative {disabled ? 'cursor-not-allowed' : ''}"
         />
-        {#if option.icon}
+        {#if option.iconBefore}
           <span class="inline-flex items-center justify-center text-text-soft">
-            {@render option.icon()}
+            {@render option.iconBefore()}
           </span>
         {/if}
         <span class="text-[var(--color-text)] text-sm select-none">

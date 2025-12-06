@@ -2,12 +2,13 @@
   import type { Snippet } from 'svelte';
   import { createId } from '../../lib/internal/id.js';
 
-  interface Props {
+  export interface Props {
     content: string;
     placement?: 'top' | 'bottom' | 'left' | 'right';
     delay?: number;
     trigger?: Snippet;
     children?: Snippet;
+    class?: string;
   }
 
   let {
@@ -15,7 +16,8 @@
     placement = 'top',
     delay = 200,
     trigger,
-    children
+    children,
+    class: className = ''
   }: Props = $props();
 
   // Use children as fallback if trigger not provided
@@ -112,7 +114,7 @@
       bind:this={tooltipElement}
       id={tooltipId}
       role="tooltip"
-      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap animate-[fade-in_0.15s_var(--ease-luxe)] pointer-events-none"
+      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap animate-[fade-in_0.15s_var(--ease-luxe)] pointer-events-none {className}"
     >
       {content}
     </div>

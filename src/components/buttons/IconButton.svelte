@@ -1,5 +1,7 @@
 <script lang="ts">
-  interface Props {
+  import { variantClasses, disabledClasses } from './buttonClasses';
+
+  export interface Props {
     variant?: 'primary' | 'secondary' | 'ghost';
     size?: 'sm' | 'md' | 'lg';
     shape?: 'circle' | 'square';
@@ -8,6 +10,7 @@
     ariaLabel: string;
     onclick?: (event: MouseEvent) => void;
     children?: import('svelte').Snippet;
+    class?: string;
   }
 
   let {
@@ -18,16 +21,11 @@
     type = 'button',
     ariaLabel,
     onclick,
-    children
+    children,
+    class: className = ''
   }: Props = $props();
 
-  const variantClasses = {
-    primary: 'bg-[var(--color-accent)] text-[var(--color-text)] accent-glow',
-    secondary: 'bg-transparent text-[var(--color-text)] border border-[var(--color-border-strong)] hover:border-[var(--color-accent)]',
-    ghost: 'bg-transparent text-[var(--color-text)] hover:bg-[var(--color-base-2)]'
-  };
-
-  const sizeClasses = {
+  const iconSizeClasses = {
     sm: 'w-10 h-10 text-sm',
     md: 'w-12 h-12 text-base',
     lg: 'w-14 h-14 text-lg'
@@ -39,7 +37,6 @@
   };
 
   const baseClasses = 'inline-flex items-center justify-center font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer hover-lift';
-  const disabledClasses = 'opacity-50 cursor-not-allowed pointer-events-none';
 </script>
 
 <button
@@ -47,7 +44,7 @@
   {disabled}
   aria-label={ariaLabel}
   onclick={onclick}
-  class="{baseClasses} {variantClasses[variant]} {sizeClasses[size]} {shapeClasses[shape]} {disabled ? disabledClasses : ''}"
+  class="{baseClasses} {variantClasses[variant]} {iconSizeClasses[size]} {shapeClasses[shape]} {disabled ? disabledClasses : ''} {className}"
 >
   {@render children?.()}
 </button>

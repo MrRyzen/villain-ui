@@ -2,7 +2,7 @@
   import type { Snippet } from 'svelte';
   import { createId } from '../../lib/internal/id.js';
 
-  interface Props {
+  export interface Props {
     open?: boolean;
     title?: string;
     size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -10,7 +10,8 @@
     closeOnEscape?: boolean;
     children?: Snippet;
     footer?: Snippet;
-    icon?: Snippet;
+    iconBefore?: Snippet;
+    class?: string;
   }
 
   let {
@@ -21,7 +22,8 @@
     closeOnEscape = true,
     children,
     footer,
-    icon
+    iconBefore,
+    class: className = ''
   }: Props = $props();
 
   let modalElement = $state<HTMLDivElement>();
@@ -52,6 +54,34 @@
     }
   }
 
+  function handleFocusTrap(event: KeyboardEvent) {
+    if (event.key !== 'Tab' || !modalElement) return;
+
+    const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const focusableElements = Array.from(
+      modalElement.querySelectorAll<HTMLElement>(focusableSelector)
+    );
+
+    if (focusableElements.length === 0) return;
+
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey) {
+      // Shift+Tab: moving backwards
+      if (document.activeElement === firstFocusable) {
+        event.preventDefault();
+        lastFocusable.focus();
+      }
+    } else {
+      // Tab: moving forwards
+      if (document.activeElement === lastFocusable) {
+        event.preventDefault();
+        firstFocusable.focus();
+      }
+    }
+  }
+
   $effect(() => {
     if (typeof document === 'undefined') return;
     
@@ -64,6 +94,7 @@
 
       // Add event listeners
       document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keydown', handleFocusTrap);
 
       // Focus first interactive element
       requestAnimationFrame(() => {
@@ -79,6 +110,7 @@
 
         // Remove event listeners
         document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener('keydown', handleFocusTrap);
 
         // Restore previous focus
         previousFocus?.focus();
@@ -95,7 +127,7 @@
   >
     <div
       bind:this={modalElement}
-      class="glass-panel rounded-[var(--radius-lg)] shadow-deep w-full {sizeClasses[size]} animate-[fade-up_0.3s_var(--ease-luxe)] flex flex-col max-h-[90vh]"
+      class="glass-panel rounded-[var(--radius-lg)] shadow-deep w-full {sizeClasses[size]} {className} animate-[fade-up_0.3s_var(--ease-luxe)] flex flex-col max-h-[90vh]"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}
@@ -103,9 +135,9 @@
       {#if title}
         <div class="flex items-center justify-between p-8 border-b border-border">
           <h2 id={titleId} class="text-xl font-semibold text-text flex items-center gap-3">
-            {#if icon}
+            {#if iconBefore}
               <span class="inline-flex items-center justify-center">
-                {@render icon()}
+                {@render iconBefore()}
               </span>
             {/if}
             {title}

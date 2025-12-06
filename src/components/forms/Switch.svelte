@@ -1,13 +1,14 @@
 <script lang="ts">
   import { createId } from '../../lib/internal/id.js';
 
-  interface Props {
+  export interface Props {
     checked?: boolean;
     disabled?: boolean;
     label?: string;
     id?: string;
     onchange?: (event: Event) => void;
-    icon?: import('svelte').Snippet;
+    iconBefore?: import('svelte').Snippet;
+    class?: string;
   }
 
   let {
@@ -16,11 +17,12 @@
     label,
     id = createId('switch'),
     onchange,
-    icon
+    iconBefore,
+    class: className = ''
   }: Props = $props();
 </script>
 
-<label for={id} class="flex items-center gap-2 cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : ''}">
+<label for={id} class="flex items-center gap-2 cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : ''} {className}">
   <input
     type="checkbox"
     role="switch"
@@ -31,9 +33,9 @@
     onchange={onchange}
     class="w-14 h-7 rounded-pill bg-base-3 border border-border appearance-none transition-all duration-300 ease-luxe cursor-pointer checked:bg-accent checked:accent-glow focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {disabled ? 'cursor-not-allowed' : ''}"
   />
-  {#if icon}
+  {#if iconBefore}
     <span class="inline-flex items-center justify-center text-text-soft">
-      {@render icon()}
+      {@render iconBefore()}
     </span>
   {/if}
   {#if label}

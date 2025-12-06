@@ -4,14 +4,15 @@
   interface Props {
     padding?: 'none' | 'sm' | 'md' | 'lg';
     rounded?: boolean;
-    glass?: boolean;
+    variant?: 'default' | 'glass'; // Primary styling selector. Use variant='glass' for enhanced glass morphism.
+    class?: string;
     children?: Snippet;
   }
 
   let {
     padding = 'md',
     rounded = true,
-    glass = true,
+    variant = 'default',
     class: className = '',
     children,
     ...restProps
@@ -24,8 +25,13 @@
     lg: 'p-10'
   };
 
-  const glassClasses = glass ? 'glass-panel' : 'bg-[var(--color-panel)]';
-  const roundedClasses = rounded ? 'rounded-[var(--radius-lg)]' : '';
+  const glassClasses = $derived(
+    variant === 'glass'
+      ? 'glass-panel bg-[rgba(107,33,168,0.05)] border-[var(--color-border-glow)]'
+      : 'glass-panel'
+  );
+  
+  const roundedClasses = $derived(rounded ? 'rounded-[var(--radius-lg)]' : '');
   const baseClasses = 'transition-all duration-300 ease-[var(--ease-luxe)]';
 </script>
 

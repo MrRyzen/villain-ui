@@ -1,22 +1,24 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  interface Props {
+  export interface Props {
     variant?: 'info' | 'success' | 'warning' | 'error';
     title?: string;
     dismissible?: boolean;
-    icon?: Snippet;
+    iconBefore?: Snippet;
     onclose?: () => void;
     children?: Snippet;
+    class?: string;
   }
 
   let {
     variant = 'info',
     title,
     dismissible = false,
-    icon,
+    iconBefore,
     onclose,
-    children
+    children,
+    class: className = ''
   }: Props = $props();
 
   let visible = $state(true);
@@ -64,13 +66,13 @@
 
 {#if visible}
   <div
-    class="glass-panel rounded-[var(--radius-lg)] p-4 flex gap-3 {variantClasses[variant]} animate-[fade-in_0.2s_var(--ease-sharp)]"
+    class="glass-panel rounded-[var(--radius-lg)] p-4 flex gap-3 {variantClasses[variant]} {className} animate-[fade-in_0.2s_var(--ease-sharp)]"
     role={roleMap[variant]}
     aria-live={ariaLiveMap[variant]}
   >
     <div class="shrink-0 {variantTextClasses[variant]}">
-      {#if icon}
-        {@render icon()}
+      {#if iconBefore}
+        {@render iconBefore()}
       {:else}
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={variantIcons[variant]} />

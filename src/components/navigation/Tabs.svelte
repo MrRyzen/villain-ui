@@ -3,16 +3,17 @@
   interface Tab {
     id: string;
     label: string;
-    icon?: import('svelte').Snippet;
+    iconBefore?: import('svelte').Snippet;
     disabled?: boolean;
   }
 
-  interface Props {
+  export interface Props {
     tabs: Tab[];
     activeTab?: string;
     orientation?: 'horizontal' | 'vertical';
     variant?: 'default' | 'pills';
-    onTabChange?: (tabId: string) => void;
+    ontabchange?: (tabId: string) => void;
+    class?: string;
   }
 
   let {
@@ -20,14 +21,15 @@
     activeTab = $bindable(''),
     orientation = 'horizontal',
     variant = 'default',
-    onTabChange
+    ontabchange,
+    class: className = ''
   }: Props = $props();
 
   function handleTabClick(tabId: string, disabled?: boolean) {
     if (disabled) return;
     activeTab = tabId;
-    if (onTabChange) {
-      onTabChange(tabId);
+    if (ontabchange) {
+      ontabchange(tabId);
     }
   }
 
@@ -39,7 +41,7 @@
   const radiusClass = variant === 'pills' ? 'rounded-pill' : 'rounded-[var(--radius-md)]';
 </script>
 
-<div role="tablist" class="{orientationClasses[orientation]} gap-1 p-1">
+<div role="tablist" class="{orientationClasses[orientation]} gap-1 p-1 {className}">
   {#each tabs as tab}
     <button
       role="tab"
@@ -49,9 +51,9 @@
       disabled={tab.disabled}
       class="flex items-center gap-2 px-6 py-3 {radiusClass} font-body text-sm transition-all duration-300 ease-luxe {activeTab === tab.id ? 'bg-accent text-text accent-glow' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
     >
-      {#if tab.icon}
+      {#if tab.iconBefore}
         <span class="inline-flex items-center justify-center">
-          {@render tab.icon()}
+          {@render tab.iconBefore()}
         </span>
       {/if}
       {tab.label}

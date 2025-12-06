@@ -16,7 +16,7 @@ export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } fro
 export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup } from './components/forms';
 
 // ===== Layout Components =====
-export { Card, Panel, Grid, Container, SectionHeader, Divider } from './components/cards';
+export { Card, Panel, Grid, Container, SectionHeader, Divider, LinkCard } from './components/cards';
 
 // ===== Navigation Components =====
 export { Navbar, Sidebar, Tabs, Breadcrumbs, Menu, DropdownMenu, ContextMenu } from './components/navigation';
@@ -31,4 +31,4 @@ export { Heading, Text, Code } from './components/typography';
 export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat } from './components/data';
 
 // ===== Utility Components =====
-export { Portal, Collapse, Accordion, Carousel, ScrollArea } from './components/utilities';
+export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero } from './components/utilities';
