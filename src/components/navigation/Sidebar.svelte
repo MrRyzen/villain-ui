@@ -137,7 +137,7 @@
   };
 
   const currentWidth = $derived(open ? widthClasses[width].open : widthClasses[width].collapsed);
-  const baseClasses = 'fixed bottom-0 z-40 glass-panel overflow-y-auto overflow-x-hidden transition-all duration-300 ease-[var(--ease-luxe)]';
+  const baseClasses = 'fixed bottom-0 z-[var(--z-40)] glass-panel overflow-y-auto overflow-x-hidden transition-all duration-300 ease-[var(--ease-luxe)]';
 </script>
 
 <aside bind:this={rootElement} data-sidebar class="{baseClasses} {sideClasses[side]} {currentWidth}" style="top: {navbarHeight}px">
@@ -203,7 +203,7 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: var(--radius-pill);
-    background: rgba(107, 33, 168, 0.2);
+    background: var(--color-accent-overlay-20);
     color: var(--color-accent);
     font-weight: 600;
     font-size: var(--text-lg);
@@ -229,7 +229,7 @@
 
   aside :global(a.active),
   aside :global(button.active) {
-    background: rgba(107, 33, 168, 0.15);
+    background: var(--color-accent-overlay-15);
     color: var(--color-accent);
     border-left: 3px solid var(--color-accent);
     font-weight: 600;

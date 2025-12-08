@@ -43,7 +43,7 @@
 
 {#if href}
   <a {href} {target} rel={relValue} class="{baseClasses} {paddingClasses[padding]} {className}" {...restProps}>
-    {#if iconBefore}efore}
+    {#if iconBefore}
       <div class="card-icon">
         {@render iconBefore()}
       </div>

@@ -32,7 +32,7 @@
   // top-4 keeps icon fixed at top when textarea is resized
   // This ensures text doesn't overlap with the absolutely positioned icon
   const textareaClasses = `${baseInputClasses} resize-y min-h-[100px]`;
-  const errorClasses = error ? 'border-error' : '';
+  const errorClasses = $derived(error ? 'error-state' : '');
 </script>
 
 {#if label}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	interface Props {
 		variant?: 'body' | 'caption';
-		color?: 'default' | 'soft' | 'muted';
+		color?: 'default' | 'soft' | 'muted' | 'success' | 'warning' | 'error';
 		as?: 'p' | 'span' | 'div';
 		children?: import('svelte').Snippet;
 	}
@@ -11,7 +11,10 @@
 	const colorMap = {
 		default: 'var(--color-text)',
 		soft: 'var(--color-text-soft)',
-		muted: 'var(--color-text-muted)'
+		muted: 'var(--color-text-muted)',
+		success: 'var(--color-success)',
+		warning: 'var(--color-warning)',
+		error: 'var(--color-error)',
 	};
 
 	const styles = $derived(

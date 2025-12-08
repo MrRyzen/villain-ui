@@ -90,35 +90,36 @@ This explicit import strategy gives you full control over styling and allows you
 Comprehensive icon snippet support across the entire component library for maximum flexibility:
 
 **Forms:**
-- **Input**: `icon`, `iconPosition` ("before"/"after"), `iconPrefix`, `iconSuffix` props for flexible icon placement in text inputs
-- **Select, Textarea**: Single `icon` snippet positioned at the left with automatic padding
-- **Checkbox, Switch**: Simple `icon` prop for visual enhancement
-- **RadioGroup**: Per-option `icon` in options array for rich radio lists
-- **FileUpload**: Custom `icon` prop to override default upload icon
+- **Input, Textarea, Select**: `iconBefore` and `iconAfter` snippets for flexible positioning
+- **Checkbox, Switch**: `iconBefore` snippet for visual enhancement
+- **RadioGroup**: Per-option `iconBefore` in options array for rich radio lists
+- **FileUpload**: Custom `icon` snippet to override default upload icon
 
 **Buttons & Navigation:**
-- **Button, LinkButton**: `icon` + `iconPosition`, or separate `iconBefore`/`iconAfter` props for flexible positioning
+- **Button, LinkButton**: `iconBefore` and `iconAfter` snippets for flexible positioning
 - **Breadcrumbs**: Per-item `icon` in items array for visual breadcrumb trails
-- **Pagination**: `prevIcon` and `nextIcon` props for custom navigation arrows
+- **Pagination**: `prevIcon` and `nextIcon` snippets for custom navigation arrows
+- **Tabs**: `iconBefore` in tab objects for tabbed navigation
 
 **Data Display:**
-- **Badge, Tag**: Simple `icon` prop for status indicators and tags
+- **Badge**: Simple `icon` snippet for status indicators (not iconBefore, as it's a simple badge)
+- **Tag**: Simple `icon` snippet for tags
 - **List**: Per-item `icon` in items array for icon lists
 - **Avatar**: Image/initials support (not snippet-based)
 
 **Overlays:**
-- **Alert**: `icon` override for custom alert icons
-- **Modal, Toast, Drawer**: `icon` prop for title icons
+- **Alert**: `iconBefore` snippet for custom alert icons
+- **Modal, Toast, Drawer**: `iconBefore` snippet for title icons
 
 **Navigation:**
-- **Tabs**: Per-tab `icon` in tabs array
-- **Menu**: Built-in icon support
+- **Menu**: Per-item `icon` in items array
+- **DropdownMenu, ContextMenu**: Per-item `icon` in items array with structured `MenuItem[]` interface
 
 #### Icon API Patterns
 
 The library uses three consistent icon patterns:
 
-**1. Simple icon prop** - Single `icon?: Snippet` for components with one icon position:
+**1. Simple icon snippet** - Single `icon?: Snippet` for components with one icon position:
 ```svelte
 <Tag>
   {#snippet icon()}
@@ -128,16 +129,16 @@ The library uses three consistent icon patterns:
 </Tag>
 ```
 
-**2. Positional icon props** - `icon` + `iconPosition` or separate `iconBefore`/`iconAfter`:
+**2. Positional icon snippets** - Separate `iconBefore`/`iconAfter` snippets for flexible positioning:
 ```svelte
-<Button iconPosition="after">
-  {#snippet icon()}
+<Button>
+  {#snippet iconAfter()}
     <ArrowRightIcon class="w-5 h-5" />
   {/snippet}
   Next
 </Button>
 
-<!-- Or with separate snippets -->
+<!-- Or with both icons -->
 <LinkButton>
   {#snippet iconBefore()}
     <HomeIcon class="w-5 h-5" />
@@ -149,37 +150,20 @@ The library uses three consistent icon patterns:
 </LinkButton>
 ```
 
-**3. Prefix/Suffix icon props** - For text inputs with icons inside the field:
-```svelte
-<Input placeholder="Search...">
-  {#snippet iconPrefix()}
-    <SearchIcon class="w-5 h-5" />
-  {/snippet}
-</Input>
-
-<!-- Or use icon + iconPosition -->
-<Input iconPosition="before" placeholder="Email">
-  {#snippet icon()}
-    <MailIcon class="w-5 h-5" />
-  {/snippet}
-</Input>
-```
-
-**4. Per-item icons** - Icons specified in item/option arrays:
+**3. Per-item icons** - Icons specified in item/option arrays:
 ```svelte
 <script>
-  const items = [
+  const options = [
     { 
       value: 'option1', 
       label: 'Option 1',
-      icon: () => `{@render MyIcon()}`
+      iconBefore: IconSnippet // Snippet reference
     }
   ];
 </script>
 
-<List {items} />
-<RadioGroup {items} bind:value={selected} />
-<Breadcrumbs {items} />
+<RadioGroup {options} bind:value={selected} />
+<Breadcrumbs items={breadcrumbItems} />
 ```
 
 #### Best Practices
@@ -276,7 +260,7 @@ The library uses three consistent icon patterns:
 
 <!-- Simple icon usage -->
 <Button variant="primary">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
     </svg>
@@ -285,9 +269,9 @@ The library uses three consistent icon patterns:
 </Button>
 
 <!-- Icon after text -->
-<Button variant="secondary" iconPosition="after">
+<Button variant="secondary">
   Download
-  {#snippet icon()}
+  {#snippet iconAfter()}
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
     </svg>
@@ -317,10 +301,16 @@ The library uses three consistent icon patterns:
   import { IconButton } from '@mrintel/villain-ui';
 </script>
 
-<IconButton variant="primary" size="md" aria-label="Settings">
+<IconButton variant="primary" size="md" ariaLabel="Settings">
   <SettingsIcon />
 </IconButton>
 ```
+
+**Props:**
+- `variant?: 'primary' | 'secondary' | 'ghost'` - Button style variant
+- `size?: 'sm' | 'md' | 'lg'` - Button size
+- `ariaLabel: string` - Accessibility label (required for screen readers)
+- `disabled?: boolean` - Disable button interaction
 
 **ButtonGroup** - Group related buttons together
 
@@ -350,16 +340,16 @@ The library uses three consistent icon patterns:
 ```svelte
 <!-- LinkButton with icon before text -->
 <LinkButton href="/docs" variant="primary">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <BookOpenIcon class="w-5 h-5" />
   {/snippet}
   View Documentation
 </LinkButton>
 
 <!-- LinkButton with icon after text -->
-<LinkButton href="/download" variant="secondary" iconPosition="after">
+<LinkButton href="/download" variant="secondary">
   Download
-  {#snippet icon()}
+  {#snippet iconAfter()}
     <DownloadIcon class="w-5 h-5" />
   {/snippet}
 </LinkButton>
@@ -383,10 +373,20 @@ The library uses three consistent icon patterns:
   import { FloatingActionButton } from '@mrintel/villain-ui';
 </script>
 
-<FloatingActionButton position="bottom-right" onclick={() => console.log('FAB clicked')}>
+<FloatingActionButton 
+  position="bottom-right" 
+  ariaLabel="Create new item"
+  onclick={() => console.log('FAB clicked')}
+>
   <PlusIcon />
 </FloatingActionButton>
 ```
+
+**Props:**
+- `position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'` - FAB position on screen
+- `ariaLabel: string` - Accessibility label (required for screen readers)
+- `onclick?: () => void` - Click handler
+- `disabled?: boolean` - Disable button interaction
 
 ### Forms
 
@@ -411,41 +411,40 @@ The library uses three consistent icon patterns:
 
 **Icon Examples:**
 ```svelte
-<!-- Input with prefix icon (search) -->
+<!-- Input with icon before (search) -->
 <Input 
   type="text" 
   label="Search" 
   placeholder="Search..."
   bind:value={searchQuery}
 >
-  {#snippet iconPrefix()}
+  {#snippet iconBefore()}
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
   {/snippet}
 </Input>
 
-<!-- Input with suffix icon (password visibility toggle) -->
+<!-- Input with icon after (password visibility toggle) -->
 <Input 
   type="password" 
   label="Password" 
   bind:value={password}
 >
-  {#snippet iconSuffix()}
+  {#snippet iconAfter()}
     <button onclick={togglePasswordVisibility}>
       <EyeIcon class="w-5 h-5" />
     </button>
   {/snippet}
 </Input>
 
-<!-- Input with simple icon prop and position -->
+<!-- Input with email icon -->
 <Input 
   type="email" 
   label="Email" 
-  iconPosition="before"
   bind:value={email}
 >
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <MailIcon class="w-5 h-5" />
   {/snippet}
 </Input>
@@ -475,11 +474,13 @@ The library uses three consistent icon patterns:
   rows={5}
   bind:value={message}
 >
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <MessageIcon class="w-5 h-5" />
   {/snippet}
 </Textarea>
 ```
+
+**Note:** Textarea only supports `iconBefore` snippet, positioned at top-left of the text area.
 
 **Select** - Dropdown selection
 
@@ -505,13 +506,13 @@ The library uses three consistent icon patterns:
   {options} 
   bind:value={selectedCountry}
 >
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <GlobeIcon class="w-5 h-5" />
   {/snippet}
 </Select>
 ```
 
-**Note:** Select and Textarea each support a single left-aligned `icon` snippet with automatic padding, not separate prefix/suffix slots.
+**Note:** Select only supports `iconBefore` snippet, positioned at the left side with automatic padding.
 
 **Checkbox** - Boolean selection
 
@@ -528,7 +529,7 @@ The library uses three consistent icon patterns:
 **Icon Example:**
 ```svelte
 <Checkbox bind:checked={accepted}>
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <ShieldCheckIcon class="w-4 h-4" />
   {/snippet}
   I accept the terms and conditions
@@ -550,7 +551,7 @@ The library uses three consistent icon patterns:
 **Icon Example:**
 ```svelte
 <Switch bind:checked={darkMode}>
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <MoonIcon class="w-4 h-4" />
   {/snippet}
   Dark Mode
@@ -577,20 +578,19 @@ The library uses three consistent icon patterns:
 **Icon Example:**
 ```svelte
 <script>
+  import { RadioGroup } from '@mrintel/villain-ui';
+  import { CreditCardIcon, PayPalIcon } from 'your-icon-library';
+  
   const options = [
     { 
       value: 'card', 
       label: 'Credit Card',
-      icon: () => {
-        return `<svg class="w-5 h-5" ...>...</svg>`;
-      }
+      iconBefore: CreditCardIcon // Snippet reference
     },
     { 
       value: 'paypal', 
       label: 'PayPal',
-      icon: () => {
-        return `<svg class="w-5 h-5" ...>...</svg>`;
-      }
+      iconBefore: PayPalIcon // Snippet reference
     }
   ];
 </script>
@@ -645,6 +645,8 @@ The library uses three consistent icon patterns:
 </FileUpload>
 ```
 
+**Note:** FileUpload uses a simple `icon` snippet (not `iconBefore`) to replace the default upload icon.
+
 **InputGroup** - Grouped input with addons
 
 ```svelte
@@ -688,7 +690,7 @@ The library uses three consistent icon patterns:
 
 <!-- Card as a link with lift effect and icon -->
 <Card href="/features" liftOnHover padding="lg">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
     </svg>
@@ -706,13 +708,13 @@ The library uses three consistent icon patterns:
 - `liftOnHover?: boolean` - Apply enhanced lift effect on hover using `.hover-lift-enhanced` utility
 - `hoverable?: boolean` - Basic hover effect (deprecated, use `liftOnHover` instead)
 - `padding?: 'none' | 'sm' | 'md' | 'lg'` - Internal padding (default: 'md')
-- `icon?: Snippet` - Optional icon displayed with `.card-icon` utility
+- `iconBefore?: Snippet` - Optional icon displayed with `.card-icon` utility
 - `header?: Snippet` - Optional header content
 - `footer?: Snippet` - Optional footer content
 - `children?: Snippet` - Main card content
 - `class?: string` - Additional CSS classes
 
-**Note:** When using `liftOnHover`, the card applies the `.hover-lift-enhanced` utility for a dramatic lift with accent border and glow. The `icon` snippet uses the `.card-icon` utility class for centered, accent-colored icon display.
+**Note:** When using `liftOnHover`, the card applies the `.hover-lift-enhanced` utility for a dramatic lift with accent border and glow. The `iconBefore` snippet uses the `.card-icon` utility class for centered, accent-colored icon display.
 
 **LinkCard** - Convenience wrapper for clickable cards
 
@@ -977,14 +979,14 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
     { 
       id: 'tab1', 
       label: 'Overview',
-      icon: OverviewIcon // Snippet reference
+      iconBefore: OverviewIcon // Snippet reference
     },
     { id: 'tab2', label: 'Analytics' },
     { id: 'tab3', label: 'Reports' }
   ];
 </script>
 
-<Tabs {tabs} bind:activeTab>
+<Tabs {tabs} bind:activeTab ontabchange={(newTab) => console.log('Tab changed:', newTab)}>
   {#if activeTab === 'tab1'}
     <div>Overview content</div>
   {:else if activeTab === 'tab2'}
@@ -994,6 +996,18 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
   {/if}
 </Tabs>
 ```
+
+**Keyboard Navigation:**
+- Arrow Left/Right (horizontal) or Up/Down (vertical): Navigate between tabs
+- Home: Jump to first tab
+- End: Jump to last tab
+- Tab: Move focus out of tab list
+
+**Accessibility Features:**
+- ARIA: `role="tablist"`, `role="tab"`, `aria-selected`, `aria-disabled`
+- Roving tabindex: Only active tab is focusable (`tabindex="0"`)
+- Screen readers: Tab labels announced with selection state
+- Focus management: Arrow keys change both focus and selection
 
 **Breadcrumbs** - Navigation breadcrumb trail
 
@@ -1071,64 +1085,137 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 **MenuItem Interface:**
 - `id: string` - Unique identifier
 - `label: string` - Display text
-- `icon?: Snippet` - Optional icon snippet
+- `icon?: Snippet` - Optional icon snippet (not iconBefore)
 - `disabled?: boolean` - Disable item
 - `onclick?: () => void` - Click handler
+
+**Keyboard Navigation:**
+- Arrow Down/Up: Navigate menu items (wraps around)
+- Home: Jump to first item
+- End: Jump to last item
+- Enter/Space: Activate selected item
+- Escape: Close menu (if in a dropdown/context menu)
+
+**Accessibility Features:**
+- ARIA: `role="menu"`, `role="menuitem"`
+- Roving tabindex: Only selected item is focusable
+- Screen readers: Menu items announced with disabled state
 
 **DropdownMenu** - Dropdown menu with items
 
 ```svelte
 <script>
-  import { DropdownMenu, Menu, Button } from '@mrintel/villain-ui';
+  import { DropdownMenu, Button } from '@mrintel/villain-ui';
+  import { EditIcon, TrashIcon } from 'your-icon-library';
   
-  const menuItems = [
-    { id: 'edit', label: 'Edit', onclick: () => console.log('Edit') },
-    { id: 'delete', label: 'Delete', onclick: () => console.log('Delete') }
+  const items = [
+    { 
+      id: 'edit', 
+      label: 'Edit', 
+      icon: EditIcon, // Snippet reference
+      onclick: () => console.log('Edit') 
+    },
+    { 
+      id: 'delete', 
+      label: 'Delete', 
+      icon: TrashIcon, // Snippet reference
+      onclick: () => console.log('Delete'),
+      disabled: false
+    }
   ];
 </script>
 
-<DropdownMenu>
+<DropdownMenu {items}>
   {#snippet trigger()}
     <Button>Options</Button>
   {/snippet}
-  
-  <Menu items={menuItems} />
 </DropdownMenu>
 ```
 
 **Props:**
+- `items: MenuItem[]` - Array of menu items
 - `open?: boolean` (bindable) - Dropdown open state
 - `placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'` - Menu position
 - `trigger?: Snippet` - Trigger button content
-- `children?: Snippet` - Dropdown menu content
+
+**MenuItem Interface:**
+- `id: string` - Unique identifier
+- `label: string` - Display text
+- `icon?: Snippet` - Optional icon snippet
+- `disabled?: boolean` - Disable item
+- `onclick?: () => void` - Click handler
+
+**Keyboard Navigation:**
+- Arrow Down/Up: Navigate menu items (wraps around)
+- Home: Jump to first item
+- End: Jump to last item
+- Enter/Space: Activate selected item
+- Escape: Close menu
+
+**Accessibility Features:**
+- ARIA: `role="menu"`, `role="menuitem"`, `aria-haspopup`, `aria-expanded`, `aria-controls`
+- Auto-focus: First item focused on open
+- Roving tabindex: Only selected item is focusable
+- Click outside: Closes menu when clicking outside
+- Screen readers: Menu state and items announced clearly
 
 **ContextMenu** - Right-click context menu
 
 ```svelte
 <script>
-  import { ContextMenu, Menu } from '@mrintel/villain-ui';
+  import { ContextMenu } from '@mrintel/villain-ui';
+  import { CopyIcon, PasteIcon } from 'your-icon-library';
   
-  const menuItems = [
-    { id: 'copy', label: 'Copy', onclick: () => console.log('Copy') },
-    { id: 'paste', label: 'Paste', onclick: () => console.log('Paste') }
+  const items = [
+    { 
+      id: 'copy', 
+      label: 'Copy', 
+      icon: CopyIcon, // Snippet reference
+      onclick: () => console.log('Copy') 
+    },
+    { 
+      id: 'paste', 
+      label: 'Paste', 
+      icon: PasteIcon, // Snippet reference
+      onclick: () => console.log('Paste') 
+    }
   ];
 </script>
 
-<ContextMenu>
+<ContextMenu {items}>
   {#snippet trigger()}
     <div>Right click me</div>
   {/snippet}
-  
-  <Menu items={menuItems} />
 </ContextMenu>
 ```
 
 **Props:**
+- `items: MenuItem[]` - Array of menu items
 - `open?: boolean` (bindable) - Context menu open state
 - `x?: number` (bindable) - Menu X position
 - `y?: number` (bindable) - Menu Y position
 - `trigger?: Snippet` - Content that triggers context menu on right-click
-- `children?: Snippet` - Context menu content
+
+**MenuItem Interface:**
+- `id: string` - Unique identifier
+- `label: string` - Display text
+- `icon?: Snippet` - Optional icon snippet
+- `disabled?: boolean` - Disable item
+- `onclick?: () => void` - Click handler
+
+**Keyboard Navigation:**
+- Arrow Down/Up: Navigate menu items (wraps around)
+- Home: Jump to first item
+- End: Jump to last item
+- Enter/Space: Activate selected item
+- Escape: Close menu
+
+**Accessibility Features:**
+- ARIA: `role="menu"`, `role="menuitem"`, `aria-haspopup`
+- Auto-focus: First item focused on open
+- Roving tabindex: Only selected item is focusable
+- Click outside: Closes menu when clicking outside
+- Screen readers: Menu state and items announced clearly
 
 ### Overlays & Feedback
 
@@ -1165,7 +1252,7 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 <Button onclick={() => open = true}>Delete Item</Button>
 
 <Modal bind:open title="Confirm Deletion">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <ExclamationTriangleIcon class="w-6 h-6 text-error" />
   {/snippet}
   
@@ -1177,6 +1264,23 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
   {/snippet}
 </Modal>
 ```
+
+**Props:**
+- `open?: boolean` (bindable) - Modal open state
+- `title?: string` - Modal title text
+- `iconBefore?: Snippet` - Optional icon displayed before title
+- `closeOnEscape?: boolean` - Close modal on Escape key (default: true)
+- `closeOnBackdrop?: boolean` - Close modal on backdrop click (default: true)
+- `footer?: Snippet` - Optional footer content
+- `children?: Snippet` - Main modal content
+
+**Accessibility Features:**
+- Focus trap: Tab/Shift+Tab cycles within modal
+- Escape key: Closes modal (if `closeOnEscape=true`)
+- Auto-focus: First interactive element focused on open
+- Focus restoration: Returns focus to trigger element on close
+- ARIA: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
+- Screen readers: Modal title and content announced
 
 **Alert** - Alert message with variants
 
@@ -1199,7 +1303,7 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 
 <!-- With custom icon -->
 <Alert variant="info" title="Custom Icon">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
       <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
       <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
@@ -1208,6 +1312,20 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
   This alert uses a custom icon snippet.
 </Alert>
 ```
+
+**Props:**
+- `variant?: 'success' | 'warning' | 'error' | 'info'` - Alert style variant
+- `title: string` - Alert title text
+- `iconBefore?: Snippet` - Optional custom icon (overrides default variant icon)
+- `dismissible?: boolean` - Show close button (default: false)
+- `onclose?: () => void` - Callback when alert is dismissed
+- `children?: Snippet` - Alert content
+
+**Accessibility Features:**
+- ARIA: `role="status"` (info/success) or `role="alert"` (warning/error)
+- `aria-live`: "polite" (info/success/warning) or "assertive" (error)
+- Dismissible: Close button has `aria-label="Dismiss alert"`
+- Screen readers: Alert content announced based on severity
 
 **Spinner** - Loading spinner
 
@@ -1273,15 +1391,16 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 ```svelte
 <script>
   import { Toast } from '@mrintel/villain-ui';
-  import { CheckCircleIcon, XCircleIcon } from 'your-icon-library';
+  import { CheckCircleIcon, XCircleIcon, InformationCircleIcon } from 'your-icon-library';
   
   let showSuccess = $state(false);
   let showError = $state(false);
+  let showInfo = $state(false);
 </script>
 
 <!-- Success toast with custom icon -->
 <Toast bind:show={showSuccess} variant="success" duration={3000}>
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <CheckCircleIcon class="w-5 h-5" />
   {/snippet}
   Changes saved successfully!
@@ -1289,7 +1408,7 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 
 <!-- Error toast with custom icon -->
 <Toast bind:show={showError} variant="error" duration={5000}>
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <XCircleIcon class="w-5 h-5" />
   {/snippet}
   Failed to save changes. Please try again.
@@ -1297,7 +1416,7 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 
 <!-- Info toast with custom icon -->
 <Toast bind:show={showInfo} variant="info">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <InformationCircleIcon class="w-5 h-5" />
   {/snippet}
   New features available! Check them out.
@@ -1333,7 +1452,7 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 <Button onclick={() => open = true}>Open Settings</Button>
 
 <Drawer bind:open position="right" title="Settings">
-  {#snippet icon()}
+  {#snippet iconBefore()}
     <Cog6ToothIcon class="w-6 h-6" />
   {/snippet}
   
@@ -1344,6 +1463,23 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
   </div>
 </Drawer>
 ```
+
+**Props:**
+- `open?: boolean` (bindable) - Drawer open state
+- `side?: 'left' | 'right' | 'top' | 'bottom'` - Drawer slide-in position (default: 'right')
+- `title?: string` - Drawer title text
+- `iconBefore?: Snippet` - Optional icon displayed before title
+- `closeOnEscape?: boolean` - Close drawer on Escape key (default: true)
+- `closeOnBackdrop?: boolean` - Close drawer on backdrop click (default: true)
+- `children?: Snippet` - Main drawer content
+
+**Accessibility Features:**
+- Focus trap: Tab/Shift+Tab cycles within drawer
+- Escape key: Closes drawer (if `closeOnEscape=true`)
+- Auto-focus: First interactive element focused on open
+- Focus restoration: Returns focus to trigger element on close
+- ARIA: `role="dialog"`, `aria-modal="true"`, `aria-labelledby`
+- Screen readers: Drawer title and content announced
 
 **Popover** - Popover content
 
@@ -1386,11 +1522,25 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
   let open = $state(false);
   const commands = [
     { id: '1', label: 'New File', onSelect: () => console.log('New File') },
-    { id: '2', label: 'Open Settings', onSelect: () => console.log('Settings') }
+    { id: '2', label: 'Open Settings', onSelect: () => console.log('Settings') },
+    { id: '3', label: 'Search Files', onSelect: () => console.log('Search') }
   ];
 </script>
 
 <CommandPalette bind:open {commands} placeholder="Search commands..." />
+```
+
+**Keyboard Navigation:**
+- Arrow Down/Up: Navigate command list
+- Enter: Execute selected command
+- Escape: Close palette
+- Type to search: Fuzzy search filters commands in real-time
+
+**Accessibility Features:**
+- ARIA: `role="combobox"`, `aria-expanded`, `aria-haspopup`, `aria-controls`, `aria-activedescendant`
+- Auto-focus: Search input focused on open
+- Keyboard navigation: Arrow keys navigate filtered results, Enter executes command
+- Screen readers: Command count and selected command announced via aria-activedescendant
 ```
 
 ### Typography
@@ -1443,25 +1593,118 @@ The component matches exact paths and nested routes (e.g., `/buttons` matches `/
 
 ### Data Display
 
-**Table** - Data table
+**Table** - Data table with sorting, filtering, and custom rendering
 
 ```svelte
 <script>
-  import { Table } from '@mrintel/villain-ui';
-  
-  const columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Role' }
+  import { Table, type TableColumn, type SortDirection } from '@mrintel/villain-ui';
+
+  const columns: TableColumn[] = [
+    { key: 'name', label: 'Name', sortable: true },
+    { key: 'email', label: 'Email', sortable: true },
+    { key: 'role', label: 'Role', align: 'center' },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (value) => `<span class="badge-${value}">${value}</span>`
+    }
   ];
-  
-  const data = [
-    { name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-    { name: 'Jane Smith', email: 'jane@example.com', role: 'User' }
+
+  let allData = [
+    { name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'active' },
+    { name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'active' },
+    { name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'inactive' }
   ];
+
+  let data = $state([...allData]);
+  let searchQuery = $state('');
+
+  // User-defined filter function
+  const filterFn = (row: Record<string, any>) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      row.name.toLowerCase().includes(query) ||
+      row.email.toLowerCase().includes(query) ||
+      row.role.toLowerCase().includes(query)
+    );
+  };
+
+  // User-defined sort handler
+  function handleSort(columnKey: string, direction: SortDirection) {
+    if (!direction) {
+      data = [...allData];
+      return;
+    }
+
+    data = [...data].sort((a, b) => {
+      const aVal = a[columnKey];
+      const bVal = b[columnKey];
+      const modifier = direction === 'asc' ? 1 : -1;
+      return aVal > bVal ? modifier : aVal < bVal ? -modifier : 0;
+    });
+  }
+
+  // User-defined row click handler
+  function handleRowClick(row: Record<string, any>) {
+    console.log('Clicked row:', row);
+  }
 </script>
 
-<Table {columns} {data} hoverable striped />
+<input type="text" bind:value={searchQuery} placeholder="Search..." />
+
+<Table
+  {columns}
+  {data}
+  {filterFn}
+  onSort={handleSort}
+  onRowClick={handleRowClick}
+  loading={isLoading}
+  loadingMessage="Loading data..."
+  emptyMessage="No results found"
+  stickyHeader
+  hoverable
+  striped
+/>
+
+<!-- Custom empty state -->
+<Table {columns} {data} striped>
+  {#snippet emptyState()}
+    <div>
+      <h3>No data yet</h3>
+      <p>Add your first item to get started</p>
+      <button>Add Item</button>
+    </div>
+  {/snippet}
+</Table>
+
+<!-- Manual markup mode still supported -->
+<Table striped hoverable>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>John</td>
+      <td>john@example.com</td>
+    </tr>
+  </tbody>
+</Table>
+
+<!-- Table Features -->
+Props:
+- filterFn: (row) => boolean - User-defined filter/search function
+- onSort: (columnKey, direction) => void - Sort callback
+- onRowClick: (row) => void - Row click callback
+- loading: boolean - Show loading spinner
+- loadingMessage: string - Custom loading text
+- emptyMessage: string - Text when no data
+- emptyState: Snippet - Custom empty state component
+- stickyHeader: boolean - Sticky table header on scroll
+- striped/hoverable/compact: Visual variants
 ```
 
 **Pagination** - Page navigation
@@ -1682,7 +1925,7 @@ A luxury-styled code display component that provides layout, styling, and option
 | `code` | `string` | `undefined` | Raw code text for copying (if not provided, extracts from rendered content) |
 
 **Important Notes:**
-- Consumers are responsible for sanitizing HTML to prevent XSS attacks
+- **Security Warning:** Consumers must sanitize HTML before passing to CodeBlock to prevent XSS attacks. Use trusted syntax highlighters (Shiki, Prism, Highlight.js) and avoid user-generated content without sanitization.
 - Apply `.line` class to each code line and `.highlighted` class to highlighted lines for consistent styling
 - Line numbers are 1-indexed (first line is 1, not 0)
 - When using `showLineNumbers`, provide the `lineCount` prop for proper rendering
@@ -1859,6 +2102,39 @@ A luxury-styled code display component that provides layout, styling, and option
 ```
 
 ### Utilities
+
+**Hero** - Full-width hero section for page introductions
+
+```svelte
+<script>
+  import { Hero } from '@mrintel/villain-ui';
+</script>
+
+<Hero>
+  {#snippet title()}
+    <h1 class="text-5xl font-bold">Welcome to Villain UI</h1>
+  {/snippet}
+  
+  {#snippet text()}
+    <p class="text-xl text-neutral-400">A luxury Svelte 5 component library with modern villain aesthetics</p>
+  {/snippet}
+  
+  {#snippet features()}
+    <div class="flex gap-4 justify-center">
+      <span class="px-4 py-2 bg-accent-500/10 rounded-lg">Svelte 5</span>
+      <span class="px-4 py-2 bg-accent-500/10 rounded-lg">TypeScript</span>
+      <span class="px-4 py-2 bg-accent-500/10 rounded-lg">Accessible</span>
+    </div>
+  {/snippet}
+</Hero>
+```
+
+**Props:**
+- `title?: Snippet` - Hero title content
+- `text?: Snippet` - Hero description/subtitle text
+- `features?: Snippet` - Optional feature tags or highlights
+- `children?: Snippet` - Additional custom content
+- `class?: string` - Additional CSS classes
 
 **Portal** - Render content in different DOM location
 
@@ -2073,6 +2349,22 @@ The library uses calculated, precision border radii for the "villain" aesthetic:
 - `--color-border-strong`: rgba(255, 255, 255, 0.20) - Emphasized border
 - `--color-border-glow`: rgba(107, 33, 168, 0.30) - Purple glow edge
 
+**Overlay Colors (Alpha Transparency)**
+- `--color-accent-overlay-5`: rgba(107, 33, 168, 0.05) - Very subtle accent tint
+- `--color-accent-overlay-10`: rgba(107, 33, 168, 0.1) - Subtle accent background
+- `--color-accent-overlay-15`: rgba(107, 33, 168, 0.15) - Light accent overlay
+- `--color-accent-overlay-20`: rgba(107, 33, 168, 0.2) - Medium accent overlay
+- `--color-accent-overlay-30`: rgba(107, 33, 168, 0.3) - Strong accent overlay
+- `--color-accent-overlay-50`: rgba(107, 33, 168, 0.5) - Semi-transparent accent
+- `--color-accent-overlay-70`: rgba(107, 33, 168, 0.7) - Dense accent overlay
+- `--color-secondary-overlay-10`: rgba(127, 61, 255, 0.1) - Subtle secondary tint
+- `--color-secondary-overlay-20`: rgba(127, 61, 255, 0.2) - Medium secondary overlay
+- `--color-neutral-overlay-2`: rgba(255, 255, 255, 0.02) - Subtle white tint
+- `--color-shadow-overlay-20`: rgba(0, 0, 0, 0.2) - Shadow layer
+- `--color-success-overlay-15`: rgba(0, 232, 151, 0.15) - Success state background
+- `--color-warning-overlay-15`: rgba(255, 200, 97, 0.15) - Warning state background
+- `--color-error-overlay-15`: rgba(255, 74, 106, 0.15) - Error state background
+
 #### Typography
 
 **Font Families (Modern Villain Luxury)**
@@ -2143,7 +2435,22 @@ The library uses calculated, precision border radii for the "villain" aesthetic:
 - `--spacing-18`: 4.5rem
 
 **Z-Index Scale**
-- `--z-0` through `--z-50` (increments of 10)
+- `--z-0`: 0 - Base layer (default)
+- `--z-10`: 10 - Slightly elevated
+- `--z-20`: 20 - Elevated content
+- `--z-30`: 30 - Dropdowns and popovers
+- `--z-40`: 40 - Sidebar navigation
+- `--z-50`: 50 - Top navigation, modals, highest overlays
+
+**Usage Example:**
+```css
+.custom-overlay {
+  z-index: var(--z-50);
+  background: var(--color-accent-overlay-20);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+}
+```
 
 #### Effects
 
@@ -2468,45 +2775,6 @@ Navbar and Sidebar components now support automatic active state management via 
 - For buttons, use `data-href` attribute to enable automatic active state
 - Consider using `$page.url.pathname` in SvelteKit for automatic reactivity
 
-## 🛠️ Development
-
-### Clone and Setup
-
-```bash
-git clone <repository-url>
-cd villain-ui
-npm install
-```
-
-### Available Scripts
-
-- `npm run dev` - Start Vite dev server
-- `npm run build` - Build the library for production
-- `npm run type-check` - Run TypeScript type checking
-- `npm run check` - Alias for type-check
-
-### Build Output
-
-The build creates a `dist/` directory with:
-
-```
-dist/
-├── index.js          # Compiled components
-├── index.d.ts        # TypeScript declarations
-└── theme.css         # Compiled theme styles
-```
-
-### Manual Build Before Publishing
-
-If you want to verify the build manually:
-
-```bash
-npm run build
-npm pack
-```
-
-This creates a `.tgz` file you can inspect before publishing.
-
 ## 📘 TypeScript Support
 
 @mrintel/villain-ui is built with TypeScript in strict mode and includes complete type definitions.
@@ -2516,6 +2784,8 @@ This creates a `.tgz` file you can inspect before publishing.
 - ✅ Type definitions included in `dist/index.d.ts`
 - ✅ All components have typed Props interfaces
 - ✅ IntelliSense support in VS Code and other editors
+
+### Using Component Types
 
 Import types directly from components:
 
@@ -2528,6 +2798,81 @@ const props: ComponentProps<typeof Button> = {
   size: 'md',
   disabled: false
 };
+```
+
+### Importing Component Prop Types
+
+For type-safe usage, import component prop types directly:
+
+```typescript
+import type { 
+  ButtonProps, 
+  InputProps, 
+  ModalProps,
+  TabsProps 
+} from '@mrintel/villain-ui';
+
+// Use in your components
+const buttonConfig: ButtonProps = {
+  variant: 'primary',
+  size: 'md',
+  disabled: false
+};
+
+const modalConfig: ModalProps = {
+  open: true,
+  title: 'Confirmation',
+  closeOnEscape: true
+};
+```
+
+### Available Prop Type Exports
+
+The following component prop types are exported for TypeScript users:
+
+**Button Types:**
+- `ButtonProps` - Standard button component
+- `IconButtonProps` - Icon-only button
+- `FloatingActionButtonProps` - Floating action button (FAB)
+- `LinkButtonProps` - Link styled as button
+
+**Form Types:**
+- `InputProps` - Text input component
+- `TextareaProps` - Multi-line text input
+- `SelectProps` - Dropdown select
+- `CheckboxProps` - Checkbox input
+- `SwitchProps` - Toggle switch
+- `RadioGroupProps` - Radio button group
+
+**Layout Types:**
+- `CardProps` - Content card
+
+**Navigation Types:**
+- `TabsProps` - Tabbed interface
+
+**Overlay Types:**
+- `ModalProps` - Modal dialog
+- `DrawerProps` - Slide-out drawer
+- `AlertProps` - Alert message
+- `TooltipProps` - Hover tooltip
+
+**Utility Types:**
+- `AccordionProps` - Accordion container
+
+**Note:** Additional component prop types may be added in future releases. Components without exported prop types can still be used with TypeScript through Svelte's built-in type inference.
+
+### Type-Safe Event Handlers
+
+All components support lowercase event handlers with proper typing:
+
+```typescript
+import { Button } from '@mrintel/villain-ui';
+
+<Button onclick={(event: MouseEvent) => {
+  console.log('Button clicked', event);
+}}>
+  Click Me
+</Button>
 ```
 
 ## 🌐 Browser Support
@@ -2552,6 +2897,25 @@ MIT License - see LICENSE file for details
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit issues and pull requests.
+
+### Contributor Guidelines
+
+1. **Before submitting a PR**, run `npm run validate` to ensure all checks pass
+2. Follow the existing code style and component patterns
+3. Add TypeScript types for all new components and props
+4. Export component prop interfaces as public types in `src/index.ts`
+5. Avoid creating circular imports between components
+6. Test your changes with the demo app in `demo-ui/`
+
+### CI Enforcement
+
+All pull requests are automatically validated via GitHub Actions CI, which runs:
+- TypeScript type checking
+- Circular import detection with madge
+- Full production build
+- Build artifact verification
+
+The CI must pass before a PR can be merged.
 
 ---
 

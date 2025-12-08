@@ -102,6 +102,6 @@
 	}
 
 	:global(ul.hoverable > li:hover) {
-		background: rgba(107, 33, 168, 0.05);
+		background: var(--color-accent-overlay-5);
 	}
 </style>

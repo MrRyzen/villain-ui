@@ -23,7 +23,7 @@
 
 {#if open}
   <div
-    class="absolute {placementClasses[placement]} z-50 glass-panel rounded-[var(--radius-lg)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[fade-up_0.2s_var(--ease-luxe)]"
+    class="absolute {placementClasses[placement]} z-[var(--z-50)] glass-panel rounded-[var(--radius-lg)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[fade-up_0.2s_var(--ease-luxe)]"
   >
     {@render children?.()}
   </div>

@@ -28,7 +28,7 @@
     'top-left': 'top-6 left-6'
   };
 
-  const baseClasses = 'fixed z-50 flex items-center justify-center rounded-[var(--radius-pill)] bg-[var(--color-accent)] text-[var(--color-text)] accent-glow hover-lift shadow-[var(--shadow-deep)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer animate-[glow-pulse_3s_ease-in-out_infinite] hover:scale-110';
+  const baseClasses = 'fixed z-[var(--z-50)] flex items-center justify-center rounded-[var(--radius-pill)] bg-[var(--color-accent)] text-[var(--color-text)] accent-glow hover-lift shadow-[var(--shadow-deep)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer animate-[glow-pulse_3s_ease-in-out_infinite] hover:scale-110';
 </script>
 
 <button

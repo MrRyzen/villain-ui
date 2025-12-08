@@ -36,7 +36,7 @@
     lg: 'h-24'
   };
 
-  const baseClasses = 'z-50 glass-panel flex items-center justify-between px-4 md:px-6 lg:px-8 transition-all duration-300 ease-[var(--ease-luxe)]';
+  const baseClasses = 'z-[var(--z-50)] glass-panel flex items-center justify-between px-4 md:px-6 lg:px-8 transition-all duration-300 ease-[var(--ease-luxe)]';
 
   // Track elements modified by the effect to preserve manual .active classes
   let autoManagedElements = $state(new Set<Element>());

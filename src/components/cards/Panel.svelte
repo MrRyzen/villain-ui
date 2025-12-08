@@ -27,7 +27,7 @@
 
   const glassClasses = $derived(
     variant === 'glass'
-      ? 'glass-panel bg-[rgba(107,33,168,0.05)] border-[var(--color-border-glow)]'
+      ? 'glass-panel bg-[var(--color-accent-overlay-5)] border-[var(--color-border-glow)]'
       : 'glass-panel'
   );
   

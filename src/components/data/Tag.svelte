@@ -13,7 +13,7 @@
 		default:
 			'bg-[var(--color-base-2)] text-[var(--color-text-soft)] border-[var(--color-border)]',
 		accent:
-			'bg-[rgba(127,61,255,0.1)] text-[var(--color-accent-soft)] border-[var(--color-accent)] shadow-[0_0_12px_rgba(127,61,255,0.2)]'
+			'bg-[var(--color-secondary-overlay-10)] text-[var(--color-accent-soft)] border-[var(--color-accent)] shadow-[0_0_12px_var(--color-secondary-overlay-20)]'
 	};
 
 	const classes = $derived(

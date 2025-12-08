@@ -1,4 +1,5 @@
 export { default as Table } from './Table.svelte';
+export type { Column as TableColumn, SortDirection } from './Table.svelte';
 export { default as Pagination } from './Pagination.svelte';
 export { default as Badge } from './Badge.svelte';
 export { default as Tag } from './Tag.svelte';

@@ -33,6 +33,7 @@
   let previousFocus = $state<HTMLElement | null>(null);
 
   const titleId = createId('drawer-title');
+  const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable="true"], summary, details, audio[controls], video[controls]';
 
   const sizeClasses = {
     left: {
@@ -90,7 +91,6 @@
   function handleFocusTrap(event: KeyboardEvent) {
     if (event.key !== 'Tab' || !drawerElement) return;
 
-    const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
     const focusableElements = Array.from(
       drawerElement.querySelectorAll<HTMLElement>(focusableSelector)
     );
@@ -131,9 +131,7 @@
 
       // Focus first interactive element
       requestAnimationFrame(() => {
-        const firstInteractive = drawerElement?.querySelector<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        const firstInteractive = drawerElement?.querySelector<HTMLElement>(focusableSelector);
         firstInteractive?.focus();
       });
 
@@ -154,7 +152,7 @@
 
 {#if open}
   <div
-    class="fixed inset-0 z-50 bg-overlay backdrop-blur-md animate-[fade-in_0.2s_var(--ease-luxe)]"
+    class="fixed inset-0 z-[var(--z-50)] bg-overlay backdrop-blur-md animate-[fade-in_0.2s_var(--ease-luxe)]"
     onclick={handleBackdropClick}
     role="presentation"
   >

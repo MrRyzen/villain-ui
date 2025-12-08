@@ -70,21 +70,18 @@
 			class="px-4 py-2 border-b border-border flex items-center justify-between"
 			style="background: var(--color-base-2); color: var(--color-text-soft); font-family: var(--font-mono); font-size: 0.875rem;"
 		>
-			<span>{filename || ''}</span>
-			{#if showCopy}
-				<button
-					onclick={copyCode}
-					class="copy-button px-3 py-1 rounded-sm transition-all"
-					style="background: var(--color-base-3); color: var(--color-text-soft); border: 1px solid var(--color-border); font-size: 0.75rem;"
-					aria-label="Copy code"
-				>
-					{copied ? 'Copied!' : 'Copy'}
-				</button>
-			{/if}
-		</div>
-	{/if}
-
-	<div
+		<span>{filename || ''}</span>
+		{#if showCopy}
+			<button
+				onclick={copyCode}
+				class="copy-button px-3 py-1 rounded-sm transition-all text-xs"
+				aria-label="Copy code"
+			>
+				{copied ? 'Copied!' : 'Copy'}
+			</button>
+		{/if}
+	</div>
+{/if}	<div
 		bind:this={codeContainer}
 		class="p-4 overflow-x-auto"
 		style="background: var(--color-base-1); font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6;"
@@ -97,10 +94,10 @@
 				>
 					{#each Array.from({ length: lineCount }, (_, i) => i + 1) as lineNum}
 						<div
-							class:highlighted={highlightLines.includes(lineNum)}
-							style={highlightLines.includes(lineNum)
-								? 'background: rgba(107, 33, 168, 0.1);'
-								: ''}
+						class:highlighted={highlightLines.includes(lineNum)}
+						style={highlightLines.includes(lineNum)
+							? 'background: var(--color-accent-overlay-10);'
+							: ''}
 						>
 							{lineNum}
 						</div>
@@ -137,16 +134,23 @@
 		background: var(--color-accent-soft);
 	}
 
-	/* Copy button hover effect */
+	/* Copy button styling */
+	.copy-button {
+		background: var(--color-base-3);
+		color: var(--color-text-soft);
+		border: 1px solid var(--color-border);
+		font-size: 0.75rem;
+	}
+
 	.copy-button:hover {
-		background: var(--color-accent) !important;
-		color: var(--color-text) !important;
-		border-color: var(--color-accent) !important;
+		background: var(--color-accent);
+		color: var(--color-text);
+		border-color: var(--color-accent);
 	}
 
 	/* Highlight gutter numbers */
 	.highlighted {
-		background: rgba(107, 33, 168, 0.1);
+		background: var(--color-accent-overlay-10);
 	}
 
 	/*
@@ -156,7 +160,7 @@
 	 * This ensures consistent styling with the component's luxury aesthetic.
 	 */
 	:global(.line.highlighted) {
-		background: rgba(107, 33, 168, 0.1);
+		background: var(--color-accent-overlay-10);
 		display: inline-block;
 		width: 100%;
 	}

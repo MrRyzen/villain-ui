@@ -136,7 +136,7 @@
 
 {#if open}
   <div
-    class="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] p-4 bg-overlay backdrop-blur-md animate-[fade-in_0.2s_var(--ease-luxe)]"
+    class="fixed inset-0 z-[var(--z-50)] flex items-start justify-center pt-[20vh] p-4 bg-overlay backdrop-blur-md animate-[fade-in_0.2s_var(--ease-luxe)]"
     onclick={handleBackdropClick}
     role="presentation"
   >
@@ -146,8 +146,6 @@
       aria-expanded="true"
       aria-haspopup="listbox"
       aria-controls={paletteId}
-      aria-activedescendant={selectedIndex >= 0 && selectedIndex < filteredCommands.length && filteredCommands[selectedIndex] ? `cmd-${filteredCommands[selectedIndex].id}` : undefined}
-      tabindex="0"
     >
       <div class="p-4 border-b border-border">
         <input
@@ -158,6 +156,7 @@
           onkeydown={handleKeyDown}
           class="w-full bg-transparent border-none outline-none text-text text-lg placeholder:text-text-muted"
           aria-autocomplete="list"
+          aria-activedescendant={selectedIndex >= 0 && selectedIndex < filteredCommands.length && filteredCommands[selectedIndex] ? `cmd-${filteredCommands[selectedIndex].id}` : undefined}
         />
       </div>
 

@@ -98,7 +98,7 @@
 
 <div class="relative inline-block">
   <div
-    aria-describedby={visible ? tooltipId : undefined}
+    aria-describedby={tooltipId}
     onmouseenter={handleMouseEnter}
     onmouseleave={handleMouseLeave}
     onfocus={handleFocus}
@@ -109,14 +109,13 @@
     {@render renderedTrigger?.()}
   </div>
 
-  {#if visible}
-    <div
-      bind:this={tooltipElement}
-      id={tooltipId}
-      role="tooltip"
-      class="absolute {placementClasses[actualPlacement]} z-50 glass-panel rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap animate-[fade-in_0.15s_var(--ease-luxe)] pointer-events-none {className}"
-    >
-      {content}
-    </div>
-  {/if}
+  <div
+    bind:this={tooltipElement}
+    id={tooltipId}
+    role="tooltip"
+    aria-hidden={visible ? 'false' : 'true'}
+    class="absolute {placementClasses[actualPlacement]} z-[var(--z-50)] glass-panel rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap pointer-events-none {className} {visible ? 'animate-[fade-in_0.15s_var(--ease-luxe)] opacity-100' : 'opacity-0 invisible'}"
+  >
+    {content}
+  </div>
 </div>
