@@ -2,11 +2,12 @@
 	interface Props {
 		variant?: 'body' | 'caption';
 		color?: 'default' | 'soft' | 'muted' | 'success' | 'warning' | 'error';
+		weight?: 'normal' | 'bold' | 'semibold';
 		as?: 'p' | 'span' | 'div';
 		children?: import('svelte').Snippet;
 	}
 
-	let { variant = 'body', color = 'default', as = 'p', children }: Props = $props();
+	let { variant = 'body', color = 'default', weight = 'normal', as = 'p', children }: Props = $props();
 
 	const colorMap = {
 		default: 'var(--color-text)',
@@ -17,8 +18,14 @@
 		error: 'var(--color-error)',
 	};
 
+	const weightMap = {
+		normal: '400',
+		semibold: '600',
+		bold: '700',
+	};
+
 	const styles = $derived(
-		`font-size: var(--text-${variant}-size); line-height: var(--text-${variant}-line-height); font-weight: var(--text-${variant}-weight); letter-spacing: var(--text-${variant}-letter-spacing); font-family: var(--font-body); color: ${colorMap[color]};`
+		`font-size: var(--text-${variant}-size); line-height: var(--text-${variant}-line-height); font-weight: ${weightMap[weight] || '400'}; letter-spacing: var(--text-${variant}-letter-spacing); font-family: var(--font-body); color: ${colorMap[color]};`
 	);
 </script>
 

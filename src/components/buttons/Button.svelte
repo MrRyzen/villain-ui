@@ -6,8 +6,6 @@
     size?: 'sm' | 'md' | 'lg';
     disabled?: boolean;
     type?: 'button' | 'submit' | 'reset';
-    href?: string;
-    target?: '_blank' | '_self' | '_parent' | '_top';
     onclick?: (event: MouseEvent) => void;
     iconBefore?: import('svelte').Snippet;
     iconAfter?: import('svelte').Snippet;
@@ -20,8 +18,6 @@
     size = 'md',
     disabled = false,
     type = 'button',
-    href,
-    target,
     onclick,
     iconBefore,
     iconAfter,
@@ -30,54 +26,28 @@
     ...restProps
   }: Props = $props();
 
-  const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer no-underline';
+  const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer';
   const classes = $derived(`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabled ? disabledClasses : ''} ${className}`);
 </script>
 
-{#if href}
-  <a
-    {href}
-    {target}
-    onclick={onclick}
-    class={classes}
-    aria-disabled={disabled}
-    tabindex={disabled ? -1 : undefined}
-    {...restProps}
-  >
-    {#if iconBefore}
-      <span class="inline-flex items-center justify-center">
-        {@render iconBefore()}
-      </span>
-    {/if}
-    {#if children}
-      {@render children()}
-    {/if}
-    {#if iconAfter}
-      <span class="inline-flex items-center justify-center">
-        {@render iconAfter()}
-      </span>
-    {/if}
-  </a>
-{:else}
-  <button
-    {type}
-    {disabled}
-    onclick={onclick}
-    class={classes}
-    {...restProps}
-  >
-    {#if iconBefore}
-      <span class="inline-flex items-center justify-center">
-        {@render iconBefore()}
-      </span>
-    {/if}
-    {#if children}
-      {@render children()}
-    {/if}
-    {#if iconAfter}
-      <span class="inline-flex items-center justify-center">
-        {@render iconAfter()}
-      </span>
-    {/if}
-  </button>
-{/if}
+<button
+  {type}
+  {disabled}
+  onclick={onclick}
+  class={classes}
+  {...restProps}
+>
+  {#if iconBefore}
+    <span class="inline-flex items-center justify-center">
+      {@render iconBefore()}
+    </span>
+  {/if}
+  {#if children}
+    {@render children()}
+  {/if}
+  {#if iconAfter}
+    <span class="inline-flex items-center justify-center">
+      {@render iconAfter()}
+    </span>
+  {/if}
+</button>

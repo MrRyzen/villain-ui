@@ -1,0 +1,21 @@
+/* Main content area that adapts to sidebar state */
+.main-content {
+	margin-left: 4rem; /* Collapsed sidebar width (w-16) */
+	transition: margin-left 300ms var(--ease-luxe);
+	min-height: 100vh;
+}
+
+.main-content.sidebar-open {
+	margin-left: 16rem; /* Open sidebar width (w-64) */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	.main-content {
+		margin-left: 0;
+	}
+
+	.main-content.sidebar-open {
+		margin-left: 0;
+	}
+}

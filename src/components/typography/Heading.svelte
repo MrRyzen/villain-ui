@@ -2,7 +2,7 @@
 	interface Props {
 		level?: 1 | 2 | 3 | 4 | 5 | 6;
 		glow?: boolean;
-		variant?: 'default' | 'gradient';
+		variant?: 'default' | 'accent' | 'gradient';
 		as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 		children?: import('svelte').Snippet;
 	}
@@ -13,6 +13,7 @@
 	
 	const variantClasses = {
 		default: '',
+		accent: 'text-accent',
 		gradient: 'text-gradient'
 	};
 	

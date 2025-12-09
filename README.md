@@ -689,15 +689,15 @@ The library uses three consistent icon patterns:
 </Card>
 
 <!-- Card as a link with lift effect and icon -->
-<Card href="/features" liftOnHover padding="lg">
+<Card href="/features" class="hover-lift" padding="lg">
   {#snippet iconBefore()}
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
     </svg>
   {/snippet}
-  
+
   <h3>Feature Name</h3>
-  <p>Clickable card with enhanced hover lift effect.</p>
+  <p>Clickable card with hover lift effect.</p>
 </Card>
 ```
 
@@ -705,8 +705,6 @@ The library uses three consistent icon patterns:
 - `href?: string` - Makes the card a clickable link (renders as `<a>` tag)
 - `target?: string` - Link target attribute (e.g., '_blank')
 - `rel?: string` - Link rel attribute (defaults to 'noopener noreferrer' for target='_blank')
-- `liftOnHover?: boolean` - Apply enhanced lift effect on hover using `.hover-lift-enhanced` utility
-- `hoverable?: boolean` - Basic hover effect (deprecated, use `liftOnHover` instead)
 - `padding?: 'none' | 'sm' | 'md' | 'lg'` - Internal padding (default: 'md')
 - `iconBefore?: Snippet` - Optional icon displayed with `.card-icon` utility
 - `header?: Snippet` - Optional header content
@@ -714,46 +712,7 @@ The library uses three consistent icon patterns:
 - `children?: Snippet` - Main card content
 - `class?: string` - Additional CSS classes
 
-**Note:** When using `liftOnHover`, the card applies the `.hover-lift-enhanced` utility for a dramatic lift with accent border and glow. The `iconBefore` snippet uses the `.card-icon` utility class for centered, accent-colored icon display.
-
-**LinkCard** - Convenience wrapper for clickable cards
-
-```svelte
-<script>
-  import { LinkCard } from '@mrintel/villain-ui';
-</script>
-
-<!-- Minimal boilerplate for a fully clickable, lifting card -->
-<LinkCard href="/features">
-  {#snippet icon()}
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-    </svg>
-  {/snippet}
-  
-  <h3>Quick Feature Card</h3>
-  <p>LinkCard automatically enables liftOnHover and sets padding='md'.</p>
-</LinkCard>
-
-<!-- With custom padding -->
-<LinkCard href="/docs" padding="lg">
-  <h3>Documentation</h3>
-  <p>All the Card props work here too.</p>
-</LinkCard>
-```
-
-**Props:**
-- `href: string` - Link destination (required)
-- `target?: string` - Link target attribute
-- `rel?: string` - Link rel attribute (auto-defaults for security)
-- `padding?: 'none' | 'sm' | 'md' | 'lg'` - Internal padding (default: 'md')
-- `icon?: Snippet` - Optional icon using `.card-icon` utility
-- `header?: Snippet` - Optional header content
-- `footer?: Snippet` - Optional footer content
-- `children?: Snippet` - Main card content
-- `class?: string` - Additional CSS classes
-
-**Note:** `LinkCard` is a convenience wrapper around `Card` that automatically sets `liftOnHover={true}` and provides sensible defaults for clickable cards. Use it when you want a fully clickable card with the `.hover-lift-enhanced` effect without manually configuring those props. All other Card props are supported.
+**Note:** For clickable cards with hover effects, use `href` to make the card a link and add `class="hover-lift"` to enable the lift animation. The `iconBefore` snippet uses the `.card-icon` utility class for centered, accent-colored icon display.
 
 **Panel** - Simple content panel
 
@@ -1766,17 +1725,24 @@ Props:
   import { Badge } from '@mrintel/villain-ui';
 </script>
 
+<!-- Basic variants -->
 <Badge variant="success">Active</Badge>
 <Badge variant="warning">Pending</Badge>
 <Badge variant="error">Error</Badge>
 <Badge variant="accent">Accent</Badge>
 
-<!-- Feature variant - styled like a feature pill -->
+<!-- Feature variant - purple accent styling -->
 <Badge variant="feature">New Feature</Badge>
 <Badge variant="feature">Beta</Badge>
 
+<!-- With hover effects -->
+<Badge variant="feature" hover>Hoverable Badge</Badge>
+
+<!-- With persistent glow (can be toggled dynamically for blinking) -->
+<Badge variant="accent" glow>Glowing Badge</Badge>
+
 <!-- With icon -->
-<Badge variant="accent">
+<Badge variant="accent" size="md" hover>
   {#snippet icon()}
     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
       <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
@@ -1788,10 +1754,13 @@ Props:
 
 **Props:**
 - `variant?: 'default' | 'success' | 'warning' | 'error' | 'accent' | 'feature'` - Badge style (default: 'default')
+- `size?: 'sm' | 'md'` - Badge size (default: 'md')
 - `icon?: Snippet` - Optional icon content
+- `hover?: boolean` - Enable hover effects (darkened background + glow for accent/feature variants) (default: false)
+- `glow?: boolean` - Apply accent glow effect, can be toggled dynamically for blinking animations (default: false)
 - `class?: string` - Additional CSS classes
 
-**Note:** The `feature` variant creates a pill-shaped badge with accent background and glow, similar to the `.feature-tag` utility class. Use it to highlight new features, beta badges, or promotional tags.
+**Note:** The `feature` variant creates a purple-accented badge perfect for highlighting new features or promotional content. Use `hover={true}` for interactive badges and `glow={true}` for persistent or animated glow effects.
 
 **Tag** - Removable tag
 

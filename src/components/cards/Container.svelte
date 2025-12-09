@@ -26,7 +26,7 @@
   };
 
   const centeredClasses = centered ? 'mx-auto' : '';
-  const paddingClasses = padding ? 'px-4 md:px-6 lg:px-8' : '';
+  const paddingClasses = padding ? 'px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16' : '';
   const baseClasses = 'w-full';
 </script>
 

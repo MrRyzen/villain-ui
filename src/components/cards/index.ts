@@ -4,4 +4,3 @@ export { default as Grid } from './Grid.svelte';
 export { default as Container } from './Container.svelte';
 export { default as SectionHeader } from './SectionHeader.svelte';
 export { default as Divider } from './Divider.svelte';
-export { default as LinkCard } from './LinkCard.svelte';

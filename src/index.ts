@@ -16,7 +16,7 @@ export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } fro
 export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup } from './components/forms';
 
 // ===== Layout Components =====
-export { Card, Panel, Grid, Container, SectionHeader, Divider, LinkCard } from './components/cards';
+export { Card, Panel, Grid, Container, SectionHeader, Divider } from './components/cards';
 
 // ===== Navigation Components =====
 export { Navbar, Sidebar, Tabs, Breadcrumbs, Menu, DropdownMenu, ContextMenu } from './components/navigation';
@@ -35,31 +35,50 @@ export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero } from './compo
 
 // ===== Component Prop Type Exports =====
 
+import type { ComponentProps } from 'svelte';
+import type Button from './components/buttons/Button.svelte';
+import type IconButton from './components/buttons/IconButton.svelte';
+import type FloatingActionButton from './components/buttons/FloatingActionButton.svelte';
+import type LinkButton from './components/buttons/LinkButton.svelte';
+import type Input from './components/forms/Input.svelte';
+import type Textarea from './components/forms/Textarea.svelte';
+import type Select from './components/forms/Select.svelte';
+import type Checkbox from './components/forms/Checkbox.svelte';
+import type Switch from './components/forms/Switch.svelte';
+import type RadioGroup from './components/forms/RadioGroup.svelte';
+import type Card from './components/cards/Card.svelte';
+import type Tabs from './components/navigation/Tabs.svelte';
+import type Modal from './components/overlays/Modal.svelte';
+import type Drawer from './components/overlays/Drawer.svelte';
+import type Alert from './components/overlays/Alert.svelte';
+import type Tooltip from './components/overlays/Tooltip.svelte';
+import type Accordion from './components/utilities/Accordion.svelte';
+
 // Button Component Types
-export type { Props as ButtonProps } from './components/buttons/Button.svelte';
-export type { Props as IconButtonProps } from './components/buttons/IconButton.svelte';
-export type { Props as FloatingActionButtonProps } from './components/buttons/FloatingActionButton.svelte';
-export type { Props as LinkButtonProps } from './components/buttons/LinkButton.svelte';
+export type ButtonProps = ComponentProps<Button>;
+export type IconButtonProps = ComponentProps<IconButton>;
+export type FloatingActionButtonProps = ComponentProps<FloatingActionButton>;
+export type LinkButtonProps = ComponentProps<LinkButton>;
 
 // Form Component Types
-export type { Props as InputProps } from './components/forms/Input.svelte';
-export type { Props as TextareaProps } from './components/forms/Textarea.svelte';
-export type { Props as SelectProps } from './components/forms/Select.svelte';
-export type { Props as CheckboxProps } from './components/forms/Checkbox.svelte';
-export type { Props as SwitchProps } from './components/forms/Switch.svelte';
-export type { Props as RadioGroupProps } from './components/forms/RadioGroup.svelte';
+export type InputProps = ComponentProps<Input>;
+export type TextareaProps = ComponentProps<Textarea>;
+export type SelectProps = ComponentProps<Select>;
+export type CheckboxProps = ComponentProps<Checkbox>;
+export type SwitchProps = ComponentProps<Switch>;
+export type RadioGroupProps = ComponentProps<RadioGroup>;
 
 // Layout Component Types
-export type { Props as CardProps } from './components/cards/Card.svelte';
+export type CardProps = ComponentProps<Card>;
 
 // Navigation Component Types
-export type { Props as TabsProps } from './components/navigation/Tabs.svelte';
+export type TabsProps = ComponentProps<Tabs>;
 
 // Overlay Component Types
-export type { Props as ModalProps } from './components/overlays/Modal.svelte';
-export type { Props as DrawerProps } from './components/overlays/Drawer.svelte';
-export type { Props as AlertProps } from './components/overlays/Alert.svelte';
-export type { Props as TooltipProps } from './components/overlays/Tooltip.svelte';
+export type ModalProps = ComponentProps<Modal>;
+export type DrawerProps = ComponentProps<Drawer>;
+export type AlertProps = ComponentProps<Alert>;
+export type TooltipProps = ComponentProps<Tooltip>;
 
 // Utility Component Types
-export type { Props as AccordionProps } from './components/utilities/Accordion.svelte';
+export type AccordionProps = ComponentProps<Accordion>;

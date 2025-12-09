@@ -1,15 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-
-	export type SortDirection = 'asc' | 'desc' | null;
-
-	export interface Column {
-		key: string;
-		label: string;
-		align?: 'left' | 'center' | 'right';
-		sortable?: boolean;
-		render?: (value: any, row: any) => any;
-	}
+	import type { Column, SortDirection } from './Table.types';
 
 	interface Props {
 		// Dynamic data mode
@@ -170,7 +161,7 @@
 				{#if loading}
 					<!-- Loading state -->
 					<tr class="state-row">
-						<td colspan={columns.length} class="text-center">
+						<td colspan={columns?.length} class="text-center">
 							<div class="loading-container">
 								<svg
 									class="loading-spinner"
@@ -193,7 +184,7 @@
 				{:else if filteredData.length === 0}
 					<!-- Empty state -->
 					<tr class="state-row">
-						<td colspan={columns.length} class="text-center">
+						<td colspan={columns?.length} class="text-center">
 							{#if emptyState}
 								{@render emptyState()}
 							{:else}

@@ -7,7 +7,7 @@
 	} from './formClasses';
 
 	export interface Props {
-		type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
+		type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'color' | 'search';
 		value?: string | number;
 		placeholder?: string;
 		disabled?: boolean;
@@ -217,5 +217,29 @@
 
 	input[type='number'] {
 		-moz-appearance: textfield;
+		appearance: textfield;
+	}
+
+	/* Color input styling */
+	input[type='color'] {
+		width: 60px;
+		min-width: 60px;
+		min-height: 3rem;
+		padding: 0.375rem;
+		cursor: pointer;
+	}
+
+	input[type='color']::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+
+	input[type='color']::-webkit-color-swatch {
+		border: 1px solid var(--color-border-strong);
+		border-radius: calc(var(--radius-md) - 2px);
+	}
+
+	input[type='color']::-moz-color-swatch {
+		border: 1px solid var(--color-border-strong);
+		border-radius: calc(var(--radius-md) - 2px);
 	}
 </style>
