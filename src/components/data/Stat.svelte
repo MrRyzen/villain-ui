@@ -20,7 +20,7 @@
 	const showGlow = $derived(trend === 'up');
 </script>
 
-<div class="glass-panel rounded-[var(--radius-xl)] p-6">
+<div class="panel-spectral rounded-[var(--radius-xl)] p-6">
 	<!-- Top Row: Icon & Label -->
 	<div class="flex items-start justify-between mb-4">
 		<div class="flex-1">

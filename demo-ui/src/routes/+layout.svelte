@@ -43,13 +43,14 @@
 		<LinkButton href="/overlays" variant="ghost" size="sm">Overlays</LinkButton>
 		<LinkButton href="/typography" variant="ghost" size="sm">Typography</LinkButton>
 		<LinkButton href="/utilities" variant="ghost" size="sm">Utilities</LinkButton>
+		<LinkButton href="/theme" variant="ghost" size="sm">Theme</LinkButton>
 	{/snippet}
 
 	{#snippet actions()}
 		<IconButton
 			variant="ghost"
 			size="md"
-			onclick={() => window.open('https://github.com/mrintel/villain-ui', '_blank')}
+			onclick={() => window.open('https://github.com/mrintel/villain-ui', '_blank', 'noopener,noreferrer')}
 			ariaLabel="GitHub repository"
 		>
 			<Icon icon="lucide:github" width="20" height="20" />
@@ -105,6 +106,11 @@
 	<a href="/utilities" class="sidebar-item">
 		<Icon icon="mdi:tools" class="sidebar-item-icon" width="20" height="20" />
 		<span class="sidebar-item-label">Utilities</span>
+	</a>
+
+	<a href="/theme" class="sidebar-item">
+		<Icon icon="mdi:palette" class="sidebar-item-icon" width="20" height="20" />
+		<span class="sidebar-item-label">Theme</span>
 	</a>
 </Sidebar>
 

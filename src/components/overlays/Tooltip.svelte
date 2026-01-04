@@ -114,7 +114,7 @@
     id={tooltipId}
     role="tooltip"
     aria-hidden={visible ? 'false' : 'true'}
-    class="absolute {placementClasses[actualPlacement]} z-[var(--z-50)] glass-panel rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap pointer-events-none {className} {visible ? 'animate-[fade-in_0.15s_var(--ease-luxe)] opacity-100' : 'opacity-0 invisible'}"
+    class="absolute {placementClasses[actualPlacement]} z-[var(--z-50)] panel-floating rounded-[var(--radius-md)] px-4 py-2.5 text-sm text-text whitespace-nowrap pointer-events-none {className} {visible ? 'animate-[fade-in_0.15s_var(--ease-luxe)] opacity-100' : 'opacity-0 invisible'}"
   >
     {content}
   </div>

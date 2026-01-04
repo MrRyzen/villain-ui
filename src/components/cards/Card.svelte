@@ -37,7 +37,7 @@
   };
 
   const baseClasses = $derived(
-    `glass-panel rounded-[var(--radius-lg)] transition-all duration-300 ease-[var(--ease-luxe)] ${href ? 'no-underline' : ''}`
+    `panel-raised rounded-[var(--radius-lg)] transition-all duration-300 ease-[var(--ease-luxe)] ${href ? 'no-underline' : ''}`
   );
 </script>
 

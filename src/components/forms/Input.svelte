@@ -17,6 +17,9 @@
 		oninput?: (event: Event) => void;
 		iconBefore?: import('svelte').Snippet;
 		iconAfter?: import('svelte').Snippet;
+		validate?: (value: string | number) => boolean | string;
+		validationMessage?: string;
+		showValidation?: boolean;
 		class?: string;
 	}
 
@@ -31,10 +34,77 @@
 		oninput,
 		iconBefore,
 		iconAfter,
+		validate,
+		validationMessage,
+		showValidation = true,
 		class: className = '',
 	}: Props = $props();
 
-	const errorClasses = $derived(error ? 'error-state' : '');
+	// Built-in validation patterns
+	const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+	const telPattern = /^[\d\s\-\+\(\)]+$/;
+
+	// Validation logic
+	let validationError = $state<string | null>(null);
+
+	function performValidation(val: string | number): boolean {
+		if (!val || val === '') {
+			validationError = null;
+			return true;
+		}
+
+		// Custom validation function
+		if (validate) {
+			const result = validate(val);
+			if (result === true) {
+				validationError = null;
+				return true;
+			} else if (typeof result === 'string') {
+				validationError = result;
+				return false;
+			} else {
+				validationError = validationMessage || 'Invalid input';
+				return false;
+			}
+		}
+
+		// Built-in validation based on type
+		const stringVal = String(val);
+		switch (type) {
+			case 'email':
+				if (!emailPattern.test(stringVal)) {
+					validationError = validationMessage || 'Please enter a valid email address';
+					return false;
+				}
+				break;
+			case 'url':
+				if (!urlPattern.test(stringVal)) {
+					validationError = validationMessage || 'Please enter a valid URL';
+					return false;
+				}
+				break;
+			case 'tel':
+				if (!telPattern.test(stringVal)) {
+					validationError = validationMessage || 'Please enter a valid phone number';
+					return false;
+				}
+				break;
+		}
+
+		validationError = null;
+		return true;
+	}
+
+	// Validate on value change
+	$effect(() => {
+		if (value !== undefined && value !== '') {
+			performValidation(value);
+		}
+	});
+
+	const hasError = $derived(error || (validationError !== null));
+	const errorClasses = $derived(hasError ? 'error-state' : '');
 
 	function increment() {
 		if (disabled || type !== 'number') return;
@@ -56,7 +126,7 @@
 			<!-- BEFORE ICON -->
 			{#if iconBefore}
 				<span
-					class="absolute left-4 inline-flex items-center justify-center text-text-soft pointer-events-none"
+					class="absolute left-4 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
 					{@render iconBefore()}
 				</span>
@@ -80,7 +150,7 @@
 			<!-- AFTER ICON (non-number) -->
 			{#if iconAfter && type !== 'number'}
 				<span
-					class="absolute right-4 inline-flex items-center justify-center text-text-soft pointer-events-none"
+					class="absolute right-4 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
 					{@render iconAfter()}
 				</span>
@@ -108,58 +178,70 @@
 				</div>
 			{/if}
 		</div>
+		{#if showValidation && validationError}
+			<p class="text-error text-xs mt-1.5">
+				{validationError}
+			</p>
+		{/if}
 	</div>
 {:else}
-	<div class="relative flex items-center">
-		{#if iconBefore}
-			<span
-				class="absolute left-4 inline-flex items-center justify-center text-text-soft pointer-events-none"
-			>
-				{@render iconBefore()}
-			</span>
-		{/if}
-
-		<input
-			{type}
-			{id}
-			{placeholder}
-			{disabled}
-			bind:value
-			{oninput}
-			class="{baseInputClasses} {focusClasses} {errorClasses} {disabled
-				? disabledClasses
-				: ''} {className}"
-			class:pl-12={iconBefore}
-			class:pr-12={iconAfter || type === 'number'}
-		/>
-
-		{#if iconAfter && type !== 'number'}
-			<span
-				class="absolute right-4 inline-flex items-center justify-center text-text-soft pointer-events-none"
-			>
-				{@render iconAfter()}
-			</span>
-		{/if}
-
-		{#if type === 'number'}
-			<div class="number-arrows">
-				<button
-					type="button"
-					onclick={increment}
-					class="arrow-btn arrow-up"
-					tabindex="-1"
+	<div>
+		<div class="relative flex items-center">
+			{#if iconBefore}
+				<span
+					class="absolute left-4 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
-					▲
-				</button>
-				<button
-					type="button"
-					onclick={decrement}
-					class="arrow-btn arrow-down"
-					tabindex="-1"
+					{@render iconBefore()}
+				</span>
+			{/if}
+
+			<input
+				{type}
+				{id}
+				{placeholder}
+				{disabled}
+				bind:value
+				{oninput}
+				class="{baseInputClasses} {focusClasses} {errorClasses} {disabled
+					? disabledClasses
+					: ''} {className}"
+				class:pl-12={iconBefore}
+				class:pr-12={iconAfter || type === 'number'}
+			/>
+
+			{#if iconAfter && type !== 'number'}
+				<span
+					class="absolute right-4 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
-					▼
-				</button>
-			</div>
+					{@render iconAfter()}
+				</span>
+			{/if}
+
+			{#if type === 'number'}
+				<div class="number-arrows">
+					<button
+						type="button"
+						onclick={increment}
+						class="arrow-btn arrow-up"
+						tabindex="-1"
+					>
+						▲
+					</button>
+					<button
+						type="button"
+						onclick={decrement}
+						class="arrow-btn arrow-down"
+						tabindex="-1"
+					>
+						▼
+					</button>
+				</div>
+			{/if}
+		</div>
+		{#if showValidation && validationError}
+			<p class="text-error text-xs mt-1.5">
+				{validationError}
+			</p>
 		{/if}
 	</div>
 {/if}

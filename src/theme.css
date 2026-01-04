@@ -393,6 +393,40 @@
 	box-sizing: border-box;
 }
 
+/* ===== Scrollbar Theming ===== */
+
+/* Modern browsers (Firefox) */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--color-accent-overlay-30) var(--color-base-2);
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--color-base-2);
+	border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-accent-overlay-30);
+	border-radius: var(--radius-sm);
+	border: 2px solid var(--color-base-2);
+	transition: background 0.2s var(--ease-luxe);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-accent-overlay-50);
+}
+
+::-webkit-scrollbar-thumb:active {
+	background: var(--color-accent);
+}
+
 html {
 	font-family: var(--font-body);
 	-webkit-font-smoothing: antialiased;
@@ -496,15 +530,54 @@ textarea:focus {
 
 /* ===== Custom Utility Classes ===== */
 
-.text-glow {
-	text-shadow: var(--shadow-text-glow);
-}
-
 .glass-panel {
 	backdrop-filter: blur(var(--glass-panel-blur));
 	background: var(--glass-panel-background);
 	border: 1px solid var(--color-border);
 	box-shadow: var(--shadow-deep);
+}
+
+.panel-base {
+	background: linear-gradient(
+		180deg,
+		var(--color-base-1),
+		var(--color-base-0)
+	);
+	border: 1px solid var(--color-border);
+	box-shadow: none;
+}
+
+.panel-raised {
+	background: linear-gradient(
+		180deg,
+		var(--color-base-2),
+		var(--color-base-1)
+	);
+	border: 1px solid var(--color-border);
+	box-shadow:
+		0 6px 18px color-mix(in srgb, black 55%, transparent);
+}
+
+.panel-floating {
+	background: linear-gradient(
+		180deg,
+		var(--color-base-3),
+		var(--color-base-2)
+	);
+	border: 1px solid var(--color-border-strong);
+	box-shadow:
+		0 12px 30px color-mix(in srgb, black 65%, transparent);
+}
+
+.panel-spectral {
+	background: linear-gradient(
+		180deg,
+		color-mix(in srgb, var(--color-base-2) 92%, black),
+		color-mix(in srgb, var(--color-base-1) 96%, black)
+	);
+	border: 1px solid var(--color-border);
+	box-shadow:
+		0 10px 28px color-mix(in srgb, black 70%, transparent);
 }
 
 .glass-panel.error-state {
@@ -526,6 +599,10 @@ textarea:focus {
 	box-shadow: var(--shadow-accent-glow), var(--shadow-deep);
 }
 
+.text-glow {
+	text-shadow: var(--shadow-text-glow);
+}
+
 .text-gradient {
 	background: linear-gradient(
 		135deg,
@@ -538,7 +615,10 @@ textarea:focus {
 }
 
 .text-accent {
-	color: var(--color-accent);
+	background: var(--color-accent);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 }
 
 .card-icon {

@@ -13,7 +13,7 @@ export const version = '0.5.0';
 export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } from './components/buttons';
 
 // ===== Form Components =====
-export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup } from './components/forms';
+export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker } from './components/forms';
 
 // ===== Layout Components =====
 export { Card, Panel, Grid, Container, SectionHeader, Divider } from './components/cards';
@@ -29,9 +29,11 @@ export { Heading, Text, Code } from './components/typography';
 
 // ===== Data Display Components =====
 export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat } from './components/data';
+export type { TableColumn, SortDirection } from './components/data';
 
 // ===== Utility Components =====
-export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero } from './components/utilities';
+export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero, SystemConsole, SystemInterface } from './components/utilities';
+export type { ConsoleMessage, SystemMessage, MessageContentType } from './components/utilities';
 
 // ===== Component Prop Type Exports =====
 
@@ -46,6 +48,9 @@ import type Select from './components/forms/Select.svelte';
 import type Checkbox from './components/forms/Checkbox.svelte';
 import type Switch from './components/forms/Switch.svelte';
 import type RadioGroup from './components/forms/RadioGroup.svelte';
+import type DatePicker from './components/forms/DatePicker.svelte';
+import type TimePicker from './components/forms/TimePicker.svelte';
+import type DateTimePicker from './components/forms/DateTimePicker.svelte';
 import type Card from './components/cards/Card.svelte';
 import type Tabs from './components/navigation/Tabs.svelte';
 import type Modal from './components/overlays/Modal.svelte';
@@ -67,6 +72,9 @@ export type SelectProps = ComponentProps<Select>;
 export type CheckboxProps = ComponentProps<Checkbox>;
 export type SwitchProps = ComponentProps<Switch>;
 export type RadioGroupProps = ComponentProps<RadioGroup>;
+export type DatePickerProps = ComponentProps<DatePicker>;
+export type TimePickerProps = ComponentProps<TimePicker>;
+export type DateTimePickerProps = ComponentProps<DateTimePicker>;
 
 // Layout Component Types
 export type CardProps = ComponentProps<Card>;

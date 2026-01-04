@@ -6,6 +6,8 @@
 		children?: import('svelte').Snippet;
 		hover?: boolean;
 		glow?: boolean;
+		statusDot?: boolean; // Shows a glowing status indicator dot
+		uppercase?: boolean; // Makes text uppercase with letter spacing
 		class?: string;
 	}
 
@@ -16,6 +18,8 @@
 		children,
 		hover = false,
 		glow = false,
+		statusDot = false,
+		uppercase = false,
 		class: className = '',
 		...restProps
 	}: Props = $props();
@@ -47,15 +51,18 @@
 
 	const sizeClasses = {
 		sm: 'px-2 py-0.5 text-[var(--text-xs)] gap-1',
-		md: 'px-4 py-2 text-[var(--text-sm)] gap-2'
+		md: 'px-3 py-1 text-[0.75rem] gap-1.5'
 	};
 
 	const classes = $derived(
-		`inline-flex items-center justify-center rounded-[var(--radius-pill)] border font-[var(--font-body)] font-medium transition-all duration-[var(--duration-300)] ease-[var(--ease-sharp)] ${variantClasses[variant]} ${sizeClasses[size]} ${hover ? hoverClasses[variant] : ''} ${glow ? 'accent-glow' : ''} ${className}`.trim()
+		`inline-flex items-center justify-center rounded-[var(--radius-pill)] border font-[var(--font-body)] font-semibold transition-all duration-[var(--duration-300)] ease-[var(--ease-sharp)] ${variantClasses[variant]} ${sizeClasses[size]} ${hover ? hoverClasses[variant] : ''} ${glow ? 'accent-glow' : ''} ${uppercase ? 'uppercase tracking-wider' : ''} ${className}`.trim()
 	);
 </script>
 
 <span class={classes} {...restProps}>
+	{#if statusDot}
+		<span class="status-dot"></span>
+	{/if}
 	{#if icon}
 		<span class="inline-flex items-center justify-center">
 			{@render icon()}
@@ -63,3 +70,13 @@
 	{/if}
 	{@render children?.()}
 </span>
+
+<style>
+	.status-dot {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 9999px;
+		background: currentColor;
+		box-shadow: 0 0 8px currentColor;
+	}
+</style>

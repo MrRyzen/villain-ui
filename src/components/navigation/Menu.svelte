@@ -1,12 +1,3 @@
-/**
- * Menu Component
- * 
- * Accessibility:
- * - Keyboard: Arrow Up/Down to navigate items, Home/End for first/last, Enter/Space to activate
- * - ARIA: role="menu", role="menuitem", aria-disabled
- * - Focus: Roving tabindex pattern (only selected item is focusable)
- * - Screen readers: Menu items announced with position and selection state
- */
 <script lang="ts">
   import type { Snippet } from 'svelte';
 

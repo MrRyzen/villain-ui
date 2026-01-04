@@ -125,7 +125,7 @@
   >
     <div
       bind:this={modalElement}
-      class="glass-panel rounded-[var(--radius-lg)] shadow-deep w-full {sizeClasses[size]} {className} animate-[fade-up_0.3s_var(--ease-luxe)] flex flex-col max-h-[90vh]"
+      class="panel-floating rounded-[var(--radius-lg)] shadow-deep w-full {sizeClasses[size]} {className} animate-[fade-up_0.3s_var(--ease-luxe)] flex flex-col max-h-[90vh]"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}

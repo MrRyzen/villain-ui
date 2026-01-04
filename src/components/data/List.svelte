@@ -18,7 +18,7 @@
 
 	const containerClasses = $derived(
 		variant === 'bordered'
-			? 'glass-panel rounded-[var(--radius-lg)] border border-[var(--color-border)]'
+			? 'panel-raised rounded-[var(--radius-lg)] border border-[var(--color-border)]'
 			: ''
 	);
 

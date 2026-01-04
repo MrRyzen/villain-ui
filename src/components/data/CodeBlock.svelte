@@ -64,7 +64,7 @@
 	}
 </script>
 
-<div class="glass-panel rounded-[var(--radius-lg)] overflow-hidden relative">
+<div class="panel-raised rounded-[var(--radius-lg)] overflow-hidden relative">
 	{#if filename || showCopy}
 		<div
 			class="px-4 py-2 border-b border-border flex items-center justify-between"

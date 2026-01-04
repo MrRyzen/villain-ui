@@ -1,12 +1,3 @@
-/**
- * Tabs Component
- * 
- * Accessibility:
- * - Keyboard: Arrow Left/Right to navigate tabs, Home/End for first/last
- * - ARIA: role="tablist", role="tab", aria-selected, aria-disabled
- * - Focus: Roving tabindex pattern (only active tab is focusable)
- * - Screen readers: Tab labels announced with selection state
- */
 <script lang="ts">
 
   interface Tab {

@@ -107,22 +107,23 @@
 </script>
 
 <div bind:this={wrapperElement} class="relative inline-block">
-  <button
-    type="button"
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div
     onclick={toggleOpen}
+    onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleOpen(); } }}
     aria-haspopup="true"
     aria-expanded={open}
     aria-controls={open ? popoverId : undefined}
-    class="bg-transparent border-none p-0 cursor-pointer"
+    class="inline-block"
   >
     {@render trigger?.()}
-  </button>
+  </div>
 
   {#if open}
     <div
       bind:this={popoverElement}
       id={popoverId}
-      class="absolute {placementClasses[actualPlacement]} z-[var(--z-50)] glass-panel rounded-[var(--radius-lg)] shadow-deep p-4 animate-[fade-up_0.2s_var(--ease-luxe)]"
+      class="absolute {placementClasses[actualPlacement]} z-[var(--z-50)] panel-floating rounded-[var(--radius-lg)] shadow-deep p-4 animate-[fade-up_0.2s_var(--ease-luxe)]"
       role="dialog"
     >
       {@render children?.()}

@@ -158,7 +158,7 @@
   >
     <div
       bind:this={drawerElement}
-      class="glass-panel shadow-deep fixed {positionClasses[side]} {sizeClasses[side][size]} {animationClasses[side]} {className} flex flex-col"
+      class="panel-floating shadow-deep fixed {positionClasses[side]} {sizeClasses[side][size]} {animationClasses[side]} {className} flex flex-col"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}

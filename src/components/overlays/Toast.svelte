@@ -110,7 +110,7 @@
     style="transform: {stackOffset}"
   >
     <div
-      class="glass-panel rounded-[var(--radius-lg)] p-4 min-w-[20rem] max-w-md flex gap-3 items-start {variantBorderClasses[variant]}"
+      class="panel-floating rounded-[var(--radius-lg)] p-4 min-w-[20rem] max-w-md flex gap-3 items-start {variantBorderClasses[variant]}"
       role={roleMap[variant]}
       aria-live={ariaLiveMap[variant]}
       aria-atomic="true"

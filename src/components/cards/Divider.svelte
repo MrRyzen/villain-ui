@@ -4,13 +4,18 @@
     spacing?: 'none' | 'sm' | 'md' | 'lg';
     thickness?: 'thin' | 'normal' | 'thick';
     variant?: 'default' | 'strong';
+    height?: string; // Custom height for vertical dividers (e.g., '100px', '2rem')
+    class?: string;
   }
 
   let {
     orientation = 'horizontal',
     spacing = 'md',
     thickness = 'normal',
-    variant = 'default'
+    variant = 'default',
+    height,
+    class: className = '',
+    ...restProps
   }: Props = $props();
 
   const horizontalThicknessMap = {
@@ -41,12 +46,15 @@
 
   const borderColor = variant === 'strong' ? 'border-[var(--color-border-strong)]' : 'border-[var(--color-border)]';
 
-  const horizontalClasses = `w-full ${horizontalThicknessMap[thickness]} ${borderColor} ${horizontalSpacing[spacing]}`;
-  const verticalClasses = `h-full ${verticalThicknessMap[thickness]} ${borderColor} ${verticalSpacing[spacing]}`;
+  const horizontalClasses = `w-full ${horizontalThicknessMap[thickness]} ${borderColor} ${horizontalSpacing[spacing]} ${className}`;
+  const verticalClasses = `self-stretch ${verticalThicknessMap[thickness]} ${borderColor} ${verticalSpacing[spacing]} ${className}`;
+
+  // For vertical dividers, use custom height or default min-height
+  const verticalStyle = height ? `height: ${height}` : 'min-height: 2rem';
 </script>
 
 {#if orientation === 'horizontal'}
-  <hr class={horizontalClasses} />
+  <hr class={horizontalClasses} {...restProps} />
 {:else}
-  <div class={verticalClasses}></div>
+  <div class={verticalClasses} style={verticalStyle} {...restProps}></div>
 {/if}

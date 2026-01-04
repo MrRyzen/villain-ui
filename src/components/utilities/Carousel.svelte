@@ -94,7 +94,7 @@
 </script>
 
 <div class="relative">
-  <div class="glass-panel rounded-[var(--radius-lg)] overflow-hidden">
+  <div class="panel-raised rounded-[var(--radius-lg)] overflow-hidden">
     <div
       class="flex transition-transform duration-300 ease-luxe"
       style="transform: translateX(-{currentIndex * 100}%);"

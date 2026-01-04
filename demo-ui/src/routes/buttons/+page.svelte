@@ -1,704 +1,493 @@
-﻿<script lang="ts">
+<script lang="ts">
 	import {
+		Text,
+		Card,
+		Grid,
+		Container,
+		Heading,
+		Divider,
+		CodeBlock,
 		Button,
 		IconButton,
 		ButtonGroup,
 		LinkButton,
 		FloatingActionButton,
-		Card,
-		Grid,
-		Container,
-		Heading,
-		Text,
-		Table,
-		type TableColumn,
-		type SortDirection,
-		Divider,
-		Checkbox,
+		Hero,
+		Badge,
+		Code
 	} from '@mrintel/villain-ui';
+	import { codeToHtml } from 'shiki';
+	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
 
-	// State for interactive controls
-	let disabledState = $state(false);
-	let loadingState = $state(false);
-	let selectedVariant = $state<'primary' | 'secondary' | 'ghost'>('primary');
-	let selectedSize = $state<'sm' | 'md' | 'lg'>('md');
-	let fabVisible = $state(true);
-	let fabPosition = $state<'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'>('bottom-right');
-	let fabSize = $state<'md' | 'lg'>('md');
+	// Code examples
+	const basicButtonCode = `import { Button } from '@mrintel/villain-ui';
 
-	// Props table columns
-	const propsColumns: TableColumn[] = [
-		{ key: 'prop', label: 'Prop', sortable: true },
-		{ key: 'type', label: 'Type', sortable: true },
-		{ key: 'default', label: 'Default' },
-		{ key: 'description', label: 'Description' }
-	];
+<Button variant="primary">Primary Button</Button>
+<Button variant="secondary">Secondary Button</Button>
+<Button variant="ghost">Ghost Button</Button>`;
 
-	// Button component props
-	const buttonPropsData = [
-		{ prop: 'variant', type: "'primary' | 'secondary' | 'ghost'", default: "'primary'", description: 'Visual style variant' },
-		{ prop: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Button size' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disables interaction' },
-		{ prop: 'type', type: "'button' | 'submit' | 'reset'", default: "'button'", description: 'HTML button type' },
-		{ prop: 'href', type: 'string', default: 'undefined', description: 'Renders as link if provided' },
-		{ prop: 'target', type: 'string', default: 'undefined', description: 'Link target attribute' },
-		{ prop: 'onclick', type: 'function', default: 'undefined', description: 'Click event handler' },
-		{ prop: 'iconBefore', type: 'Snippet', default: 'undefined', description: 'Icon before text' },
-		{ prop: 'iconAfter', type: 'Snippet', default: 'undefined', description: 'Icon after text' },
-		{ prop: 'class', type: 'string', default: "''", description: 'Additional CSS classes' }
-	];
+	const buttonSizesCode = `<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>`;
 
-	// IconButton component props
-	const iconButtonPropsData = [
-		{ prop: 'variant', type: "'primary' | 'secondary' | 'ghost'", default: "'ghost'", description: 'Visual style variant' },
-		{ prop: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Button size' },
-		{ prop: 'shape', type: "'circle' | 'square'", default: "'circle'", description: 'Button shape' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disables interaction' },
-		{ prop: 'type', type: "'button' | 'submit' | 'reset'", default: "'button'", description: 'HTML button type' },
-		{ prop: 'ariaLabel', type: 'string', default: 'required', description: 'Accessible label (required for screen readers)' },
-		{ prop: 'onclick', type: 'function', default: 'undefined', description: 'Click event handler' },
-		{ prop: 'class', type: 'string', default: "''", description: 'Additional CSS classes' }
-	];
+	const buttonIconsCode = `<Button variant="primary">
+  {#snippet iconBefore()}
+    <Icon icon="lucide:rocket" />
+  {/snippet}
+  Launch
+</Button>
 
-	// ButtonGroup component props
-	const buttonGroupPropsData = [
-		{ prop: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", description: 'Button arrangement direction' },
-		{ prop: 'spacing', type: 'boolean', default: 'false', description: 'Add spacing between buttons (instead of merged borders)' },
-		{ prop: 'children', type: 'Snippet', default: 'required', description: 'Button components to group' }
-	];
+<Button variant="secondary">
+  Download
+  {#snippet iconAfter()}
+    <Icon icon="lucide:download" />
+  {/snippet}
+</Button>`;
 
-	// LinkButton component props
-	const linkButtonPropsData = [
-		{ prop: 'href', type: 'string', default: 'required', description: 'Link destination URL' },
-		{ prop: 'variant', type: "'primary' | 'secondary' | 'ghost'", default: "'primary'", description: 'Visual style variant' },
-		{ prop: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Button size' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disables interaction' },
-		{ prop: 'target', type: 'string', default: 'undefined', description: 'Link target (_blank, _self, etc.)' },
-		{ prop: 'rel', type: 'string', default: 'undefined', description: 'Link relationship' },
-		{ prop: 'iconBefore', type: 'Snippet', default: 'undefined', description: 'Icon before text' },
-		{ prop: 'iconAfter', type: 'Snippet', default: 'undefined', description: 'Icon after text' },
-		{ prop: 'class', type: 'string', default: "''", description: 'Additional CSS classes' }
-	];
+	const iconButtonCode = `import { IconButton } from '@mrintel/villain-ui';
 
-	// FloatingActionButton component props
-	const fabPropsData = [
-		{ prop: 'position', type: "'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'", default: "'bottom-right'", description: 'FAB position on screen' },
-		{ prop: 'size', type: "'md' | 'lg'", default: "'lg'", description: 'Button size' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disables interaction' },
-		{ prop: 'ariaLabel', type: 'string', default: 'required', description: 'Accessible label (required for screen readers)' },
-		{ prop: 'onclick', type: 'function', default: 'undefined', description: 'Click event handler' },
-		{ prop: 'class', type: 'string', default: "''", description: 'Additional CSS classes' }
-	];
+<IconButton ariaLabel="Settings" variant="primary">
+  <Icon icon="lucide:settings" />
+</IconButton>
+
+<IconButton ariaLabel="Search" shape="square">
+  <Icon icon="lucide:search" />
+</IconButton>`;
+
+	const buttonGroupCode = `import { ButtonGroup, Button } from '@mrintel/villain-ui';
+
+<ButtonGroup>
+  <Button variant="secondary">Left</Button>
+  <Button variant="secondary">Center</Button>
+  <Button variant="secondary">Right</Button>
+</ButtonGroup>
+
+<ButtonGroup spacing>
+  <Button variant="primary">Save</Button>
+  <Button variant="ghost">Cancel</Button>
+</ButtonGroup>`;
+
+	const linkButtonCode = `import { LinkButton } from '@mrintel/villain-ui';
+
+<LinkButton href="/docs" variant="primary">
+  View Documentation
+</LinkButton>
+
+<LinkButton href="https://github.com" target="_blank">
+  {#snippet iconBefore()}
+    <Icon icon="lucide:github" />
+  {/snippet}
+  GitHub
+</LinkButton>`;
+
+	const fabCode = `import { FloatingActionButton } from '@mrintel/villain-ui';
+
+<FloatingActionButton
+  ariaLabel="Add item"
+  position="bottom-right"
+>
+  <Icon icon="lucide:plus" width="24" height="24" />
+</FloatingActionButton>`;
+
+	// State for highlighted code
+	let basicButtonHtml = $state('');
+	let buttonSizesHtml = $state('');
+	let buttonIconsHtml = $state('');
+	let iconButtonHtml = $state('');
+	let buttonGroupHtml = $state('');
+	let linkButtonHtml = $state('');
+	let fabHtml = $state('');
+
+	let showFab = $state(false);
+
+	onMount(async () => {
+		basicButtonHtml = await codeToHtml(basicButtonCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+
+		buttonSizesHtml = await codeToHtml(buttonSizesCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+
+		buttonIconsHtml = await codeToHtml(buttonIconsCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+
+		iconButtonHtml = await codeToHtml(iconButtonCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+
+		buttonGroupHtml = await codeToHtml(buttonGroupCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+
+		linkButtonHtml = await codeToHtml(linkButtonCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+
+		fabHtml = await codeToHtml(fabCode, {
+			lang: 'svelte',
+			theme: 'github-dark'
+		});
+	});
 </script>
 
-<!-- Hero Section -->
-<Container>
-	<div class="demo-section">
-		<Heading glow={true} level={1} variant="gradient">Button Components</Heading>
-		<Text>
-			5 interactive button components with icon support, variants, and accessibility features
-		</Text>
-		<div style="display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;">
-			<span class="feature-tag">5 Components</span>
-			<span class="feature-tag">Icon Support</span>
-			<span class="feature-tag">Accessible</span>
-			<span class="feature-tag">Responsive</span>
-		</div>
-	</div>
+<Container centered padding>
+	<Hero>
+		{#snippet title()}
+			<Heading level={1} variant="accent" glow>Button Components</Heading>
+		{/snippet}
+		{#snippet text()}
+			<Text variant="body" as="p" color="soft">
+				Explore the versatile button components in Villain UI, designed for seamless interaction and
+				stylish interfaces.
+			</Text>
+		{/snippet}
+		{#snippet features()}
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:cursor-click" class="tag-icon" />
+				Multiple Variants
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:arrows-expand" class="tag-icon" />
+				Sizes & Icons
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:layers" class="tag-icon" />
+				Button Groups
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:flash" class="tag-icon" />
+				Floating Action Button
+			</Badge>
+		{/snippet}
+	</Hero>
 
-	<!-- Button Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Button</Heading>
-			<Text>Primary interactive element with variants, sizes, and icon support</Text>
+	<Grid cols={1} gap="lg">
+		<!-- Basic Button Variants -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Button Variants</Heading>
+				<Text variant="body" color="soft">Three distinct button styles for different use cases</Text
+				>
+			{/snippet}
 
-			<Divider />
-
-			<!-- Interactive Controls -->
-			<div class="controls-section">
-				<Grid cols={2} gap="md">
-					<div>
-						<Checkbox bind:checked={disabledState} label="Disabled" />
-					</div>
-					<div>
-						<Checkbox bind:checked={loadingState} label="Loading" />
-					</div>
-					<div>
-						<div style="margin-bottom: 0.5rem;"><Text variant="caption">Variant:</Text></div>
-						<div style="display: flex; gap: 0.5rem;">
-							<Button
-								size="sm"
-								variant={selectedVariant === 'primary' ? 'primary' : 'ghost'}
-								onclick={() => (selectedVariant = 'primary')}
-							>
-								Primary
-							</Button>
-							<Button
-								size="sm"
-								variant={selectedVariant === 'secondary' ? 'primary' : 'ghost'}
-								onclick={() => (selectedVariant = 'secondary')}
-							>
-								Secondary
-							</Button>
-							<Button
-								size="sm"
-								variant={selectedVariant === 'ghost' ? 'primary' : 'ghost'}
-								onclick={() => (selectedVariant = 'ghost')}
-							>
-								Ghost
-							</Button>
-						</div>
-					</div>
-					<div>
-						<div style="margin-bottom: 0.5rem;">
-							<Text variant="caption">Size:</Text>
-						</div>
-						<div style="display: flex; gap: 0.5rem;">
-							<Button
-								size="sm"
-								variant={selectedSize === 'sm' ? 'primary' : 'ghost'}
-								onclick={() => (selectedSize = 'sm')}
-							>
-								SM
-							</Button>
-							<Button
-								size="sm"
-								variant={selectedSize === 'md' ? 'primary' : 'ghost'}
-								onclick={() => (selectedSize = 'md')}
-							>
-								MD
-							</Button>
-							<Button
-								size="sm"
-								variant={selectedSize === 'lg' ? 'primary' : 'ghost'}
-								onclick={() => (selectedSize = 'lg')}
-							>
-								LG
-							</Button>
-						</div>
-					</div>
-				</Grid>
+			<div class="demo-group">
+				<Button variant="primary">Primary Button</Button>
+				<Button variant="secondary">Secondary Button</Button>
+				<Button variant="ghost">Ghost Button</Button>
+				<Button variant="primary" disabled>Disabled Button</Button>
 			</div>
 
-			<!-- Live Examples -->
-			<div class="examples-grid">
-				<Heading level={4}>Variants</Heading>
-				<Grid cols={3} gap="md">
-					<Button variant="primary" size={selectedSize} disabled={disabledState}>
-						Primary Button
-					</Button>
-					<Button variant="secondary" size={selectedSize} disabled={disabledState}>
-						Secondary Button
-					</Button>
-					<Button variant="ghost" size={selectedSize} disabled={disabledState}>Ghost Button</Button>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Sizes</Heading>
-				</div>
-				<Grid cols={3} gap="md">
-					<Button variant={selectedVariant} size="sm">Small Button</Button>
-					<Button variant={selectedVariant} size="md">Medium Button</Button>
-					<Button variant={selectedVariant} size="lg">Large Button</Button>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>With Icons</Heading>
-				</div>
-				<Grid cols={3} gap="md">
-					<Button variant={selectedVariant} size={selectedSize}>
-						{#snippet iconBefore()}
-							<Icon icon="lucide:plus" />
-						{/snippet}
-						Icon Before
-					</Button>
-					<Button variant={selectedVariant} size={selectedSize}>
-						{#snippet iconAfter()}
-							<Icon icon="lucide:arrow-right" />
-						{/snippet}
-						Icon After
-					</Button>
-					<Button variant={selectedVariant} size={selectedSize}>
-						{#snippet iconBefore()}
-							<Icon icon="lucide:upload" />
-						{/snippet}
-						{#snippet iconAfter()}
-							<Icon icon="lucide:check" />
-						{/snippet}
-						Both Icons
-					</Button>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Loading State</Heading>
-				</div>
-				<Grid cols={3} gap="md">
-					<Button variant="primary" disabled={loadingState}>
-						{#snippet iconBefore()}
-							{#if loadingState}
-								<Icon icon="lucide:loader-2" class="animate-spin" />
-							{:else}
-								<Icon icon="lucide:save" />
-							{/if}
-						{/snippet}
-						{loadingState ? 'Saving...' : 'Save'}
-					</Button>
-					<Button variant="secondary" disabled={loadingState}>
-						{#snippet iconBefore()}
-							{#if loadingState}
-								<Icon icon="lucide:loader-2" class="animate-spin" />
-							{/if}
-						{/snippet}
-						{loadingState ? 'Loading...' : 'Load Data'}
-					</Button>
-					<Button variant="ghost" disabled={loadingState}>
-						{#snippet iconBefore()}
-							{#if loadingState}
-								<Icon icon="lucide:loader-2" class="animate-spin" />
-							{/if}
-						{/snippet}
-						{loadingState ? 'Processing...' : 'Process'}
-					</Button>
-				</Grid>
-			</div>
-
-			<Divider />
-
-			<!-- Props Table -->
-			<Heading level={4}>Props Reference</Heading>
-			<Table columns={propsColumns} data={buttonPropsData} compact striped />
+			<CodeBlock
+				filename="Button.svelte"
+				showLineNumbers
+				lineCount={basicButtonCode.split('\n').length}
+				showCopy
+				code={basicButtonCode}
+			>
+				{@html basicButtonHtml}
+			</CodeBlock>
 		</Card>
-	</div>
 
-	<!-- IconButton Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>IconButton</Heading>
-			<Text>Compact icon-only button with shape variants</Text>
+		<!-- Button Sizes -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Button Sizes</Heading>
+				<Text variant="body" color="soft">Three sizes to fit any interface need</Text>
+			{/snippet}
 
-			<Divider />
+			<div class="demo-group items-center">
+				<Button variant="primary" size="sm">Small</Button>
+				<Button variant="primary" size="md">Medium</Button>
+				<Button variant="primary" size="lg">Large</Button>
+			</div>
 
-			<div class="examples-grid">
-				<Heading level={4}>Variants</Heading>
-				<Grid cols={4} gap="md">
-					<IconButton variant="primary" ariaLabel="Settings">
+			<CodeBlock
+				filename="Button.svelte"
+				showLineNumbers
+				lineCount={buttonSizesCode.split('\n').length}
+				showCopy
+				code={buttonSizesCode}
+			>
+				{@html buttonSizesHtml}
+			</CodeBlock>
+		</Card>
+
+		<!-- Buttons with Icons -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Buttons with Icons</Heading>
+				<Text variant="body" color="soft">Add icons before or after button text</Text>
+			{/snippet}
+
+			<div class="demo-group">
+				<Button variant="primary">
+					{#snippet iconBefore()}
+						<Icon icon="lucide:rocket" />
+					{/snippet}
+					Launch
+				</Button>
+				<Button variant="secondary">
+					Download
+					{#snippet iconAfter()}
+						<Icon icon="lucide:download" />
+					{/snippet}
+				</Button>
+				<Button variant="ghost">
+					{#snippet iconBefore()}
+						<Icon icon="lucide:sparkles" />
+					{/snippet}
+					Magic
+					{#snippet iconAfter()}
+						<Icon icon="lucide:sparkles" />
+					{/snippet}
+				</Button>
+			</div>
+
+			<CodeBlock
+				filename="Button.svelte"
+				showLineNumbers
+				lineCount={buttonIconsCode.split('\n').length}
+				showCopy
+				code={buttonIconsCode}
+			>
+				{@html buttonIconsHtml}
+			</CodeBlock>
+		</Card>
+
+		<!-- Icon Buttons -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Icon Buttons</Heading>
+				<Text variant="body" color="soft">Compact icon-only buttons in circle or square shapes</Text
+				>
+			{/snippet}
+
+			<div class="demo-group items-center">
+				<div class="flex gap-2">
+					<IconButton ariaLabel="Settings" variant="primary" shape="circle">
 						<Icon icon="lucide:settings" />
 					</IconButton>
-					<IconButton variant="secondary" ariaLabel="Settings">
-						<Icon icon="lucide:settings" />
+					<IconButton ariaLabel="Search" variant="secondary" shape="circle">
+						<Icon icon="lucide:search" />
 					</IconButton>
-					<IconButton variant="ghost" ariaLabel="Settings">
-						<Icon icon="lucide:settings" />
+					<IconButton ariaLabel="Menu" variant="ghost" shape="circle">
+						<Icon icon="lucide:menu" />
 					</IconButton>
-					<IconButton variant="primary" disabled ariaLabel="Settings">
-						<Icon icon="lucide:settings" />
-					</IconButton>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Sizes</Heading>
 				</div>
-				<Grid cols={4} gap="md">
-					<IconButton size="sm" ariaLabel="Like">
+				<Divider orientation="vertical" />
+				<div class="flex gap-2">
+					<IconButton ariaLabel="Heart" variant="primary" shape="square">
 						<Icon icon="lucide:heart" />
 					</IconButton>
-					<IconButton size="md" ariaLabel="Like">
-						<Icon icon="lucide:heart" />
-					</IconButton>
-					<IconButton size="lg" ariaLabel="Like">
-						<Icon icon="lucide:heart" />
-					</IconButton>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Shapes</Heading>
-				</div>
-				<Grid cols={4} gap="md">
-					<IconButton shape="circle" ariaLabel="Favorite">
+					<IconButton ariaLabel="Star" variant="secondary" shape="square">
 						<Icon icon="lucide:star" />
 					</IconButton>
-					<IconButton shape="square" ariaLabel="Favorite">
-						<Icon icon="lucide:star" />
+					<IconButton ariaLabel="Bell" variant="ghost" shape="square">
+						<Icon icon="lucide:bell" />
 					</IconButton>
-					<IconButton shape="circle" variant="secondary" ariaLabel="Bookmark">
-						<Icon icon="lucide:bookmark" />
-					</IconButton>
-					<IconButton shape="square" variant="ghost" ariaLabel="Share">
-						<Icon icon="lucide:share-2" />
-					</IconButton>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Action Examples</Heading>
 				</div>
-				<Grid cols={4} gap="md">
-					<IconButton variant="primary" ariaLabel="Edit">
-						<Icon icon="lucide:edit" />
-					</IconButton>
-					<IconButton variant="secondary" ariaLabel="Delete">
-						<Icon icon="lucide:trash" />
-					</IconButton>
-					<IconButton variant="ghost" ariaLabel="More options">
-						<Icon icon="lucide:more-vertical" />
-					</IconButton>
-					<IconButton variant="primary" disabled ariaLabel="Delete (disabled)">
-						<Icon icon="lucide:trash" />
-					</IconButton>
-				</Grid>
 			</div>
 
-			<Divider />
-
-			<Heading level={4}>Props Reference</Heading>
-			<Table columns={propsColumns} data={iconButtonPropsData} compact striped />
+			<CodeBlock
+				filename="IconButton.svelte"
+				showLineNumbers
+				lineCount={iconButtonCode.split('\n').length}
+				showCopy
+				code={iconButtonCode}
+			>
+				{@html iconButtonHtml}
+			</CodeBlock>
 		</Card>
-	</div>
 
-	<!-- ButtonGroup Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>ButtonGroup</Heading>
-			<Text>Group related buttons with merged borders or spacing</Text>
+		<!-- Button Groups -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Button Groups</Heading>
+				<Text variant="body" color="soft"
+					>Group related buttons together horizontally or vertically</Text
+				>
+			{/snippet}
 
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Horizontal (Merged Borders)</Heading>
-				<div style="margin-bottom: 2rem;">
-					<ButtonGroup orientation="horizontal" spacing={false}>
+			<div class="demo-stack">
+				<div>
+					<Text variant="caption" color="soft">Merged (Horizontal)</Text>
+					<ButtonGroup>
 						<Button variant="secondary">Left</Button>
 						<Button variant="secondary">Center</Button>
 						<Button variant="secondary">Right</Button>
 					</ButtonGroup>
 				</div>
 
-				<Heading level={4}>Horizontal (With Spacing)</Heading>
-				<div style="margin-bottom: 2rem;">
-					<ButtonGroup orientation="horizontal" spacing={true}>
-						<Button variant="secondary">
-							{#snippet iconBefore()}
-								<Icon icon="lucide:align-left" />
-							{/snippet}
-							Left
-						</Button>
-						<Button variant="secondary">
-							{#snippet iconBefore()}
-								<Icon icon="lucide:align-center" />
-							{/snippet}
-							Center
-						</Button>
-						<Button variant="secondary">
-							{#snippet iconBefore()}
-								<Icon icon="lucide:align-right" />
-							{/snippet}
-							Right
-						</Button>
-					</ButtonGroup>
-				</div>
-
-				<Heading level={4}>Vertical</Heading>
-				<div style="margin-bottom: 2rem;">
-					<ButtonGroup orientation="vertical">
-						<Button variant="ghost">Option 1</Button>
-						<Button variant="ghost">Option 2</Button>
-						<Button variant="ghost">Option 3</Button>
-					</ButtonGroup>
-				</div>
-
-				<Heading level={4}>Mixed Variants</Heading>
-				<div style="margin-bottom: 2rem;">
-					<ButtonGroup orientation="horizontal" spacing={true}>
-						<Button variant="primary">
-							{#snippet iconBefore()}
-								<Icon icon="lucide:save" />
-							{/snippet}
-							Save
-						</Button>
+				<div>
+					<Text variant="caption" color="soft">Spaced (Horizontal)</Text>
+					<ButtonGroup spacing>
+						<Button variant="primary">Save</Button>
 						<Button variant="secondary">Cancel</Button>
-						<Button variant="ghost">
-							{#snippet iconBefore()}
-								<Icon icon="lucide:trash" />
-							{/snippet}
-							Delete
-						</Button>
+						<Button variant="ghost">Reset</Button>
 					</ButtonGroup>
 				</div>
 
-				<Heading level={4}>Icon Button Groups</Heading>
-				<div style="margin-bottom: 2rem;">
-					<ButtonGroup orientation="horizontal" spacing={false}>
-						<IconButton variant="secondary" ariaLabel="Bold">
-							<Icon icon="lucide:bold" />
-						</IconButton>
-						<IconButton variant="secondary" ariaLabel="Italic">
-							<Icon icon="lucide:italic" />
-						</IconButton>
-						<IconButton variant="secondary" ariaLabel="Underline">
-							<Icon icon="lucide:underline" />
-						</IconButton>
+				<div>
+					<Text variant="caption" color="soft">Vertical</Text>
+					<ButtonGroup orientation="vertical">
+						<Button variant="secondary">Top</Button>
+						<Button variant="secondary">Middle</Button>
+						<Button variant="secondary">Bottom</Button>
 					</ButtonGroup>
 				</div>
 			</div>
 
-			<Divider />
-
-			<Heading level={4}>Props Reference</Heading>
-			<Table columns={propsColumns} data={buttonGroupPropsData} compact striped />
+			<CodeBlock
+				filename="ButtonGroup.svelte"
+				showLineNumbers
+				lineCount={buttonGroupCode.split('\n').length}
+				showCopy
+				code={buttonGroupCode}
+			>
+				{@html buttonGroupHtml}
+			</CodeBlock>
 		</Card>
-	</div>
 
-	<!-- LinkButton Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>LinkButton</Heading>
-			<Text>Button styled as navigation link with href support</Text>
+		<!-- Link Buttons -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Link Buttons</Heading>
+				<Text variant="body" color="soft">Styled links that look like buttons</Text>
+			{/snippet}
 
-			<Divider />
-
-			<div class="examples-grid">
-				<Grid cols={2} gap="md">
-					<LinkButton href="/docs" variant="primary">View Documentation</LinkButton>
-					<LinkButton href="https://github.com" target="_blank" variant="secondary">
-						{#snippet iconAfter()}
-							<Icon icon="lucide:external-link" />
-						{/snippet}
-						GitHub Repository
-					</LinkButton>
-					<LinkButton href="/download" variant="primary">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:download" />
-						{/snippet}
-						Download
-					</LinkButton>
-					<LinkButton href="/about" variant="ghost">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:info" />
-						{/snippet}
-						Learn More
-					</LinkButton>
-					<LinkButton href="/api" variant="secondary">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:code" />
-						{/snippet}
-						API Reference
-					</LinkButton>
-					<LinkButton href="/community" variant="ghost">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:users" />
-						{/snippet}
-						{#snippet iconAfter()}
-							<Icon icon="lucide:arrow-right" />
-						{/snippet}
-						Join Community
-					</LinkButton>
-				</Grid>
+			<div class="demo-group">
+				<LinkButton href="/" variant="primary">Go Home</LinkButton>
+				<LinkButton href="https://github.com" target="_blank" variant="secondary">
+					{#snippet iconBefore()}
+						<Icon icon="lucide:external-link" />
+					{/snippet}
+					External Link
+				</LinkButton>
+				<LinkButton href="/docs" variant="ghost">
+					Documentation
+					{#snippet iconAfter()}
+						<Icon icon="lucide:arrow-right" />
+					{/snippet}
+				</LinkButton>
 			</div>
 
-			<Divider />
-
-			<Heading level={4}>Props Reference</Heading>
-			<Table columns={propsColumns} data={linkButtonPropsData} compact striped />
+			<CodeBlock
+				filename="LinkButton.svelte"
+				showLineNumbers
+				lineCount={linkButtonCode.split('\n').length}
+				showCopy
+				code={linkButtonCode}
+			>
+				{@html linkButtonHtml}
+			</CodeBlock>
 		</Card>
-	</div>
 
-	<!-- FloatingActionButton Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>FloatingActionButton</Heading>
-			<Text>Prominent floating action button with position control</Text>
+		<!-- Floating Action Button -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Floating Action Button</Heading>
+				<Text variant="body" color="soft">Fixed position button for primary actions</Text>
+			{/snippet}
 
-			<Divider />
-
-			<!-- Interactive Controls -->
-			<div class="controls-section">
-				<Grid cols={3} gap="md">
-					<div>
-						<Checkbox bind:checked={fabVisible} label="Show FAB" />
-					</div>
-					<div>
-						<div style="margin-bottom: 0.5rem;">
-							<Text variant="caption">Position:</Text>
-						</div>
-						<div style="display: flex; flex-direction: column; gap: 0.5rem;">
-							<Button
-								size="sm"
-								variant={fabPosition === 'bottom-right' ? 'primary' : 'ghost'}
-								onclick={() => (fabPosition = 'bottom-right')}
-							>
-								Bottom Right
-							</Button>
-							<Button
-								size="sm"
-								variant={fabPosition === 'bottom-left' ? 'primary' : 'ghost'}
-								onclick={() => (fabPosition = 'bottom-left')}
-							>
-								Bottom Left
-							</Button>
-							<Button
-								size="sm"
-								variant={fabPosition === 'top-right' ? 'primary' : 'ghost'}
-								onclick={() => (fabPosition = 'top-right')}
-							>
-								Top Right
-							</Button>
-							<Button
-								size="sm"
-								variant={fabPosition === 'top-left' ? 'primary' : 'ghost'}
-								onclick={() => (fabPosition = 'top-left')}
-							>
-								Top Left
-							</Button>
-						</div>
-					</div>
-					<div>
-						<div style="margin-bottom: 0.5rem;"><Text variant="caption">Size:</Text></div>
-						<div style="display: flex; gap: 0.5rem;">
-							<Button
-								size="sm"
-								variant={fabSize === 'md' ? 'primary' : 'ghost'}
-								onclick={() => (fabSize = 'md')}
-							>
-								MD
-							</Button>
-							<Button
-								size="sm"
-								variant={fabSize === 'lg' ? 'primary' : 'ghost'}
-								onclick={() => (fabSize = 'lg')}
-							>
-								LG
-							</Button>
-						</div>
-					</div>
-				</Grid>
+			<div class="demo-group">
+				<Button variant="primary" onclick={() => (showFab = !showFab)}>
+					{showFab ? 'Hide' : 'Show'} FAB Demo
+				</Button>
+				<Text variant="caption" color="soft">
+					Toggle to see the floating action button in the bottom-right corner
+				</Text>
 			</div>
 
-			<!-- Preview Container -->
-			<div class="fab-preview-container">
-				<div style="text-align: center; padding: 2rem;">
-					<div style="margin-bottom: 0.5rem;">
-						<Text color="muted">
-							The FloatingActionButton is fixed to the viewport, not this container.
-						</Text>
-					</div>
-					<Text color="muted">
-						Use the controls above to adjust its position, size, and visibility.
+			<CodeBlock
+				filename="FloatingActionButton.svelte"
+				showLineNumbers
+				lineCount={fabCode.split('\n').length}
+				showCopy
+				code={fabCode}
+			>
+				{@html fabHtml}
+			</CodeBlock>
+		</Card>
+
+		<Divider />
+
+		<!-- Usage Tips -->
+		<Card padding="lg" class="accent-surface">
+			{#snippet header()}
+				<Heading level={2}>Usage Tips</Heading>
+			{/snippet}
+
+			<Grid cols={2} gap="lg">
+				<div>
+					<Heading level={4}>Variant Selection</Heading>
+					<Text variant="body" color="soft">
+						Use <Code>primary</Code> for main actions,
+						<Code>secondary</Code> for supporting actions, and
+						<Code>ghost</Code> for subtle interactions.
 					</Text>
-					<div style="margin-top: 0.5rem;">
-						<Text color="muted">
-							{fabVisible
-								? '👉 Look for the FAB at the viewport edge!'
-								: '(Currently hidden - toggle visibility above)'}
-						</Text>
-					</div>
 				</div>
-			</div>
 
-			<Divider />
+				<div>
+					<Heading level={4}>Accessibility</Heading>
+					<Text variant="body" color="soft">
+						Always provide <Code>ariaLabel</Code> for IconButton and FloatingActionButton
+						to ensure screen reader compatibility.
+					</Text>
+				</div>
 
-			<Heading level={4}>Props Reference</Heading>
-			<Table columns={propsColumns} data={fabPropsData} compact striped />
+				<div>
+					<Heading level={4}>Icon Integration</Heading>
+					<Text variant="body" color="soft">
+						Use the <Code>iconBefore</Code> and
+						<Code>iconAfter</Code> snippets to add icons. Works great with @iconify/svelte
+						or any icon library.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Button Groups</Heading>
+					<Text variant="body" color="soft">
+						Use merged ButtonGroups for toggle buttons or segmented controls. Use spaced groups for
+						related actions that need visual separation.
+					</Text>
+				</div>
+			</Grid>
 		</Card>
-	</div>
-
-	<!-- Best Practices Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Best Practices</Heading>
-
-			<div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
-				<Text>
-					<strong>Variant Selection:</strong> Use primary variant for main actions, secondary for alternatives,
-					and ghost for tertiary actions or subtle interactions.
-				</Text>
-				<Text>
-					<strong>Accessibility:</strong> Always provide ariaLabel for IconButton and FloatingActionButton
-					to ensure screen reader compatibility.
-				</Text>
-				<Text>
-					<strong>Icon Placement:</strong> Use iconBefore for actions (add, upload, save) and iconAfter
-					for navigation (arrow-right, external-link).
-				</Text>
-				<Text>
-					<strong>Loading States:</strong> Disable buttons during async operations and show a loading
-					spinner to provide visual feedback.
-				</Text>
-				<Text>
-					<strong>Button Groups:</strong> Group related actions with ButtonGroup to create cohesive action
-					sets with merged borders or consistent spacing.
-				</Text>
-				<Text>
-					<strong>Navigation vs Actions:</strong> Use LinkButton for navigation, Button for actions that
-					don't change routes.
-				</Text>
-				<Text>
-					<strong>Consistent Sizing:</strong> Maintain consistent sizing within button groups and related
-					UI sections for visual harmony.
-				</Text>
-			</div>
-		</Card>
-	</div>
+	</Grid>
 </Container>
 
-<!-- Controlled FAB (outside Container, positioned by interactive controls) -->
-{#if fabVisible}
+{#if showFab}
 	<FloatingActionButton
-		position={fabPosition}
-		size={fabSize}
-		ariaLabel="Add item"
+		ariaLabel="Add new item"
+		position="bottom-right"
 		onclick={() => alert('FAB clicked!')}
 	>
-		<Icon icon="lucide:plus" />
+		<Icon icon="lucide:plus" width="24" height="24" />
 	</FloatingActionButton>
 {/if}
 
 <style>
-	.demo-section {
-		margin-bottom: 3rem;
-	}
-
-	.controls-section {
-		padding: 1.5rem;
-		background: var(--color-base-2);
-		border-radius: var(--radius-lg);
-		margin-bottom: 2rem;
-	}
-
-	.examples-grid {
-		margin-top: 2rem;
-	}
-
-	.fab-preview-container {
-		position: relative;
-		height: 16rem;
-		background: var(--color-base-2);
-		border-radius: var(--radius-lg);
+	/* Demo layout utilities */
+	.demo-group {
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-text-muted);
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
 	}
 
-	.feature-tag {
-		display: inline-block;
-		padding: 0.25rem 0.75rem;
-		background: var(--color-base-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-	}
-
-	:global(.animate-spin) {
-		animation: spin 1s linear infinite;
-	}
-
-	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
+	.demo-stack {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		margin-bottom: 1.5rem;
 	}
 </style>

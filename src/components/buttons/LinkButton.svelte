@@ -27,7 +27,7 @@
     class: className = ''
   }: Props = $props();
 
-  const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] no-underline';
+  const baseClasses = 'inline-flex items-center justify-center rounded-[var(--radius-lg)] font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] no-underline gap-2';
 
   const computedRel = $derived(target === '_blank' ? (rel || 'noopener noreferrer') : rel);
 </script>

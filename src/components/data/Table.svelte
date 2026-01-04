@@ -23,6 +23,8 @@
 		onRowClick?: (row: Record<string, any>) => void;
 		// Manual markup mode
 		children?: Snippet;
+		// Column-specific snippets for hybrid mode
+		[key: `cell_${string}`]: Snippet<[{ value: any; row: any }]> | undefined;
 		// Rest props
 		class?: string;
 	}
@@ -86,7 +88,7 @@
 	}
 </script>
 
-<div class="glass-panel rounded-[var(--radius-xl)] overflow-hidden {className}" {...restProps}>
+<div class="panel-raised rounded-[var(--radius-xl)] overflow-hidden {className}" {...restProps}>
 	<table class="mrdv-table w-full" class:striped class:hoverable class:compact class:sticky-header={stickyHeader}>
 		{#if isDynamicMode}
 			<!-- Dynamic mode: render from columns and data -->
@@ -218,7 +220,9 @@
 						>
 							{#each columns as column}
 								<td style:text-align={column.align || 'left'}>
-									{#if column.render}
+									{#if restProps[`cell_${column.key}`]}
+										{@render restProps[`cell_${column.key}`]({ value: row[column.key], row })}
+									{:else if column.render}
 										{@html column.render(row[column.key], row)}
 									{:else}
 										{row[column.key]}

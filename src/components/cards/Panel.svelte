@@ -28,7 +28,7 @@
   const glassClasses = $derived(
     variant === 'glass'
       ? 'glass-panel bg-[var(--color-accent-overlay-5)] border-[var(--color-border-glow)]'
-      : 'glass-panel'
+      : 'panel-raised'
   );
   
   const roundedClasses = $derived(rounded ? 'rounded-[var(--radius-lg)]' : '');

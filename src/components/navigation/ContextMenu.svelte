@@ -1,12 +1,3 @@
-/**
- * ContextMenu Component
- * 
- * Accessibility:
- * - Keyboard: Arrow Up/Down to navigate items, Home/End for first/last, Enter/Space to activate, Escape to close
- * - ARIA: role="menu", role="menuitem"
- * - Focus: Auto-focus first item on open, roving tabindex pattern
- * - Screen readers: Menu items announced with position and selection state
- */
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { createId } from '../../lib/internal/id.js';

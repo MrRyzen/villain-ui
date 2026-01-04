@@ -1,12 +1,5 @@
 <script lang="ts">
 	import {
-		Card,
-		Grid,
-		Container,
-		Heading,
-		Text,
-		Table,
-		Divider,
 		Input,
 		Textarea,
 		Select,
@@ -14,1049 +7,986 @@
 		Switch,
 		RadioGroup,
 		RangeSlider,
-		InputGroup,
 		FileUpload,
+		InputGroup,
+		DatePicker,
+		TimePicker,
+		DateTimePicker,
+		Heading,
+		Text,
+		Card,
+		Grid,
+		Container,
+		Badge,
+		CodeBlock,
+		Divider,
 		Button,
-		ProgressBar
+		Hero,
+		Code
 	} from '@mrintel/villain-ui';
+	import { codeToHtml } from 'shiki';
+	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
 
-	// State management
-	let username = $state('');
+	// Code examples
+	const inputCode = `import { Input } from '@mrintel/villain-ui';
+
+let email = $state('');
+let password = $state('');
+
+<Input
+  type="email"
+  bind:value={email}
+  label="Email"
+  placeholder="Enter your email"
+/>
+
+<Input
+  type="password"
+  bind:value={password}
+  label="Password"
+  placeholder="Enter your password"
+/>
+
+<!-- With icons -->
+<Input
+  type="text"
+  bind:value={search}
+  placeholder="Search..."
+>
+  {#snippet iconBefore()}
+    <Icon icon="lucide:search" width="16" />
+  {/snippet}
+</Input>
+
+<!-- Built-in validation -->
+<Input
+  type="email"
+  bind:value={email}
+  label="Email (with validation)"
+  placeholder="test@example.com"
+/>
+
+<!-- Custom validation -->
+<Input
+  type="text"
+  bind:value={username}
+  label="Username"
+  placeholder="Enter username"
+  validate={(val) => {
+    if (String(val).length < 3) {
+      return 'Username must be at least 3 characters';
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(String(val))) {
+      return 'Username can only contain letters, numbers, and underscores';
+    }
+    return true;
+  }}
+/>`;
+
+	const textareaCode = `import { Textarea } from '@mrintel/villain-ui';
+
+let message = $state('');
+
+<Textarea
+  bind:value={message}
+  label="Message"
+  placeholder="Enter your message..."
+  rows={6}
+/>`;
+
+	const selectCode = `import { Select } from '@mrintel/villain-ui';
+
+let country = $state('');
+
+const countries = [
+  { value: 'us', label: 'United States' },
+  { value: 'uk', label: 'United Kingdom' },
+  { value: 'ca', label: 'Canada' }
+];
+
+<Select
+  bind:value={country}
+  options={countries}
+  label="Country"
+  placeholder="Select a country"
+/>`;
+
+	const checkboxCode = `import { Checkbox } from '@mrintel/villain-ui';
+
+let agreed = $state(false);
+let newsletter = $state(true);
+
+<Checkbox bind:checked={agreed} label="I agree to the terms" />
+<Checkbox bind:checked={newsletter} label="Subscribe to newsletter" />`;
+
+	const switchCode = `import { Switch } from '@mrintel/villain-ui';
+
+let darkMode = $state(false);
+let notifications = $state(true);
+
+<Switch bind:checked={darkMode} label="Dark Mode" />
+<Switch bind:checked={notifications} label="Enable Notifications" />`;
+
+	const radioCode = `import { RadioGroup } from '@mrintel/villain-ui';
+
+let plan = $state('pro');
+
+const plans = [
+  { value: 'free', label: 'Free' },
+  { value: 'pro', label: 'Pro' },
+  { value: 'enterprise', label: 'Enterprise' }
+];
+
+<RadioGroup
+  bind:value={plan}
+  options={plans}
+  name="plan"
+  label="Choose a plan"
+/>`;
+
+	const sliderCode = `import { RangeSlider } from '@mrintel/villain-ui';
+
+let volume = $state(50);
+
+<RangeSlider
+  bind:value={volume}
+  min={0}
+  max={100}
+  label="Volume"
+  showValue
+/>`;
+
+	const fileUploadCode = `import { FileUpload } from '@mrintel/villain-ui';
+
+let files = $state<FileList | null>(null);
+
+<FileUpload
+  bind:files
+  accept=".jpg,.png,.pdf"
+  multiple
+  label="Upload documents"
+  onchange={(e) => console.log('Files:', e.target.files)}
+/>`;
+
+	const inputGroupCode = `import { InputGroup, Input, Button } from '@mrintel/villain-ui';
+
+<InputGroup>
+  <Input type="text" placeholder="Username" />
+  <Button variant="primary">Search</Button>
+</InputGroup>`;
+
+	const datePickerCode = `import { DatePicker } from '@mrintel/villain-ui';
+
+let selectedDate = $state<Date | null>(null);
+
+<DatePicker
+  bind:value={selectedDate}
+  label="Select a date"
+  placeholder="Choose a date"
+/>`;
+
+	const timePickerCode = `import { TimePicker } from '@mrintel/villain-ui';
+
+let selectedTime = $state<string>('');
+
+<TimePicker
+  bind:value={selectedTime}
+  label="Select a time"
+  placeholder="Choose a time"
+/>`;
+
+	const dateTimePickerCode = `import { DateTimePicker } from '@mrintel/villain-ui';
+
+let selectedDateTime = $state<Date | null>(null);
+
+<DateTimePicker
+  bind:value={selectedDateTime}
+  label="Select date and time"
+  placeholder="Choose date and time"
+/>`;
+
+	// State for highlighted code
+	let inputHtml = $state('');
+	let textareaHtml = $state('');
+	let selectHtml = $state('');
+	let checkboxHtml = $state('');
+	let switchHtml = $state('');
+	let radioHtml = $state('');
+	let sliderHtml = $state('');
+	let fileUploadHtml = $state('');
+	let inputGroupHtml = $state('');
+	let datePickerHtml = $state('');
+	let timePickerHtml = $state('');
+	let dateTimePickerHtml = $state('');
+
+	// Demo state
 	let email = $state('');
-	let email2 = $state('');
+	let validatedEmail = $state('');
 	let password = $state('');
-	let password2 = $state('');
+	let search = $state('');
+	let numberValue = $state(0);
+	let colorValue = $state('#a855f7');
 	let message = $state('');
 	let country = $state('');
-	let termsAccepted = $state(false);
-	let notificationsEnabled = $state(false);
-	let size = $state('md');
-	let volume = $state(50);
-	let uploadedFiles = $state<FileList | null>(null);
-
-	// Control states
-	let showErrors = $state(false);
-	let disabledState = $state(false);
-	let selectedOrientation = $state<'vertical' | 'horizontal'>('vertical');
-
-	// Validation states
-	let emailError = $state(false);
-	let passwordError = $state(false);
-	let messageError = $state(false);
-	let termsError = $state(false);
-
-	// Additional states for demos
-	let feature1 = $state(false);
-	let feature2 = $state(true);
-	let feature3 = $state(false);
+	let agreed = $state(false);
+	let newsletter = $state(true);
 	let darkMode = $state(false);
-	let autoSave = $state(true);
-	let soundEnabled = $state(false);
-	let protocol = $state('https://');
-	let domain = $state('');
-	let tld = $state('.com');
-	let priceValue = $state('');
-	let searchQuery = $state('');
+	let notifications = $state(true);
+	let plan = $state('pro');
+	let paymentMethod = $state('card');
+	let volume = $state(50);
+	let brightness = $state(75);
+	let files = $state<FileList | null>(null);
+	let groupUsername = $state('');
+	let errorInput = $state('');
+	let customValidatedUsername = $state('');
+	let urlInput = $state('');
+	let phoneInput = $state('');
+	let selectedDate = $state<Date | null>(null);
+	let selectedTime = $state<string>('');
+	let selectedDateTime = $state<Date | null>(null);
 
-	// File upload progress tracking (simulated for demo)
-	let fileProgress = $state<Map<string, number>>(new Map());
-
-	// Simulate upload progress when files change
-	$effect(() => {
-		if (uploadedFiles && uploadedFiles.length > 0) {
-			const files = Array.from(uploadedFiles);
-			files.forEach(file => {
-				if (!fileProgress.has(file.name)) {
-					// Start at 0 for new files
-					fileProgress.set(file.name, 0);
-					// Simulate progress
-					let progress = 0;
-					const interval = setInterval(() => {
-						progress += Math.random() * 30;
-						if (progress >= 100) {
-							progress = 100;
-							clearInterval(interval);
-						}
-						fileProgress.set(file.name, progress);
-						fileProgress = new Map(fileProgress); // Trigger reactivity
-					}, 200);
-				}
-			});
-		}
-	});
-
-	// Helper function
-	function validateEmail(value: string): boolean {
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		return emailRegex.test(value);
-	}
-
-	function validateForm() {
-		emailError = !email || !validateEmail(email);
-		passwordError = !password || password.length < 6;
-		messageError = !message;
-		termsError = !termsAccepted;
-	}
-
-	function resetForm() {
-		email = '';
-		password = '';
-		message = '';
-		country = '';
-		termsAccepted = false;
-		emailError = false;
-		passwordError = false;
-		messageError = false;
-		termsError = false;
-	}
-
-	// Options for Select
-	const countryOptions = [
+	const countries = [
 		{ value: 'us', label: 'United States' },
 		{ value: 'uk', label: 'United Kingdom' },
 		{ value: 'ca', label: 'Canada' },
 		{ value: 'au', label: 'Australia' },
-		{ value: 'de', label: 'Germany' }
+		{ value: 'de', label: 'Germany' },
+		{ value: 'fr', label: 'France' },
+		{ value: 'jp', label: 'Japan' }
 	];
 
-	// Options for RadioGroup
-	const sizeOptions = [
-		{ value: 'sm', label: 'Small' },
-		{ value: 'md', label: 'Medium' },
-		{ value: 'lg', label: 'Large' }
+	const plans = [
+		{ value: 'free', label: 'Free' },
+		{ value: 'pro', label: 'Pro ($9/month)' },
+		{ value: 'enterprise', label: 'Enterprise ($29/month)' }
 	];
 
-	const paymentOptions = [
+	const paymentMethods = [
 		{ value: 'card', label: 'Credit Card' },
-		{ value: 'wallet', label: 'Digital Wallet' }
+		{ value: 'paypal', label: 'PayPal' },
+		{ value: 'crypto', label: 'Cryptocurrency' }
 	];
 
-	// Props table columns
-	const tableColumns = [
-		{ key: 'prop', label: 'Prop', sortable: true },
-		{ key: 'type', label: 'Type', sortable: true },
-		{ key: 'default', label: 'Default' },
-		{ key: 'description', label: 'Description' }
-	];
-
-	// Props data for Input
-	const inputProps = [
-		{ prop: 'type', type: 'string', default: 'text', description: 'Input type (text, email, password, number, etc.)' },
-		{ prop: 'value', type: 'string', default: '""', description: 'Input value (use bind:value)' },
-		{ prop: 'placeholder', type: 'string', default: '""', description: 'Placeholder text' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable the input' },
-		{ prop: 'error', type: 'boolean', default: 'false', description: 'Show error state' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Input label' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'oninput', type: 'function', default: 'undefined', description: 'Input change handler' },
-		{ prop: 'iconBefore', type: 'snippet', default: 'undefined', description: 'Icon snippet before input' },
-		{ prop: 'iconAfter', type: 'snippet', default: 'undefined', description: 'Icon snippet after input' },
-		{ prop: 'class', type: 'string', default: '""', description: 'Additional CSS classes' }
-	];
-
-	// Props data for Textarea
-	const textareaProps = [
-		{ prop: 'value', type: 'string', default: '""', description: 'Textarea value (use bind:value)' },
-		{ prop: 'placeholder', type: 'string', default: '""', description: 'Placeholder text' },
-		{ prop: 'rows', type: 'number', default: '4', description: 'Number of visible rows' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable the textarea' },
-		{ prop: 'error', type: 'boolean', default: 'false', description: 'Show error state' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Textarea label' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'oninput', type: 'function', default: 'undefined', description: 'Input change handler' },
-		{ prop: 'iconBefore', type: 'snippet', default: 'undefined', description: 'Icon snippet before textarea' },
-		{ prop: 'class', type: 'string', default: '""', description: 'Additional CSS classes' }
-	];
-
-	// Props data for Select
-	const selectProps = [
-		{ prop: 'value', type: 'string', default: '""', description: 'Selected value (use bind:value)' },
-		{ prop: 'options', type: 'Array<{value: string, label: string}>', default: 'required', description: 'Array of options' },
-		{ prop: 'placeholder', type: 'string', default: '""', description: 'Placeholder text' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable the select' },
-		{ prop: 'error', type: 'boolean', default: 'false', description: 'Show error state' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Select label' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'onchange', type: 'function', default: 'undefined', description: 'Change handler' },
-		{ prop: 'iconBefore', type: 'snippet', default: 'undefined', description: 'Icon snippet before select' },
-		{ prop: 'class', type: 'string', default: '""', description: 'Additional CSS classes' }
-	];
-
-	// Props data for Checkbox
-	const checkboxProps = [
-		{ prop: 'checked', type: 'boolean', default: 'false', description: 'Checked state (use bind:checked)' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable the checkbox' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Checkbox label' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'onchange', type: 'function', default: 'undefined', description: 'Change handler' },
-		{ prop: 'iconBefore', type: 'snippet', default: 'undefined', description: 'Icon snippet before checkbox' },
-		{ prop: 'class', type: 'string', default: '""', description: 'Additional CSS classes' }
-	];
-
-	// Props data for Switch
-	const switchProps = [
-		{ prop: 'checked', type: 'boolean', default: 'false', description: 'Toggle state (use bind:checked)' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable the switch' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Switch label' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'onchange', type: 'function', default: 'undefined', description: 'Change handler' },
-		{ prop: 'iconBefore', type: 'snippet', default: 'undefined', description: 'Icon snippet before switch' },
-		{ prop: 'class', type: 'string', default: '""', description: 'Additional CSS classes' }
-	];
-
-	// Props data for RadioGroup
-	const radioGroupProps = [
-		{ prop: 'value', type: 'string', default: '""', description: 'Selected value (use bind:value)' },
-		{ prop: 'options', type: 'Array<{value: string, label: string}>', default: 'required', description: 'Array of radio options' },
-		{ prop: 'name', type: 'string', default: 'required', description: 'Radio group name' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable all radios' },
-		{ prop: 'orientation', type: '"vertical" | "horizontal"', default: '"vertical"', description: 'Layout orientation' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Group label' },
-		{ prop: 'onchange', type: 'function', default: 'undefined', description: 'Change handler' },
-		{ prop: 'class', type: 'string', default: '""', description: 'Additional CSS classes' }
-	];
-
-	// Props data for RangeSlider
-	const rangeSliderProps = [
-		{ prop: 'value', type: 'number', default: '0', description: 'Slider value (use bind:value)' },
-		{ prop: 'min', type: 'number', default: '0', description: 'Minimum value' },
-		{ prop: 'max', type: 'number', default: '100', description: 'Maximum value' },
-		{ prop: 'step', type: 'number', default: '1', description: 'Step increment' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable the slider' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Slider label' },
-		{ prop: 'showValue', type: 'boolean', default: 'true', description: 'Show current value' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'oninput', type: 'function', default: 'undefined', description: 'Input change handler' }
-	];
-
-	// Props data for InputGroup
-	const inputGroupProps = [
-		{ prop: '—', type: '—', default: '—', description: 'No props – uses slot-only composition. Child elements are automatically styled with merged borders.' }
-	];
-
-	// Props data for FileUpload
-	const fileUploadProps = [
-		{ prop: 'files', type: 'FileList | null', default: 'null', description: 'Uploaded files (use bind:files)' },
-		{ prop: 'accept', type: 'string', default: '""', description: 'Accepted file types' },
-		{ prop: 'multiple', type: 'boolean', default: 'false', description: 'Allow multiple files' },
-		{ prop: 'disabled', type: 'boolean', default: 'false', description: 'Disable file upload' },
-		{ prop: 'label', type: 'string', default: '""', description: 'Upload label' },
-		{ prop: 'id', type: 'string', default: 'auto', description: 'HTML id attribute' },
-		{ prop: 'onchange', type: 'function', default: 'undefined', description: 'Change callback receiving {target: {files: FileList}}' },
-		{ prop: 'icon', type: 'snippet', default: 'undefined', description: 'Custom icon snippet' }
-	];
+	onMount(async () => {
+		inputHtml = await codeToHtml(inputCode, { lang: 'svelte', theme: 'github-dark' });
+		textareaHtml = await codeToHtml(textareaCode, { lang: 'svelte', theme: 'github-dark' });
+		selectHtml = await codeToHtml(selectCode, { lang: 'svelte', theme: 'github-dark' });
+		checkboxHtml = await codeToHtml(checkboxCode, { lang: 'svelte', theme: 'github-dark' });
+		switchHtml = await codeToHtml(switchCode, { lang: 'svelte', theme: 'github-dark' });
+		radioHtml = await codeToHtml(radioCode, { lang: 'svelte', theme: 'github-dark' });
+		sliderHtml = await codeToHtml(sliderCode, { lang: 'svelte', theme: 'github-dark' });
+		fileUploadHtml = await codeToHtml(fileUploadCode, { lang: 'svelte', theme: 'github-dark' });
+		inputGroupHtml = await codeToHtml(inputGroupCode, { lang: 'svelte', theme: 'github-dark' });
+		datePickerHtml = await codeToHtml(datePickerCode, { lang: 'svelte', theme: 'github-dark' });
+		timePickerHtml = await codeToHtml(timePickerCode, { lang: 'svelte', theme: 'github-dark' });
+		dateTimePickerHtml = await codeToHtml(dateTimePickerCode, { lang: 'svelte', theme: 'github-dark' });
+	});
 </script>
 
-<Container>
-	<!-- Hero Section -->
-	<div class="demo-section">
-		<Heading level={1} glow={true} variant="gradient">Form Components</Heading>
-		<div style="margin-top: 1rem;">
-			<Text color="muted">
-				9 interactive form components with validation, icons, and accessibility features
+<Container centered padding>
+	<Hero>
+		{#snippet title()}
+			<Heading level={1} variant="accent" glow>Form Components</Heading>
+		{/snippet}
+		{#snippet text()}
+			<Text variant="body" as="p" color="soft">
+				Beautiful, accessible form components with built-in validation and error states
 			</Text>
-		</div>
-		<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem;">
-			<span class="feature-tag">9 Components</span>
-			<span class="feature-tag">Validation</span>
-			<span class="feature-tag">Icon Support</span>
-			<span class="feature-tag">Accessible</span>
-			<span class="feature-tag">Drag & Drop</span>
-		</div>
-	</div>
+		{/snippet}
+		{#snippet features()}
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:text-cursor-input" class="tag-icon" />
+				Text Inputs
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:check-square" class="tag-icon" />
+				Checkboxes & Switches
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:sliders" class="tag-icon" />
+				Range Sliders
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:upload" class="tag-icon" />
+				File Upload
+			</Badge>
+		{/snippet}
+	</Hero>
 
-	<!-- Input Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Input</Heading>
-			<Text color="muted">Text input with multiple types, labels, icons, and error states</Text>
+	<Grid cols={1} gap="lg">
+		<!-- Input -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Input</Heading>
+				<Text variant="body" color="soft">
+					Versatile text input with support for icons, labels, and various input types
+				</Text>
+			{/snippet}
 
-			<Divider />
-
-			<div class="controls-section">
-				<Grid cols={2}>
-					<Checkbox bind:checked={showErrors} label="Show errors" />
-					<Checkbox bind:checked={disabledState} label="Disabled state" />
-				</Grid>
-			</div>
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Inputs</Heading>
-				<Grid cols={2}>
-					<Input type="text" label="Username" bind:value={username} placeholder="Enter username" />
-					<Input type="email" label="Email" bind:value={email} placeholder="your@email.com" />
-					<Input type="password" label="Password" bind:value={password} placeholder="Enter password" />
-					<Input type="number" label="Age" placeholder="25" />
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>With Icons</Heading>
-				</div>
-				<Grid cols={2}>
-					<Input label="Search" placeholder="Search...">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:search" width="18" />
-						{/snippet}
-					</Input>
-					<Input type="password" label="Password" placeholder="Enter password">
-						{#snippet iconAfter()}
-							<Icon icon="lucide:eye" width="18" />
-						{/snippet}
-					</Input>
-					<Input label="Email" placeholder="your@email.com">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:mail" width="18" />
-						{/snippet}
-						{#snippet iconAfter()}
-							<Icon icon="lucide:check-circle" width="18" />
-						{/snippet}
-					</Input>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Error States</Heading>
-				</div>
-				<Grid cols={2}>
-					<Input
-						type="email"
-						label="Email"
-						bind:value={email2}
-						error={showErrors}
-						placeholder="your@email.com"
-					/>
-					<Input
-						type="password"
-						label="Password"
-						bind:value={password2}
-						error={showErrors}
-						placeholder="Enter password"
-					/>
-				</Grid>
-
-				<div style="margin-top: 2rem;">
-					<Heading level={4}>Disabled State</Heading>
-				</div>
-				<Input label="Disabled Input" disabled={disabledState} placeholder="Cannot edit" />
-			</div>
-
-			<div style="margin-top: 2rem;">
-				<Divider />
-			</div>
-
-			<div style="margin-top: 1rem;">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={inputProps} />
-		</Card>
-	</div>
-
-	<!-- Textarea Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Textarea</Heading>
-			<Text color="muted">Multi-line text input with adjustable rows and icon support</Text>
-
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Usage</Heading>
-				<Textarea label="Comment" rows={4} bind:value={message} placeholder="Enter your comment..." />
-
-				<div class="subsection">
-					<Heading level={4}>With Icon</Heading>
-				</div>
-				<Textarea label="Message" rows={4} placeholder="Type your message...">
-					{#snippet iconBefore()}
-						<Icon icon="lucide:message-square" width="18" />
-					{/snippet}
-				</Textarea>
-
-				<div class="subsection">
-					<Heading level={4}>Error State</Heading>
-				</div>
-				<Textarea
-					label="Required Field"
-					rows={4}
-					bind:value={message}
-					error={showErrors && !message}
-					placeholder="This field is required"
-				/>
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<Textarea label="Disabled Textarea" rows={4} disabled={disabledState} placeholder="Cannot edit" />
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={textareaProps} />
-		</Card>
-	</div>
-
-	<!-- Select Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Select</Heading>
-			<Text color="muted">Dropdown selection with options array and icon support</Text>
-
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Select</Heading>
-				<Select
-					label="Country"
-					options={countryOptions}
-					bind:value={country}
-					placeholder="Choose a country"
-				/>
-
-				<div class="subsection">
-					<Heading level={4}>With Icon</Heading>
-				</div>
-				<Select label="Location" options={countryOptions} bind:value={country} placeholder="Select location">
-					{#snippet iconBefore()}
-						<Icon icon="lucide:globe" width="18" />
-					{/snippet}
-				</Select>
-
-				<div class="subsection">
-					<Heading level={4}>Error State</Heading>
-				</div>
-				<Select
-					label="Required Selection"
-					options={countryOptions}
-					bind:value={country}
-					error={showErrors && !country}
-					placeholder="Please select"
-				/>
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<Select
-					label="Disabled Select"
-					options={countryOptions}
-					disabled={disabledState}
-					placeholder="Cannot select"
-				/>
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={selectProps} />
-		</Card>
-	</div>
-
-	<!-- Checkbox Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Checkbox</Heading>
-			<Text color="muted">Boolean selection with label and icon support</Text>
-
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Checkbox</Heading>
-				<Checkbox bind:checked={termsAccepted} label="I accept the terms and conditions" />
-
-				<div class="subsection">
-					<Heading level={4}>With Icon</Heading>
-				</div>
-				<Checkbox bind:checked={termsAccepted} label="Verify with shield protection">
-					{#snippet iconBefore()}
-						<Icon icon="lucide:shield-check" width="18" />
-					{/snippet}
-				</Checkbox>
-
-				<div class="subsection">
-					<Heading level={4}>Checkbox Group</Heading>
-				</div>
-				<div style="display: flex; flex-direction: column; gap: 0.75rem;">
-					<Checkbox bind:checked={feature1} label="Enable feature 1" />
-					<Checkbox bind:checked={feature2} label="Enable feature 2" />
-					<Checkbox bind:checked={feature3} label="Enable feature 3" />
-				</div>
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<Checkbox label="Disabled checkbox" disabled={disabledState} />
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={checkboxProps} />
-		</Card>
-	</div>
-
-	<!-- Switch Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Switch</Heading>
-			<Text color="muted">Toggle switch with smooth animation and icon support</Text>
-
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Switch</Heading>
-				<Switch bind:checked={notificationsEnabled} label="Enable notifications" />
-
-				<div class="subsection">
-					<Heading level={4}>With Icon</Heading>
-				</div>
-				<Switch bind:checked={notificationsEnabled} label="Notification alerts">
-					{#snippet iconBefore()}
-						<Icon icon="lucide:bell" width="18" />
-					{/snippet}
-				</Switch>
-
-				<div class="subsection">
-					<Heading level={4}>Multiple Switches</Heading>
-				</div>
-				<Grid cols={2}>
-					<Switch bind:checked={darkMode} label="Dark mode" />
-					<Switch bind:checked={autoSave} label="Auto-save" />
-					<Switch bind:checked={soundEnabled} label="Sound effects" />
-					<Switch bind:checked={notificationsEnabled} label="Push notifications" />
-				</Grid>
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<Switch label="Disabled switch" disabled={disabledState} />
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={switchProps} />
-		</Card>
-	</div>
-
-	<!-- RadioGroup Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>RadioGroup</Heading>
-			<Text color="muted">Single selection from multiple options with orientation control</Text>
-
-			<Divider />
-
-			<div class="controls-section">
-				<div style="display: flex; gap: 0.5rem;">
-					<Button
-						variant={selectedOrientation === 'vertical' ? 'primary' : 'secondary'}
-						size="sm"
-						onclick={() => (selectedOrientation = 'vertical')}
-					>
-						Vertical
-					</Button>
-					<Button
-						variant={selectedOrientation === 'horizontal' ? 'primary' : 'secondary'}
-						size="sm"
-						onclick={() => (selectedOrientation = 'horizontal')}
-					>
-						Horizontal
-					</Button>
-				</div>
-			</div>
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic RadioGroup</Heading>
-				<RadioGroup
-					name="size-selection"
-					label="Select size"
-					options={sizeOptions}
-					bind:value={size}
-					orientation={selectedOrientation}
-				/>
-
-				<div class="subsection">
-					<Heading level={4}>With Icons</Heading>
-				</div>
-				<RadioGroup
-					name="payment-method"
-					label="Payment method"
-					options={paymentOptions}
-					orientation={selectedOrientation}
-				/>
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<RadioGroup
-					name="disabled-options"
-					label="Disabled options"
-					options={sizeOptions}
-					disabled={disabledState}
-					orientation={selectedOrientation}
-				/>
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={radioGroupProps} />
-		</Card>
-	</div>
-
-	<!-- RangeSlider Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>RangeSlider</Heading>
-			<Text color="muted">Numeric range selection with live value display</Text>
-
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Slider</Heading>
-				<RangeSlider label="Volume" min={0} max={100} bind:value={volume} showValue={true} />
-				<div style="margin-top: 0.5rem;">
-					<Text color="muted">Current value: {volume}</Text>
-				</div>
-
-				<div class="subsection">
-					<Heading level={4}>Custom Range</Heading>
-				</div>
-				<RangeSlider label="Price range ($10-$50)" min={10} max={50} step={5} value={25} showValue={true} />
-
-				<div class="subsection">
-					<Heading level={4}>Without Value Display</Heading>
-				</div>
-				<RangeSlider label="Opacity" min={0} max={100} value={75} showValue={false} />
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<RangeSlider label="Disabled slider" min={0} max={100} value={50} disabled={disabledState} />
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={rangeSliderProps} />
-		</Card>
-	</div>
-
-	<!-- InputGroup Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>InputGroup</Heading>
-			<Text color="muted">Combine multiple inputs with seamless borders</Text>
-
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>URL Input</Heading>
-				<InputGroup>
-					<div class="input-width-sm">
-						<Input type="text" bind:value={protocol} placeholder="https://" />
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Inputs</Text>
+					<div class="demo-group">
+						<Input type="email" bind:value={email} label="Email" placeholder="Enter your email" />
+						<Input
+							type="password"
+							bind:value={password}
+							label="Password"
+							placeholder="Enter your password"
+						/>
 					</div>
-					<Input type="text" bind:value={domain} placeholder="example" />
-					<div class="input-width-xs">
-						<Input type="text" bind:value={tld} placeholder=".com" />
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">With Icons</Text>
+					<div class="demo-group">
+						<Input type="text" bind:value={search} placeholder="Search...">
+							{#snippet iconBefore()}
+								<Icon icon="lucide:search" width="16" height="16" />
+							{/snippet}
+						</Input>
+
+						<Input type="email" placeholder="Email address">
+							{#snippet iconBefore()}
+								<Icon icon="lucide:mail" width="16" height="16" />
+							{/snippet}
+						</Input>
+
+						<Input type="text" placeholder="Enter URL">
+							{#snippet iconAfter()}
+								<Icon icon="lucide:external-link" width="16" height="16" />
+							{/snippet}
+						</Input>
 					</div>
-				</InputGroup>
-
-				<div class="subsection">
-					<Heading level={4}>Price Input</Heading>
 				</div>
-				<InputGroup>
-					<span class="input-addon">$</span>
-					<Input type="number" bind:value={priceValue} placeholder="0" />
-					<span class="input-addon">.00</span>
-				</InputGroup>
 
-				<div class="subsection">
-					<Heading level={4}>Search with Button</Heading>
+				<div>
+					<Text variant="caption" color="soft">Special Input Types</Text>
+					<div class="demo-group items-center">
+						<Input type="number" bind:value={numberValue} label="Quantity" placeholder="0" />
+
+						<Input type="color" bind:value={colorValue} label="Pick a color" />
+
+						<Input type="search" placeholder="Search products...">
+							{#snippet iconBefore()}
+								<Icon icon="lucide:search" width="16" height="16" />
+							{/snippet}
+						</Input>
+					</div>
 				</div>
-				<InputGroup>
-					<Input type="text" bind:value={searchQuery} placeholder="Search...">
-						{#snippet iconBefore()}
-							<Icon icon="lucide:search" width="18" />
-						{/snippet}
-					</Input>
-					<Button variant="primary">
-						<Icon icon="lucide:arrow-right" width="18" />
-					</Button>
-				</InputGroup>
 
-				<div style="margin-top: 1rem;">
-					<Text color="muted">
-						InputGroup uses glass-panel styling and automatically merges borders between child elements.
+				<div>
+					<Text variant="caption" color="soft">States</Text>
+					<div class="demo-group">
+						<Input type="text" placeholder="Normal state" />
+						<Input type="text" placeholder="Disabled state" disabled />
+						<Input
+							type="text"
+							bind:value={errorInput}
+							placeholder="Error state"
+							error
+							label="Username (error)"
+						/>
+					</div>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Built-in Validation</Text>
+					<div class="demo-group">
+						<Input
+							type="email"
+							bind:value={validatedEmail}
+							label="Email (auto-validates)"
+							placeholder="test@example.com"
+						/>
+
+						<Input
+							type="url"
+							bind:value={urlInput}
+							label="Website URL (auto-validates)"
+							placeholder="https://example.com"
+						/>
+
+						<Input
+							type="tel"
+							bind:value={phoneInput}
+							label="Phone Number (auto-validates)"
+							placeholder="+1 (555) 123-4567"
+						/>
+					</div>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Custom Validation Function</Text>
+					<div class="demo-group">
+						<Input
+							type="text"
+							bind:value={customValidatedUsername}
+							label="Username (custom validation)"
+							placeholder="Enter username"
+							validate={(val) => {
+								const str = String(val);
+								if (str.length < 3) {
+									return 'Username must be at least 3 characters';
+								}
+								if (!/^[a-zA-Z0-9_]+$/.test(str)) {
+									return 'Username can only contain letters, numbers, and underscores';
+								}
+								return true;
+							}}
+						/>
+					</div>
+					<Text variant="caption" color="muted">
+						Try entering invalid characters or less than 3 characters
 					</Text>
 				</div>
-			</div>
 
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={inputGroupProps} />
+				<CodeBlock
+					filename="Input.svelte"
+					showLineNumbers
+					lineCount={inputCode.split('\n').length}
+					showCopy
+					code={inputCode}
+				>
+					{@html inputHtml}
+				</CodeBlock>
+			</Grid>
 		</Card>
-	</div>
 
-	<!-- FileUpload Component Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>FileUpload</Heading>
-			<Text color="muted">File selection with drag-and-drop support and progress display</Text>
+		<!-- Textarea -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Textarea</Heading>
+				<Text variant="body" color="soft">Multi-line text input with resizable area</Text>
+			{/snippet}
 
-			<Divider />
-
-			<div class="examples-grid">
-				<Heading level={4}>Basic Upload</Heading>
-				<FileUpload label="Upload Documents" accept="image/*" bind:files={uploadedFiles} />
-
-				<div class="subsection">
-					<Heading level={4}>Multiple Files</Heading>
-				</div>
-				<FileUpload label="Upload Multiple Images" accept="image/*" multiple={true} />
-
-				<div class="subsection">
-					<Heading level={4}>Custom Icon</Heading>
-				</div>
-				<FileUpload label="Upload to Cloud" accept="*/*">
-					{#snippet icon()}
-						<Icon icon="lucide:cloud-upload" width="32" />
-					{/snippet}
-				</FileUpload>
-
-				<div class="subsection">
-					<Heading level={4}>Disabled</Heading>
-				</div>
-				<FileUpload label="Disabled Upload" disabled={disabledState} />
-
-				{#if uploadedFiles && uploadedFiles.length > 0}
-					<div style="margin-top: 1rem;">
-						<Text color="muted">Uploaded files (progress simulated for demo):</Text>
-						{#each Array.from(uploadedFiles) as file}
-							<div style="margin-top: 0.75rem;">
-								<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
-									<Text>
-										{file.name}
-									</Text>
-									<Text color="muted">
-										{(file.size / 1024).toFixed(2)} KB
-									</Text>
-								</div>
-								<ProgressBar 
-									value={fileProgress.get(file.name) ?? 0} 
-									size="sm" 
-									showLabel={true}
-								/>
-							</div>
-						{/each}
-					</div>
-				{/if}
-
-				<div style="margin-top: 1rem;">
-					<Text color="muted">
-						Drag and drop files or click to browse. The upload area shows an accent border and glow effect when dragging files over it. Upload progress is simulated for demonstration purposes.
-					</Text>
-				</div>
-			</div>
-
-			<div class="section-spacing">
-				<Divider />
-			</div>
-
-			<div class="small-spacing">
-				<Heading level={4}>Props</Heading>
-			</div>
-			<Table columns={tableColumns} data={fileUploadProps} />
-		</Card>
-	</div>
-
-	<!-- Form Validation Demo Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Form Validation Example</Heading>
-			<Text color="muted">Complete form with validation and error states</Text>
-
-			<Divider />
-
-			<div style="margin-top: 2rem;">
-				<Grid cols={1} gap="md">
-					<Input
-						type="email"
-						label="Email"
-						bind:value={email}
-						error={emailError}
-						placeholder="your@email.com"
-					>
-						{#snippet iconBefore()}
-							<Icon icon="lucide:mail" width="18" />
-						{/snippet}
-					</Input>
-
-					<Input
-						type="password"
-						label="Password (min 6 characters)"
-						bind:value={password}
-						error={passwordError}
-						placeholder="Enter password"
-					>
-						{#snippet iconBefore()}
-							<Icon icon="lucide:lock" width="18" />
-						{/snippet}
-					</Input>
-
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Textarea</Text>
 					<Textarea
-						label="Message"
 						bind:value={message}
-						error={messageError}
-						rows={4}
-						placeholder="Enter your message"
-					>
+						label="Message"
+						placeholder="Enter your message..."
+						rows={6}
+					/>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">With Icon</Text>
+					<Textarea placeholder="Write a comment...">
 						{#snippet iconBefore()}
-							<Icon icon="lucide:message-square" width="18" />
+							<Icon icon="lucide:message-square" width="16" height="16" />
 						{/snippet}
 					</Textarea>
+				</div>
 
+				<CodeBlock
+					filename="Textarea.svelte"
+					showLineNumbers
+					lineCount={textareaCode.split('\n').length}
+					showCopy
+					code={textareaCode}
+				>
+					{@html textareaHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- Select -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Select</Heading>
+				<Text variant="body" color="soft">Dropdown select with custom styling</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Select</Text>
 					<Select
-						label="Country"
-						options={countryOptions}
 						bind:value={country}
-						error={showErrors && !country}
-						placeholder="Select your country"
-					>
+						options={countries}
+						label="Country"
+						placeholder="Select a country"
+					/>
+					{#if country}
+						<Text variant="caption" color="soft">
+							Selected: {countries.find((c) => c.value === country)?.label}
+						</Text>
+					{/if}
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">With Icon</Text>
+					<Select bind:value={country} options={countries} placeholder="Choose country">
 						{#snippet iconBefore()}
-							<Icon icon="lucide:globe" width="18" />
+							<Icon icon="lucide:globe" width="16" height="16" />
 						{/snippet}
 					</Select>
+				</div>
 
-					<Checkbox 
-						bind:checked={termsAccepted} 
-						label="I accept the terms and conditions"
-						onchange={() => { if (termsAccepted) termsError = false; }}
-					/>
-					{#if termsError}
-						<div class="error-text">
-							<Text color="error">You must accept the terms and conditions</Text>
-						</div>
-					{/if}
+				<div>
+					<Text variant="caption" color="soft">Disabled State</Text>
+					<Select options={countries} placeholder="Disabled select" disabled />
+				</div>
 
-					<div style="display: flex; gap: 1rem; margin-top: 1rem;">
-						<Button variant="primary" onclick={validateForm}>Validate Form</Button>
-						<Button variant="secondary" onclick={resetForm}>Reset</Button>
+				<CodeBlock
+					filename="Select.svelte"
+					showLineNumbers
+					lineCount={selectCode.split('\n').length}
+					showCopy
+					code={selectCode}
+				>
+					{@html selectHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- Checkbox -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Checkbox</Heading>
+				<Text variant="body" color="soft">Toggle checkboxes with custom styling</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Checkboxes</Text>
+					<div class="demo-group-vertical">
+						<Checkbox bind:checked={agreed} label="I agree to the terms and conditions" />
+						<Checkbox bind:checked={newsletter} label="Subscribe to newsletter" />
+						<Checkbox checked={false} label="Disabled checkbox" disabled />
 					</div>
+				</div>
 
-					{#if emailError || passwordError || messageError || termsError}
-						<div class="error-text">
-							<Text color="error">
-								Please fix errors: 
-								{emailError ? 'Invalid email. ' : ''}
-								{passwordError ? 'Password too short. ' : ''}
-								{messageError ? 'Message required. ' : ''}
-								{termsError ? 'Terms required.' : ''}
-							</Text>
-						</div>
-					{:else if email && password && message && termsAccepted}
-						<div class="success-text">
-							<Text color="muted">
-								Form valid! ✓
-							</Text>
-						</div>
+				<div>
+					<Text variant="caption" color="soft">With Icon</Text>
+					<Checkbox checked={true} label="Premium feature">
+						{#snippet iconBefore()}
+							<Icon icon="lucide:crown" width="16" height="16" class="text-accent" />
+						{/snippet}
+					</Checkbox>
+				</div>
+
+				<CodeBlock
+					filename="Checkbox.svelte"
+					showLineNumbers
+					lineCount={checkboxCode.split('\n').length}
+					showCopy
+					code={checkboxCode}
+				>
+					{@html checkboxHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- Switch -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Switch</Heading>
+				<Text variant="body" color="soft">Toggle switch for binary options</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Switches</Text>
+					<div class="demo-group-vertical">
+						<Switch bind:checked={darkMode} label="Dark Mode" />
+						<Switch bind:checked={notifications} label="Enable Notifications" />
+						<Switch checked={false} label="Disabled switch" disabled />
+					</div>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">With Icon</Text>
+					<Switch checked={true} label="Auto-save enabled">
+						{#snippet iconBefore()}
+							<Icon icon="lucide:save" width="16" height="16" class="text-success" />
+						{/snippet}
+					</Switch>
+				</div>
+
+				<CodeBlock
+					filename="Switch.svelte"
+					showLineNumbers
+					lineCount={switchCode.split('\n').length}
+					showCopy
+					code={switchCode}
+				>
+					{@html switchHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- RadioGroup -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Radio Group</Heading>
+				<Text variant="body" color="soft">
+					Mutually exclusive options in vertical or horizontal layout
+				</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Vertical Layout</Text>
+					<RadioGroup
+						bind:value={plan}
+						options={plans}
+						name="plan"
+						label="Choose a plan"
+						orientation="vertical"
+					/>
+					<Text variant="caption" color="soft">Selected: {plan}</Text>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Horizontal Layout</Text>
+					<RadioGroup
+						bind:value={paymentMethod}
+						options={paymentMethods}
+						name="payment"
+						label="Payment Method"
+						orientation="horizontal"
+					/>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Disabled State</Text>
+					<RadioGroup options={plans} name="disabled-plan" label="Disabled options" disabled />
+				</div>
+
+				<CodeBlock
+					filename="RadioGroup.svelte"
+					showLineNumbers
+					lineCount={radioCode.split('\n').length}
+					showCopy
+					code={radioCode}
+				>
+					{@html radioHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- RangeSlider -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Range Slider</Heading>
+				<Text variant="body" color="soft">Slider for selecting numeric values</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Slider</Text>
+					<RangeSlider bind:value={volume} min={0} max={100} label="Volume" showValue />
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Custom Range and Step</Text>
+					<RangeSlider
+						bind:value={brightness}
+						min={0}
+						max={100}
+						step={5}
+						label="Brightness"
+						showValue
+					/>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Disabled State</Text>
+					<RangeSlider value={50} min={0} max={100} label="Disabled slider" disabled />
+				</div>
+
+				<CodeBlock
+					filename="RangeSlider.svelte"
+					showLineNumbers
+					lineCount={sliderCode.split('\n').length}
+					showCopy
+					code={sliderCode}
+				>
+					{@html sliderHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- FileUpload -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>File Upload</Heading>
+				<Text variant="body" color="soft">Drag-and-drop file upload with visual feedback</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic File Upload</Text>
+					<FileUpload
+						bind:files
+						accept=".jpg,.png,.pdf"
+						multiple
+						label="Upload documents"
+						onchange={(e) => console.log('Files:', e.target.files)}
+					/>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Custom Icon</Text>
+					<FileUpload accept="image/*" label="Upload images">
+						{#snippet icon()}
+							<Icon icon="lucide:image" width="48" height="48" class="text-accent" />
+						{/snippet}
+					</FileUpload>
+				</div>
+				<CodeBlock
+					filename="FileUpload.svelte"
+					showLineNumbers
+					lineCount={fileUploadCode.split('\n').length}
+					showCopy
+					code={fileUploadCode}
+				>
+					{@html fileUploadHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- DatePicker -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Date Picker</Heading>
+				<Text variant="body" color="soft">Select dates with an intuitive calendar interface</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Date Picker</Text>
+					<DatePicker
+						bind:value={selectedDate}
+						label="Select a date"
+						placeholder="Choose a date"
+					/>
+					{#if selectedDate}
+						<Text variant="caption" color="soft">
+							Selected: {selectedDate.toLocaleDateString()}
+						</Text>
 					{/if}
-				</Grid>
-			</div>
+				</div>
+
+				<CodeBlock
+					filename="DatePicker.svelte"
+					showLineNumbers
+					lineCount={datePickerCode.split('\n').length}
+					showCopy
+					code={datePickerCode}
+				>
+					{@html datePickerHtml}
+				</CodeBlock>
+			</Grid>
 		</Card>
-	</div>
 
-	<!-- Component Relationships Diagram -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Component Relationships</Heading>
-			<Text color="muted">Visual overview of form component categories and data flow</Text>
+		<!-- TimePicker -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Time Picker</Heading>
+				<Text variant="body" color="soft">Select time with hour and minute controls</Text>
+			{/snippet}
 
-			<Divider />
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Basic Time Picker</Text>
+					<TimePicker
+						bind:value={selectedTime}
+						label="Select a time"
+						placeholder="Choose a time"
+					/>
+					{#if selectedTime}
+						<Text variant="caption" color="soft">
+							Selected: {selectedTime}
+						</Text>
+					{/if}
+				</div>
 
-			<div style="margin-top: 2rem;">
-				<pre style="background: var(--color-base-2); padding: 1.5rem; border-radius: var(--radius-lg); overflow-x: auto;"><code>{`graph TD
-    A[Form Components] --> B[Text Inputs]
-    A --> C[Selection]
-    A --> D[Boolean]
-    A --> E[Special]
-    
-    B --> B1[Input]
-    B --> B2[Textarea]
-    
-    C --> C1[Select]
-    C --> C2[RadioGroup]
-    
-    D --> D1[Checkbox]
-    D --> D2[Switch]
-    
-    E --> E1[RangeSlider]
-    E --> E2[FileUpload]
-    E --> E3[InputGroup]
-    
-    B1 -.->|bind:value| F[State Management]
-    B2 -.->|bind:value| F
-    C1 -.->|bind:value| F
-    C2 -.->|bind:value| F
-    D1 -.->|bind:checked| F
-    D2 -.->|bind:checked| F
-    E1 -.->|bind:value| F
-    E2 -.->|bind:files| F
-    
-    F --> G[Validation]
-    G --> H[Error States]
-    H -.->|error prop| B1
-    H -.->|error prop| B2
-    H -.->|error prop| C1`}</code></pre>
-			</div>
+				<CodeBlock
+					filename="TimePicker.svelte"
+					showLineNumbers
+					lineCount={timePickerCode.split('\n').length}
+					showCopy
+					code={timePickerCode}
+				>
+					{@html timePickerHtml}
+				</CodeBlock>
+			</Grid>
 		</Card>
-	</div>
 
-	<!-- Best Practices Section -->
-	<div class="demo-section">
-		<Card>
-			<Heading level={2}>Best Practices</Heading>
+		<!-- DateTimePicker -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Date Time Picker</Heading>
+				<Text variant="body" color="soft">Select both date and time in one component</Text>
+			{/snippet}
 
-			<Divider />
-
-			<div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+			<Grid cols={1} gap="lg">
 				<div>
-					<div class="practice-title">Labels</div>
-					<Text color="muted">Always provide labels for accessibility. Use the label prop or wrap inputs in a label element. Screen readers rely on proper labeling.</Text>
+					<Text variant="caption" color="soft">Basic Date Time Picker</Text>
+					<DateTimePicker
+						bind:value={selectedDateTime}
+						label="Select date and time"
+						placeholder="Choose date and time"
+					/>
+					{#if selectedDateTime}
+						<Text variant="caption" color="soft">
+							Selected: {selectedDateTime.toLocaleString()}
+						</Text>
+					{/if}
 				</div>
 
-				<div>
-					<div class="practice-title">Error States</div>
-					<Text color="muted">Show clear error messages near inputs. Use the error prop for visual indication. Provide helpful, specific error messages that guide users to fix issues.</Text>
-				</div>
-
-				<div>
-					<div class="practice-title">Icons</div>
-					<Text color="muted">Use iconBefore for context (search, email, globe) and iconAfter for actions (password visibility toggle, clear button). Icons should enhance understanding, not replace labels.</Text>
-				</div>
-
-				<div>
-					<div class="practice-title">Validation</div>
-					<Text color="muted">Validate on blur or submit, not on every keystroke. This prevents frustrating users with errors while they're still typing. Provide helpful error messages.</Text>
-				</div>
-
-				<div>
-					<div class="practice-title">Disabled States</div>
-					<Text color="muted">Clearly indicate disabled inputs with reduced opacity and cursor changes. Consider showing why an input is disabled (e.g., tooltip or help text).</Text>
-				</div>
-
-				<div>
-					<div class="practice-title">File Upload</div>
-					<Text color="muted">Provide clear accepted formats using the accept prop. Show upload progress for large files. Support both click and drag-drop interactions.</Text>
-				</div>
-
-				<div>
-					<div class="practice-title">Accessibility</div>
-					<Text color="muted">Ensure keyboard navigation works (Tab, Enter, Space). All components include proper ARIA attributes by default. Test with screen readers.</Text>
-				</div>
-
-				<div>
-					<div class="practice-title">Grouping</div>
-					<Text color="muted">Use InputGroup for related inputs (URL parts, price with currency). Use RadioGroup for mutually exclusive options. Group related checkboxes with fieldset/legend.</Text>
-				</div>
-			</div>
+				<CodeBlock
+					filename="DateTimePicker.svelte"
+					showLineNumbers
+					lineCount={dateTimePickerCode.split('\n').length}
+					showCopy
+					code={dateTimePickerCode}
+				>
+					{@html dateTimePickerHtml}
+				</CodeBlock>
+			</Grid>
 		</Card>
-	</div>
+
+		<!-- InputGroup -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Input Group</Heading>
+				<Text variant="body" color="soft">Combine inputs and buttons into a cohesive group</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Input with Button</Text>
+					<InputGroup>
+						<Input type="text" bind:value={groupUsername} placeholder="Username" />
+						<Button variant="primary">Search</Button>
+					</InputGroup>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Multiple Inputs</Text>
+					<InputGroup>
+						<Input type="text" placeholder="First name" />
+						<Input type="text" placeholder="Last name" />
+						<Button variant="secondary">
+							<Icon icon="lucide:user-plus" width="16" height="16" />
+						</Button>
+					</InputGroup>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Search Bar</Text>
+					<InputGroup>
+						<Button variant="ghost">
+							<Icon icon="lucide:search" width="16" height="16" />
+						</Button>
+						<Input type="search" placeholder="Search anything..." />
+						<Button variant="primary">Go</Button>
+					</InputGroup>
+				</div>
+
+				<CodeBlock
+					filename="InputGroup.svelte"
+					showLineNumbers
+					lineCount={inputGroupCode.split('\n').length}
+					showCopy
+					code={inputGroupCode}
+				>
+					{@html inputGroupHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<Divider />
+
+		<!-- Usage Tips -->
+		<Card padding="lg" class="accent-surface">
+			{#snippet header()}
+				<Heading level={2}>Usage Tips</Heading>
+			{/snippet}
+
+			<Grid cols={2} gap="lg">
+				<div>
+					<Heading level={4}>Labels and Placeholders</Heading>
+					<Text variant="body" color="soft">
+						Use <Code>label</Code> props for accessibility. Placeholders should provide
+						examples, not instructions.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Built-in Validation</Heading>
+					<Text variant="body" color="soft">
+						Input automatically validates <Code>email</Code>, <Code
+							>url</Code
+						>, and <Code>tel</Code> types. Validation errors appear below the input
+						with helpful messages.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Custom Validation</Heading>
+					<Text variant="body" color="soft">
+						Pass a <Code>validate</Code> function to Input for custom validation.
+						Return <Code>true</Code> for valid or a string error message for invalid.
+						Perfect for username rules, password strength, etc.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Binding Values</Heading>
+					<Text variant="body" color="soft">
+						Use <Code>bind:value</Code> for two-way binding with Input,
+						Textarea, Select, and RangeSlider. Use <Code>bind:checked</Code> for Checkbox
+						and Switch.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Icons and Customization</Heading>
+					<Text variant="body" color="soft">
+						Most form components support <Code>iconBefore</Code> snippets. Use @iconify/svelte
+						or any icon library for consistent iconography.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Input Groups</Heading>
+					<Text variant="body" color="soft">
+						InputGroup automatically handles borders and rounded corners. Place Input and Button
+						components directly inside for seamless integration.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>File Upload</Heading>
+					<Text variant="body" color="soft">
+						FileUpload supports drag-and-drop and click-to-upload. Use the <Code>accept</Code
+						>
+						prop to restrict file types and <Code>multiple</Code> for multiple files.
+					</Text>
+				</div>
+			</Grid>
+		</Card>
+	</Grid>
 </Container>
 
 <style>
-	.demo-section {
-		margin-bottom: 3rem;
-	}
-
-	.controls-section {
-		padding: 1.5rem;
-		background: var(--color-base-2);
-		border-radius: var(--radius-lg);
-		margin-bottom: 2rem;
-	}
-
-	.examples-grid {
-		margin-top: 2rem;
-	}
-
-	.feature-tag {
-		display: inline-block;
-		padding: 0.25rem 0.75rem;
-		background: var(--color-base-2);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-	}
-
-	.section-spacing {
-		margin-top: 2rem;
-	}
-
-	.small-spacing {
-		margin-top: 1rem;
-	}
-
-	.subsection {
-		margin-top: 2rem;
-	}
-
-	.input-width-sm {
-		max-width: 100px;
-	}
-
-	.input-width-xs {
-		max-width: 80px;
-	}
-
-	.input-addon {
-		padding: 0.5rem 1rem;
-		background: var(--color-base-2);
-		border: 1px solid var(--color-border);
+	.demo-group {
 		display: flex;
-		align-items: center;
-	}
-
-	.error-text {
-		color: var(--color-error);
-	}
-
-	.success-text {
-		color: var(--color-success);
-	}
-
-	.practice-title {
-		font-weight: 600;
+		flex-direction: column;
+		gap: 1rem;
 		margin-bottom: 0.5rem;
+	}
+
+	.demo-group-vertical {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
 	}
 </style>

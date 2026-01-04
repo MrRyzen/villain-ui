@@ -3,7 +3,6 @@
 	import { codeToHtml } from 'shiki';
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
-	import ColorCustomizer from '$lib/components/ColorCustomizer.svelte';
 
 	const rawInstallCode = `npm install @mrintel/villain-ui`;
 	const rawImportCode = `import { Button, Card, Modal } from '@mrintel/villain-ui';\nimport '@mrintel/villain-ui/theme.css';`;
@@ -33,7 +32,7 @@
 <Container centered padding>
 	<Hero>
 		{#snippet title()}
-			<Heading level={1} variant="gradient" glow>Villain UI</Heading>
+			<Heading level={1} variant="accent" glow>Villain UI</Heading>
 		{/snippet}
 		{#snippet text()}
 			<Text variant="body" as="p" color="soft">

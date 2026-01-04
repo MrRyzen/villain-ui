@@ -48,7 +48,7 @@
 		<div class="relative">
 			{#if iconBefore}
 				<span
-					class="absolute left-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center text-text-soft pointer-events-none"
+					class="absolute left-4 top-1/2 -translate-y-1/2 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
 					{@render iconBefore()}
 				</span>
@@ -81,7 +81,7 @@
 	<div class="relative">
 		{#if iconBefore}
 			<span
-				class="absolute left-4 top-1/2 -translate-y-1/2 inline-flex items-center justify-center text-text-soft pointer-events-none"
+				class="absolute left-4 top-1/2 -translate-y-1/2 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 			>
 				{@render iconBefore()}
 			</span>

@@ -141,7 +141,7 @@
     role="presentation"
   >
     <div
-      class="glass-panel rounded-xl shadow-deep w-full max-w-[36rem] animate-[fade-up_0.3s_var(--ease-luxe)]"
+      class="panel-floating rounded-xl shadow-deep w-full max-w-[36rem] animate-[fade-up_0.3s_var(--ease-luxe)]"
       role="combobox"
       aria-expanded="true"
       aria-haspopup="listbox"
