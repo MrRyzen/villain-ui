@@ -6,6 +6,8 @@
     title?: string;
     dismissible?: boolean;
     iconBefore?: Snippet;
+    onClose?: () => void;
+    /** @deprecated Use onClose */
     onclose?: () => void;
     children?: Snippet;
     class?: string;
@@ -16,10 +18,13 @@
     title,
     dismissible = false,
     iconBefore,
+    onClose,
     onclose,
     children,
     class: className = ''
   }: Props = $props();
+
+  const onCloseCallback = $derived(onClose ?? onclose);
 
   let visible = $state(true);
 
@@ -60,7 +65,7 @@
 
   function handleClose() {
     visible = false;
-    onclose?.();
+    onCloseCallback?.();
   }
 </script>
 

@@ -25,6 +25,7 @@
 	--color-success: #10b981; /* Emerald green - success */
 	--color-warning: #f59e0b; /* Amber - warning */
 	--color-error: #ef4444; /* Crimson Red - error/danger */
+	--color-info: #0891b2; /* Deep cyan - info (darker to fit villain aesthetic) */
 
 	/* ===== Surface Colors ===== */
 	--color-surface: var(--color-base-1);
@@ -132,6 +133,26 @@
 	--color-error-overlay-30: color-mix(
 		in srgb,
 		var(--color-error) 30%,
+		transparent
+	);
+	--color-info-overlay-10: color-mix(
+		in srgb,
+		var(--color-info) 10%,
+		transparent
+	);
+	--color-info-overlay-15: color-mix(
+		in srgb,
+		var(--color-info) 15%,
+		transparent
+	);
+	--color-info-overlay-20: color-mix(
+		in srgb,
+		var(--color-info) 20%,
+		transparent
+	);
+	--color-info-overlay-30: color-mix(
+		in srgb,
+		var(--color-info) 30%,
 		transparent
 	);
 
@@ -554,8 +575,7 @@ textarea:focus {
 		var(--color-base-1)
 	);
 	border: 1px solid var(--color-border);
-	box-shadow:
-		0 6px 18px color-mix(in srgb, black 55%, transparent);
+	box-shadow: 0 6px 18px color-mix(in srgb, black 55%, transparent);
 }
 
 .panel-floating {
@@ -565,8 +585,7 @@ textarea:focus {
 		var(--color-base-2)
 	);
 	border: 1px solid var(--color-border-strong);
-	box-shadow:
-		0 12px 30px color-mix(in srgb, black 65%, transparent);
+	box-shadow: 0 12px 30px color-mix(in srgb, black 65%, transparent);
 }
 
 .panel-spectral {
@@ -576,8 +595,7 @@ textarea:focus {
 		color-mix(in srgb, var(--color-base-1) 96%, black)
 	);
 	border: 1px solid var(--color-border);
-	box-shadow:
-		0 10px 28px color-mix(in srgb, black 70%, transparent);
+	box-shadow: 0 10px 28px color-mix(in srgb, black 70%, transparent);
 }
 
 .glass-panel.error-state {
@@ -597,6 +615,17 @@ textarea:focus {
 .hover-lift:hover {
 	transform: translateY(-4px);
 	box-shadow: var(--shadow-accent-glow), var(--shadow-deep);
+}
+
+/* Drag Child - Apply to children of Draggable for glow/scale on drag */
+.drag-child {
+	transition: all var(--duration-200) var(--ease-luxe);
+}
+
+.dragging .drag-child {
+	transform: scale(1.03);
+	box-shadow: var(--shadow-accent-glow), var(--shadow-deep);
+	border-color: var(--color-accent-overlay-30);
 }
 
 .text-glow {
@@ -637,31 +666,67 @@ textarea:focus {
 }
 
 /* Grid Span Utilities - For spanning multiple columns/rows */
-.span-2 { grid-column: span 2; }
-.span-3 { grid-column: span 3; }
-.span-4 { grid-column: span 4; }
-.span-6 { grid-column: span 6; }
-.span-full { grid-column: 1 / -1; }
+.span-2 {
+	grid-column: span 2;
+}
+.span-3 {
+	grid-column: span 3;
+}
+.span-4 {
+	grid-column: span 4;
+}
+.span-6 {
+	grid-column: span 6;
+}
+.span-full {
+	grid-column: 1 / -1;
+}
 
-.row-span-2 { grid-row: span 2; }
-.row-span-3 { grid-row: span 3; }
-.row-span-4 { grid-row: span 4; }
+.row-span-2 {
+	grid-row: span 2;
+}
+.row-span-3 {
+	grid-row: span 3;
+}
+.row-span-4 {
+	grid-row: span 4;
+}
 
 /* Responsive Grid Spans */
 @media (min-width: 768px) {
-	.md\:span-2 { grid-column: span 2; }
-	.md\:span-3 { grid-column: span 3; }
-	.md\:span-4 { grid-column: span 4; }
-	.md\:span-6 { grid-column: span 6; }
-	.md\:span-full { grid-column: 1 / -1; }
+	.md\:span-2 {
+		grid-column: span 2;
+	}
+	.md\:span-3 {
+		grid-column: span 3;
+	}
+	.md\:span-4 {
+		grid-column: span 4;
+	}
+	.md\:span-6 {
+		grid-column: span 6;
+	}
+	.md\:span-full {
+		grid-column: 1 / -1;
+	}
 }
 
 @media (min-width: 1024px) {
-	.lg\:span-2 { grid-column: span 2; }
-	.lg\:span-3 { grid-column: span 3; }
-	.lg\:span-4 { grid-column: span 4; }
-	.lg\:span-6 { grid-column: span 6; }
-	.lg\:span-full { grid-column: 1 / -1; }
+	.lg\:span-2 {
+		grid-column: span 2;
+	}
+	.lg\:span-3 {
+		grid-column: span 3;
+	}
+	.lg\:span-4 {
+		grid-column: span 4;
+	}
+	.lg\:span-6 {
+		grid-column: span 6;
+	}
+	.lg\:span-full {
+		grid-column: 1 / -1;
+	}
 }
 
 /* Metal Edge Effect - Thin specular highlights */

@@ -39,6 +39,7 @@
 		<LinkButton href="/cards" variant="ghost" size="sm">Cards</LinkButton>
 		<LinkButton href="/data" variant="ghost" size="sm">Data</LinkButton>
 		<LinkButton href="/forms" variant="ghost" size="sm">Forms</LinkButton>
+		<LinkButton href="/interactions" variant="ghost" size="sm">Interactions</LinkButton>
 		<LinkButton href="/navigation" variant="ghost" size="sm">Navigation</LinkButton>
 		<LinkButton href="/overlays" variant="ghost" size="sm">Overlays</LinkButton>
 		<LinkButton href="/typography" variant="ghost" size="sm">Typography</LinkButton>
@@ -86,6 +87,11 @@
 	<a href="/forms" class="sidebar-item">
 		<Icon icon="mdi:form-select" class="sidebar-item-icon" width="20" height="20" />
 		<span class="sidebar-item-label">Forms</span>
+	</a>
+
+	<a href="/interactions" class="sidebar-item">
+		<Icon icon="lucide:pointer" class="sidebar-item-icon" width="20" height="20" />
+		<span class="sidebar-item-label">Interactions</span>
 	</a>
 
 	<a href="/navigation" class="sidebar-item">

@@ -7,7 +7,7 @@
 // Import theme CSS to ensure it's bundled
 import './theme.css';
 
-export const version = '0.5.0';
+export const version = '0.6.0';
 
 // ===== Button Components =====
 export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } from './components/buttons';
@@ -34,6 +34,40 @@ export type { TableColumn, SortDirection } from './components/data';
 // ===== Utility Components =====
 export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero, SystemConsole, SystemInterface } from './components/utilities';
 export type { ConsoleMessage, SystemMessage, MessageContentType } from './components/utilities';
+
+// ===== Interactable Components =====
+export { Draggable, DragHandle, DragGrid, GridItem, DragReorderList, DropZone } from './components/interactables';
+
+export {
+	createDragContext,
+	getDragContext,
+	DRAG_CONTEXT_KEY,
+	createGridContext,
+	getGridContext,
+	GRID_CONTEXT_KEY,
+	createListContext,
+	getListContext,
+	REORDER_LIST_CONTEXT_KEY
+} from './components/interactables';
+
+export type {
+	DraggableProps,
+	DragHandleProps,
+	DropZoneProps,
+	DragGridProps,
+	GridItemProps,
+	DragReorderListProps,
+	DragContextValue,
+	GridContextValue,
+	GridItemData,
+	ListContextValue,
+	ListItemData,
+	DropEvent,
+	DragEnterEvent,
+	DragEvent,
+	DragStartEvent,
+	DragEndEvent
+} from './components/interactables';
 
 // ===== Component Prop Type Exports =====
 

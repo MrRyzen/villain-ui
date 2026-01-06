@@ -5,6 +5,8 @@
     duration?: number;
     position?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
     dismissible?: boolean;
+    onClose?: () => void;
+    /** @deprecated Use onClose */
     onclose?: () => void;
     /** Index in toast stack for vertical offset. Pass the toast's position in a list to enable stacking. */
     index?: number;
@@ -17,10 +19,13 @@
     duration = 3000,
     position = 'bottom-right',
     dismissible = true,
+    onClose,
     onclose,
     index = 0,
     icon
   }: Props = $props();
+
+  const onCloseCallback = $derived(onClose ?? onclose);
 
   let visible = $state(true);
   let isExiting = $state(false);
@@ -86,7 +91,7 @@
     isExiting = true;
     setTimeout(() => {
       visible = false;
-      onclose?.();
+      onCloseCallback?.();
     }, 200); // Match fade-out animation duration
   }
 

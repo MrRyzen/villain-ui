@@ -1,27 +1,40 @@
 <script lang="ts">
 	interface Props {
-		variant?: 'default' | 'accent';
+		variant?: 'default' | 'accent' | 'info';
+		size?: 'sm' | 'md' | 'lg';
 		dismissible?: boolean;
+		onDismiss?: () => void;
+		/** @deprecated Use onDismiss */
 		ondismiss?: () => void;
 		children?: import('svelte').Snippet;
 		icon?: import('svelte').Snippet;
 	}
 
-	let { variant = 'default', dismissible = false, ondismiss, children, icon }: Props = $props();
+	let { variant = 'default', size = 'md', dismissible = false, onDismiss, ondismiss, children, icon }: Props = $props();
+
+	const onDismissCallback = $derived(onDismiss ?? ondismiss);
 
 	const variantClasses = {
 		default:
 			'bg-[var(--color-base-2)] text-[var(--color-text-soft)] border-[var(--color-border)]',
 		accent:
-			'bg-[var(--color-secondary-overlay-10)] text-[var(--color-accent-soft)] border-[var(--color-accent)] shadow-[0_0_12px_var(--color-secondary-overlay-20)]'
+			'bg-[var(--color-secondary-overlay-10)] text-[var(--color-accent-soft)] border-[var(--color-accent)] shadow-[0_0_12px_var(--color-secondary-overlay-20)]',
+		info:
+			'bg-[var(--color-info-overlay-10)] text-[var(--color-info)] border-[var(--color-info)] shadow-[0_0_12px_var(--color-info-overlay-20)]'
+	};
+
+	const sizeClasses = {
+		sm: 'px-2 py-0.5 text-xs gap-1',
+		md: 'px-3 py-1.5 text-sm gap-2',
+		lg: 'px-4 py-2 text-base gap-2'
 	};
 
 	const classes = $derived(
-		`inline-flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-pill)] border font-[var(--font-body)] font-medium text-sm transition-all duration-300 hover:scale-[1.02] ${variantClasses[variant]}`
+		`inline-flex items-center rounded-[var(--radius-pill)] border font-[var(--font-body)] font-medium transition-all duration-300 hover:scale-[1.02] ${sizeClasses[size]} ${variantClasses[variant]}`
 	);
 
 	function handleDismiss() {
-		ondismiss?.();
+		onDismissCallback?.();
 	}
 </script>
 

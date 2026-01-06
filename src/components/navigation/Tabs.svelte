@@ -12,6 +12,8 @@
     activeTab?: string;
     orientation?: 'horizontal' | 'vertical';
     variant?: 'default' | 'pills';
+    onTabChange?: (tabId: string) => void;
+    /** @deprecated Use onTabChange */
     ontabchange?: (tabId: string) => void;
     class?: string;
   }
@@ -21,16 +23,17 @@
     activeTab = $bindable(''),
     orientation = 'horizontal',
     variant = 'default',
+    onTabChange,
     ontabchange,
     class: className = ''
   }: Props = $props();
 
+  const onTabChangeCallback = $derived(onTabChange ?? ontabchange);
+
   function handleTabClick(tabId: string, disabled?: boolean) {
     if (disabled) return;
     activeTab = tabId;
-    if (ontabchange) {
-      ontabchange(tabId);
-    }
+    onTabChangeCallback?.(tabId);
   }
 
   function handleKeyDown(event: KeyboardEvent, currentTabId: string) {

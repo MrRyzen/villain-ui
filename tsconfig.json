@@ -20,6 +20,10 @@
     
     // Type-checking only - no emit (vite-plugin-dts handles declaration generation)
     "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "$lib/*": ["src/lib/*"],
+    },
 
     //Svelte specific options
     "verbatimModuleSyntax": true

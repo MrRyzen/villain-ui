@@ -49,7 +49,7 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:css && svelte-package -i src -o dist && npm run build:css",
+    "build": "svelte-package -i src -o dist && npm run build:css",
     "build:css": "node build-css.mjs",
     "type-check": "tsc --noEmit",
     "clean": "rimraf dist",

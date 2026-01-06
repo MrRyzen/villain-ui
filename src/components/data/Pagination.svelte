@@ -3,13 +3,26 @@
 		currentPage: number;
 		totalPages: number;
 		maxVisible?: number;
+		onPageChange?: (page: number) => void;
+		/** @deprecated Use onPageChange */
 		onpagechange?: (page: number) => void;
 		prevIcon?: import('svelte').Snippet;
 		nextIcon?: import('svelte').Snippet;
 		showLabels?: boolean;
 	}
 
-	let { currentPage = $bindable(1), totalPages, maxVisible = 7, onpagechange, prevIcon, nextIcon, showLabels }: Props = $props();
+	let {
+		currentPage = $bindable(1),
+		totalPages,
+		maxVisible = 7,
+		onPageChange,
+		onpagechange,
+		prevIcon,
+		nextIcon,
+		showLabels
+	}: Props = $props();
+
+	const onPageChangeCallback = $derived(onPageChange ?? onpagechange);
 
 	const displayPrevLabel = $derived(showLabels !== false);
 	const displayNextLabel = $derived(showLabels !== false);
@@ -62,7 +75,7 @@
 	function goToPage(page: number) {
 		if (page < 1 || page > totalPages || page === currentPage) return;
 		currentPage = page;
-		onpagechange?.(page);
+		onPageChangeCallback?.(page);
 	}
 </script>
 
