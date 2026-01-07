@@ -628,6 +628,35 @@ textarea:focus {
 	border-color: var(--color-accent-overlay-30);
 }
 
+/* Drop Zone Child - Apply to children of DropZone for visual feedback */
+.drop-zone {
+	border: 2px dashed var(--color-border);
+	transition: all var(--duration-300) var(--ease-luxe);
+	position: relative;
+}
+
+/* When drag is active and can accept drop */
+[data-can-drop="true"] .drop-zone {
+	border-color: var(--color-accent-overlay-30);
+	background: var(--color-accent-overlay-5);
+}
+
+/* When hovering over zone and can drop */
+[data-over="true"][data-can-drop="true"] .drop-zone {
+	border-style: solid;
+	border-color: var(--color-accent);
+	background: var(--color-accent-overlay-10);
+	box-shadow: var(--shadow-accent-glow);
+}
+
+/* When hovering over zone but cannot drop */
+[data-over="true"][data-can-drop="false"] .drop-zone {
+	border-style: solid;
+	border-color: var(--color-error);
+	background: var(--color-error-overlay-10);
+	box-shadow: var(--shadow-error-glow);
+}
+
 .text-glow {
 	text-shadow: var(--shadow-text-glow);
 }
