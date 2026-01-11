@@ -7,3 +7,5 @@ export { default as List } from './List.svelte';
 export { default as Avatar } from './Avatar.svelte';
 export { default as CodeBlock } from './CodeBlock.svelte';
 export { default as Stat } from './Stat.svelte';
+export { default as CalendarGrid } from './CalendarGrid.svelte';
+export type { CalendarEvent } from './CalendarGrid.svelte';

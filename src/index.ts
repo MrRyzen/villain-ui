@@ -28,8 +28,8 @@ export { Modal, Alert, Spinner, Tooltip, ProgressBar, SkeletonLoader, Toast, Dra
 export { Heading, Text, Code } from './components/typography';
 
 // ===== Data Display Components =====
-export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat } from './components/data';
-export type { TableColumn, SortDirection } from './components/data';
+export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat, CalendarGrid } from './components/data';
+export type { TableColumn, SortDirection, CalendarEvent } from './components/data';
 
 // ===== Utility Components =====
 export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero, SystemConsole, SystemInterface } from './components/utilities';
