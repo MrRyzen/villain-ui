@@ -7,3 +7,11 @@ export interface Column {
 	sortable?: boolean;
 	render?: (value: any, row: any) => any;
 }
+
+export type RowKey = string | number;
+
+export interface SelectionState {
+	selectedKeys: Set<RowKey>;
+	allSelected: boolean;
+	someSelected: boolean;
+}

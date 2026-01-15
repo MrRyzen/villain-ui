@@ -17,10 +17,11 @@
 		Button,
 		Input,
 		Hero,
-		Code
+		Code,
+		Sparkline
 
 	} from '@mrintel/villain-ui';
-	import type { TableColumn, SortDirection } from '@mrintel/villain-ui';
+	import type { TableColumn, SortDirection, RowKey } from '@mrintel/villain-ui';
 	import { codeToHtml } from 'shiki';
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
@@ -240,6 +241,46 @@ import Icon from '@iconify/svelte';
 
 <!-- Note: name, email, and role use default rendering automatically! -->`;
 
+	const sparklineCode = `import { Sparkline } from '@mrintel/villain-ui';
+
+const weeklyData = [120, 135, 128, 142, 155, 148, 160];
+
+<Sparkline data={weeklyData} />`;
+
+	const sparklineFillCode = `import { Sparkline } from '@mrintel/villain-ui';
+
+const trendData = [10, 15, 12, 18, 22, 19, 25];
+
+<Sparkline
+  data={trendData}
+  showFill={true}
+  showDots={true}
+  height={60}
+  color="var(--color-success)"
+/>`;
+
+	const sparklineStatCode = `import { Stat, Sparkline } from '@mrintel/villain-ui';
+
+const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
+
+<Stat
+  label="7-Day Volume"
+  value="16,000 lbs"
+  trend="up"
+  change={12.5}
+  description="gym planner example"
+>
+  <div style="margin-top: 1rem;">
+    <Sparkline
+      data={volumeTrend}
+      height={40}
+      width={180}
+      color="var(--color-success)"
+      showFill={true}
+    />
+  </div>
+</Stat>`;
+
 	// State for highlighted code
 	let tableHtml = $state('');
 	let badgeHtml = $state('');
@@ -252,6 +293,9 @@ import Icon from '@iconify/svelte';
 	let exampleCodeHtml = $state('');
 	let customTableHtml = $state('');
 	let hybridTableHtml = $state('');
+	let sparklineHtml = $state('');
+	let sparklineFillHtml = $state('');
+	let sparklineStatHtml = $state('');
 
 	// Demo data
 	interface UserData {
@@ -284,6 +328,15 @@ import Icon from '@iconify/svelte';
 	let lastClickedRow = $state<string | null>(null);
 	let searchQuery = $state('');
 	let actionMessage = $state<string | null>(null);
+	let selectedKeys = $state<Set<RowKey>>(new Set());
+	let selectionMessage = $state<string | null>(null);
+
+	// Sparkline demo data
+	const weeklyData = [120, 135, 128, 142, 155, 148, 160];
+	const revenueData = [5400, 5800, 5200, 6100, 6500, 6200, 6800];
+	const activityData = [42, 55, 48, 62, 71, 65, 78];
+	const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
+	const downtrendData = [180, 175, 165, 158, 150, 145, 138];
 
 	// Custom table data with more fields
 	interface CustomUserData {
@@ -413,6 +466,12 @@ import Icon from '@iconify/svelte';
 		setTimeout(() => actionMessage = null, 3000);
 	}
 
+	// Selection handler
+	function handleSelectionChange(keys: Set<RowKey>, rows: CustomUserData[]) {
+		const names = rows.map(r => r.name).join(', ');
+		selectionMessage = keys.size > 0 ? `Selected ${keys.size}: ${names}` : null;
+	}
+
 	onMount(async () => {
 		// Set up global handlers for table actions
 		(window as any).handleEdit = handleEdit;
@@ -428,6 +487,9 @@ import Icon from '@iconify/svelte';
 		codeBlockHtml = await codeToHtml(codeBlockCode, { lang: 'svelte', theme: 'github-dark' });
 		customTableHtml = await codeToHtml(customTableCode, { lang: 'svelte', theme: 'github-dark' });
 		hybridTableHtml = await codeToHtml(hybridTableCode, { lang: 'svelte', theme: 'github-dark' });
+		sparklineHtml = await codeToHtml(sparklineCode, { lang: 'svelte', theme: 'github-dark' });
+		sparklineFillHtml = await codeToHtml(sparklineFillCode, { lang: 'svelte', theme: 'github-dark' });
+		sparklineStatHtml = await codeToHtml(sparklineStatCode, { lang: 'svelte', theme: 'github-dark' });
 
 		exampleCodeHtml = await codeToHtml(
 			`function greet(name: string): void {\n  console.log(\`Hello, \${name}!\`);\n}`,
@@ -467,6 +529,10 @@ import Icon from '@iconify/svelte';
 			<Badge variant="feature" size="md" hover>
 				<Icon icon="lucide:bar-chart-2" class="tag-icon" />
 				Stats
+			</Badge>
+			<Badge variant="feature" size="md" hover>
+				<Icon icon="lucide:activity" class="tag-icon" />
+				Sparklines
 			</Badge>
 			<Badge variant="feature" size="md" hover>
 				<Icon icon="lucide:chevrons-right-left" class="tag-icon" />
@@ -527,6 +593,61 @@ import Icon from '@iconify/svelte';
 						filterFn={filterData}
 						emptyMessage="No matching results found"
 					/>
+				</div>
+
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">Multi-Select with Checkboxes</Text>
+					</div>
+					{#if selectionMessage}
+						<div class="mb-2 p-3 rounded-lg bg-accent-overlay-10 border border-accent">
+							<Text variant="caption">{selectionMessage}</Text>
+						</div>
+					{/if}
+					<Table
+						columns={customColumns}
+						data={sortedCustomData}
+						selectable
+						bind:selectedKeys
+						rowKey="id"
+						onSelectionChange={handleSelectionChange}
+						hoverable
+						striped
+					>
+						{#snippet cell_user({ value, row })}
+							<div style="display: flex; align-items: center; gap: 0.75rem;">
+								<Avatar src={row.avatarUrl} alt={row.name} size="md" />
+								<Grid cols={1} gap="none">
+									<Text variant="body" color="default" weight="semibold" as="div">{row.name}</Text>
+									<Text variant="caption" color="muted" as="div">{row.email}</Text>
+								</Grid>
+							</div>
+						{/snippet}
+						{#snippet cell_status({ value, row })}
+							{#if value === 'active'}
+								<Badge variant="success" statusDot uppercase>Active</Badge>
+							{:else if value === 'pending'}
+								<Badge variant="warning" statusDot uppercase>Pending</Badge>
+							{:else}
+								<Badge variant="error" statusDot uppercase>Inactive</Badge>
+							{/if}
+						{/snippet}
+						{#snippet cell_actions({ value, row })}
+							<div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+								<Button variant="ghost" size="sm" onclick={() => handleEdit(row.id, row.name)}>
+									<Icon icon="lucide:pencil" width="14" height="14" />
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									onclick={() => handleDelete(row.id, row.name)}
+									class="text-red-500 hover:text-red-400"
+								>
+									<Icon icon="lucide:trash-2" width="14" height="14" />
+								</Button>
+							</div>
+						{/snippet}
+					</Table>
 				</div>
 
 				<div>
@@ -951,6 +1072,198 @@ import Icon from '@iconify/svelte';
 			</Grid>
 		</Card>
 
+		<!-- Sparkline -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Sparkline</Heading>
+				<Text variant="body" color="soft">
+					Lightweight micro trend visualizations with zero dependencies
+				</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="xl">
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">Basic Sparklines with Different Colors</Text>
+					</div>
+					<Grid cols={3} gap="md" responsive>
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Default (Purple)</Text>
+							<Sparkline data={weeklyData} height={40} width={200} />
+						</div>
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Success (Green)</Text>
+							<Sparkline data={revenueData} height={40} width={200} color="var(--color-success)" />
+						</div>
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Error (Red)</Text>
+							<Sparkline data={downtrendData} height={40} width={200} color="var(--color-error)" />
+						</div>
+					</Grid>
+				</div>
+
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">With Fill Gradient & Dots</Text>
+					</div>
+					<Grid cols={2} gap="md" responsive>
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Fill Only</Text>
+							<Sparkline
+								data={activityData}
+								height={60}
+								width={220}
+								color="var(--color-secondary)"
+								showFill={true}
+							/>
+						</div>
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Fill + Dots</Text>
+							<Sparkline
+								data={activityData}
+								height={60}
+								width={220}
+								color="var(--color-success)"
+								showFill={true}
+								showDots={true}
+								strokeWidth={2}
+							/>
+						</div>
+					</Grid>
+				</div>
+
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">Integrated with Stat Component (Gym Planner Example)</Text>
+					</div>
+					<Grid cols={3} gap="md" responsive>
+						<Stat
+							label="7-Day Volume"
+							value="16,000 lbs"
+							trend="up"
+							change={12.5}
+							description="gym planner example"
+						>
+							<div style="margin-top: 1rem;">
+								<Sparkline
+									data={volumeTrend}
+									height={40}
+									width={180}
+									color="var(--color-success)"
+									showFill={true}
+								/>
+							</div>
+						</Stat>
+
+						<Stat
+							label="Weekly Sessions"
+							value="5.2 avg"
+							trend="up"
+							change={8.3}
+							description="per week"
+						>
+							<div style="margin-top: 1rem;">
+								<Sparkline
+									data={weeklyData}
+									height={40}
+									width={180}
+									color="var(--color-accent-soft)"
+									showFill={true}
+								/>
+							</div>
+						</Stat>
+
+						<Stat label="Activity Score" value="78%" description="last 7 days">
+							<div style="margin-top: 1rem;">
+								<Sparkline
+									data={activityData}
+									height={40}
+									width={180}
+									color="var(--color-secondary)"
+									showFill={true}
+									showDots={true}
+								/>
+							</div>
+						</Stat>
+					</Grid>
+				</div>
+
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">Custom Sizes & Stroke Width</Text>
+					</div>
+					<div class="flex flex-col gap-4">
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Compact (height: 30)</Text>
+							<Sparkline data={weeklyData} height={30} width={300} strokeWidth={1.5} />
+						</div>
+						<div
+							class="p-4 rounded-lg"
+							style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+						>
+							<Text variant="caption" color="soft" class="block mb-2">Large (height: 80, strokeWidth: 3)</Text>
+							<Sparkline
+								data={revenueData}
+								height={80}
+								width={400}
+								strokeWidth={3}
+								color="var(--color-success)"
+								showFill={true}
+							/>
+						</div>
+					</div>
+				</div>
+
+				<CodeBlock
+					filename="SparklineBasic.svelte"
+					showLineNumbers
+					lineCount={sparklineCode.split('\n').length}
+					showCopy
+					code={sparklineCode}
+				>
+					{@html sparklineHtml}
+				</CodeBlock>
+
+				<CodeBlock
+					filename="SparklineFillDots.svelte"
+					showLineNumbers
+					lineCount={sparklineFillCode.split('\n').length}
+					showCopy
+					code={sparklineFillCode}
+				>
+					{@html sparklineFillHtml}
+				</CodeBlock>
+
+				<CodeBlock
+					filename="SparklineWithStat.svelte"
+					showLineNumbers
+					lineCount={sparklineStatCode.split('\n').length}
+					showCopy
+					code={sparklineStatCode}
+				>
+					{@html sparklineStatHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
 		<!-- Pagination -->
 		<Card padding="lg">
 			{#snippet header()}
@@ -1075,6 +1388,22 @@ import Icon from '@iconify/svelte';
 					<Text variant="body" color="soft">
 						Use <Code>trend</Code> prop to show directional changes. Positive trends automatically get
 						glow effect.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Sparklines</Heading>
+					<Text variant="body" color="soft">
+						Perfect for micro trends in dashboards. Pair with <Code>Stat</Code> components for
+						data-rich visualizations. Zero dependencies, pure SVG.
+					</Text>
+				</div>
+
+				<div>
+					<Heading level={4}>Advanced Charts</Heading>
+					<Text variant="body" color="soft">
+						For complex charting needs beyond sparklines, integrate Chart.js, uPlot, or Apache
+						ECharts with the theme variables.
 					</Text>
 				</div>
 			</Grid>

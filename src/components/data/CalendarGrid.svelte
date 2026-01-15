@@ -1,13 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-
-	export interface CalendarEvent {
-		id: string;
-		date: Date | string;
-		title?: string;
-		variant?: 'default' | 'success' | 'warning' | 'error' | 'accent';
-		metadata?: any;
-	}
+	import type { CalendarEvent } from './CalendarGrid.types';
 
 	interface CellData {
 		date: Date;

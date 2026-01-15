@@ -667,6 +667,88 @@ The library uses three consistent icon patterns:
 </InputGroup>
 ```
 
+**DatePicker** - Date input with native date picker
+
+```svelte
+<script>
+  import { DatePicker } from '@mrintel/villain-ui';
+
+  let selectedDate = $state('');
+</script>
+
+<DatePicker
+  label="Select Date"
+  bind:value={selectedDate}
+  min="2024-01-01"
+  max="2024-12-31"
+/>
+```
+
+**Props:**
+- `value?: string` - Selected date in YYYY-MM-DD format (bindable)
+- `label?: string` - Input label
+- `min?: string` - Minimum selectable date
+- `max?: string` - Maximum selectable date
+- `placeholder?: string` - Placeholder text
+- `disabled?: boolean` - Disable date selection
+- `error?: boolean` - Show error state
+- `class?: string` - Additional CSS classes
+
+**TimePicker** - Time input with native time picker
+
+```svelte
+<script>
+  import { TimePicker } from '@mrintel/villain-ui';
+
+  let selectedTime = $state('');
+</script>
+
+<TimePicker
+  label="Select Time"
+  bind:value={selectedTime}
+  step={900}
+/>
+```
+
+**Props:**
+- `value?: string` - Selected time in HH:MM format (bindable)
+- `label?: string` - Input label
+- `min?: string` - Minimum selectable time
+- `max?: string` - Maximum selectable time
+- `step?: number` - Time interval in seconds (e.g., 900 = 15 minutes)
+- `placeholder?: string` - Placeholder text
+- `disabled?: boolean` - Disable time selection
+- `error?: boolean` - Show error state
+- `class?: string` - Additional CSS classes
+
+**DateTimePicker** - Combined date and time input
+
+```svelte
+<script>
+  import { DateTimePicker } from '@mrintel/villain-ui';
+
+  let selectedDateTime = $state('');
+</script>
+
+<DateTimePicker
+  label="Select Date & Time"
+  bind:value={selectedDateTime}
+  min="2024-01-01T00:00"
+  max="2024-12-31T23:59"
+/>
+```
+
+**Props:**
+- `value?: string` - Selected date-time in ISO format (bindable)
+- `label?: string` - Input label
+- `min?: string` - Minimum selectable date-time
+- `max?: string` - Maximum selectable date-time
+- `step?: number` - Time interval in seconds
+- `placeholder?: string` - Placeholder text
+- `disabled?: boolean` - Disable date-time selection
+- `error?: boolean` - Show error state
+- `class?: string` - Additional CSS classes
+
 ### Layout
 
 **Card** - Content container with optional header and footer
@@ -2070,6 +2152,252 @@ A luxury-styled code display component that provides layout, styling, and option
 <Stat label="Total Users" value="1,234" change="+12.5%" trend="up" />
 ```
 
+**Sparkline** - Lightweight micro trend visualizations
+
+A zero-dependency SVG sparkline component for displaying micro trends in dashboards and data-rich interfaces. Perfect for showing quick visual trends without the overhead of a full charting library.
+
+**Key Features:**
+- Pure SVG rendering (zero dependencies)
+- Fully themed with villain-ui CSS variables
+- Smooth draw-in animation with reduced motion support
+- Optional gradient fills and data point dots
+- Tiny bundle size (~2KB)
+- Flexible sizing and styling
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | `number[]` | **required** | Array of numeric data points to plot |
+| `color` | `string` | `var(--color-accent-soft)` | Line stroke color (CSS color or variable) |
+| `height` | `number` | `40` | Chart height in pixels |
+| `width` | `number` | `200` | Chart width in pixels |
+| `showDots` | `boolean` | `false` | Show dots at each data point |
+| `showFill` | `boolean` | `false` | Show gradient fill below the line |
+| `strokeWidth` | `number` | `2` | Line thickness in pixels |
+| `animationDuration` | `number` | `500` | Animation duration in ms (0 to disable) |
+
+**Basic Usage:**
+
+```svelte
+<script>
+  import { Sparkline } from '@mrintel/villain-ui';
+
+  const weeklyData = [120, 135, 128, 142, 155, 148, 160];
+</script>
+
+<Sparkline data={weeklyData} />
+```
+
+**With Fill and Dots:**
+
+```svelte
+<script>
+  import { Sparkline } from '@mrintel/villain-ui';
+
+  const trendData = [10, 15, 12, 18, 22, 19, 25];
+</script>
+
+<Sparkline
+  data={trendData}
+  showFill={true}
+  showDots={true}
+  height={60}
+  color="var(--color-success)"
+/>
+```
+
+**Integrated with Stat Component (Gym Planner Example):**
+
+```svelte
+<script>
+  import { Stat, Sparkline } from '@mrintel/villain-ui';
+
+  const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
+</script>
+
+<Stat
+  label="7-Day Volume"
+  value="16,000 lbs"
+  trend="up"
+  change={12.5}
+  description="gym planner example"
+>
+  <div style="margin-top: 1rem;">
+    <Sparkline
+      data={volumeTrend}
+      height={40}
+      width={180}
+      color="var(--color-success)"
+      showFill={true}
+    />
+  </div>
+</Stat>
+```
+
+**Custom Colors and Sizes:**
+
+```svelte
+<script>
+  import { Sparkline } from '@mrintel/villain-ui';
+
+  const revenueData = [5400, 5800, 5200, 6100, 6500, 6200, 6800];
+  const downtrendData = [180, 175, 165, 158, 150, 145, 138];
+</script>
+
+<!-- Success trend (green) -->
+<Sparkline data={revenueData} color="var(--color-success)" showFill={true} />
+
+<!-- Error trend (red) -->
+<Sparkline data={downtrendData} color="var(--color-error)" />
+
+<!-- Large with thick stroke -->
+<Sparkline
+  data={revenueData}
+  height={80}
+  width={400}
+  strokeWidth={3}
+  color="var(--color-success)"
+  showFill={true}
+/>
+```
+
+**Accessibility:**
+- Respects `prefers-reduced-motion` - disables animation when requested
+- Includes `role="img"` and `aria-label` for screen readers
+- Color is not the only indicator of information (use with labels/values)
+
+**For Advanced Charting:**
+
+Sparkline is designed for simple micro trends. For complex visualization needs (multi-series charts, axes, legends, tooltips, bar/pie/scatter charts), integrate established charting libraries:
+- [Chart.js](https://www.chartjs.org/) - Versatile canvas-based charts
+- [uPlot](https://github.com/leeoniya/uPlot) - Extremely fast time-series charts
+- [Apache ECharts](https://echarts.apache.org/) - Feature-rich enterprise charts
+
+These libraries integrate easily with villain-ui theming via CSS variables.
+
+**CalendarGrid** - Interactive monthly calendar with event support
+
+A fully-featured calendar grid component for displaying events, selecting dates, and navigating months. Perfect for scheduling interfaces, date selection, and event dashboards.
+
+**Key Features:**
+- Monthly calendar grid with prev/next month navigation
+- Event display with customizable rendering
+- Date selection with keyboard navigation
+- Configurable week start day (Sunday/Monday)
+- Optional week numbers
+- Today highlighting
+- Custom cell rendering via snippets
+- Fully accessible with ARIA attributes
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `month` | `Date` | `new Date()` | Currently displayed month (bindable) |
+| `events` | `CalendarEvent[]` | `[]` | Array of events to display |
+| `selectedDate` | `Date` | `undefined` | Currently selected date (bindable) |
+| `onDateSelect` | `(date: Date) => void` | - | Callback when date is clicked |
+| `onMonthChange` | `(date: Date) => void` | - | Callback when month changes |
+| `renderCell` | `Snippet<[CellData]>` | - | Custom cell rendering snippet |
+| `weekStartsOn` | `0 \| 1` | `0` | Week start day (0=Sunday, 1=Monday) |
+| `showWeekNumbers` | `boolean` | `false` | Display week numbers |
+| `highlightToday` | `boolean` | `true` | Highlight current date |
+| `class` | `string` | `''` | Additional CSS classes |
+
+**CalendarEvent Interface:**
+```typescript
+interface CalendarEvent {
+  id: string;
+  title: string;
+  date: Date | string;
+  color?: string;
+  description?: string;
+}
+```
+
+**CellData Interface (for renderCell):**
+```typescript
+interface CellData {
+  date: Date;
+  events: CalendarEvent[];
+  isToday: boolean;
+  isSelected: boolean;
+  isCurrentMonth: boolean;
+  isEmpty: boolean;
+}
+```
+
+**Basic Usage:**
+
+```svelte
+<script>
+  import { CalendarGrid } from '@mrintel/villain-ui';
+
+  let currentMonth = $state(new Date());
+  let selectedDate = $state();
+
+  const events = [
+    { id: '1', title: 'Team Meeting', date: '2024-01-15', color: 'var(--color-accent)' },
+    { id: '2', title: 'Project Deadline', date: '2024-01-20', color: 'var(--color-error)' }
+  ];
+</script>
+
+<CalendarGrid
+  bind:month={currentMonth}
+  bind:selectedDate
+  {events}
+  onDateSelect={(date) => console.log('Selected:', date)}
+  onMonthChange={(date) => console.log('Month changed:', date)}
+/>
+```
+
+**With Custom Cell Rendering:**
+
+```svelte
+<script>
+  import { CalendarGrid } from '@mrintel/villain-ui';
+
+  let currentMonth = $state(new Date());
+  const events = [...]; // Your events array
+</script>
+
+<CalendarGrid bind:month={currentMonth} {events}>
+  {#snippet renderCell(cellData)}
+    <div class="custom-cell" class:has-events={cellData.events.length > 0}>
+      <div class="date-number">{cellData.date.getDate()}</div>
+      {#if cellData.events.length > 0}
+        <div class="event-indicators">
+          {#each cellData.events.slice(0, 3) as event}
+            <div class="event-dot" style="background: {event.color}"></div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  {/snippet}
+</CalendarGrid>
+```
+
+**With Week Starting on Monday:**
+
+```svelte
+<CalendarGrid bind:month={currentMonth} {events} weekStartsOn={1} showWeekNumbers={true} />
+```
+
+**Keyboard Navigation:**
+- `Arrow Keys` - Navigate between dates
+- `Enter` or `Space` - Select focused date
+- `Home` - Go to first day of week
+- `End` - Go to last day of week
+- `Page Up` - Go to previous month
+- `Page Down` - Go to next month
+
+**Accessibility Features:**
+- Full keyboard navigation support
+- ARIA labels for dates and navigation
+- Screen reader announcements for selected dates
+- Focus management and visual indicators
+
 ### Utilities
 
 **Hero** - Full-width hero section for page introductions
@@ -2176,6 +2504,271 @@ A luxury-styled code display component that provides layout, styling, and option
 <ScrollArea height="300px">
   <div>Long scrollable content...</div>
 </ScrollArea>
+```
+
+**SystemConsole** - Terminal-style console with message history
+
+A retro terminal console component with typewriter effects, scanlines, and glow effects. Perfect for command-line interfaces, log viewers, and terminal-style interactions.
+
+**Key Features:**
+- Terminal-style message display with user/system roles
+- Optional typewriter animation for system messages
+- Configurable scanlines and glow effects
+- Auto-scroll to latest messages
+- Timestamp support
+- Message variants (default, success, warning, error, info)
+- Command input with submission handling
+- Customizable prompt character
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `messages` | `ConsoleMessage[]` | `[]` | Array of console messages |
+| `prompt` | `string` | `'>'` | Prompt character/text (e.g., '>', '$', 'λ') |
+| `placeholder` | `string` | `'Enter command...'` | Input placeholder text |
+| `height` | `string` | `'500px'` | Console height |
+| `maxHeight` | `string` | `'80vh'` | Maximum console height |
+| `showTimestamps` | `boolean` | `false` | Display message timestamps |
+| `autoScroll` | `boolean` | `true` | Auto-scroll to new messages |
+| `typewriterEffect` | `boolean` | `false` | Animate system messages |
+| `typewriterSpeed` | `number` | `50` | Characters per second for animation |
+| `showScanlines` | `boolean` | `true` | Show retro scanline effect |
+| `glowEffect` | `boolean` | `true` | Show text glow effect |
+| `onSubmit` | `(input: string) => void` | - | Called when command is submitted |
+| `disabled` | `boolean` | `false` | Disable input |
+| `class` | `string` | `''` | Additional CSS classes |
+
+**ConsoleMessage Interface:**
+```typescript
+interface ConsoleMessage {
+  id: string;
+  role: 'user' | 'system';
+  content: string;
+  timestamp?: Date;
+  variant?: 'default' | 'success' | 'warning' | 'error' | 'info';
+}
+```
+
+**Basic Usage:**
+
+```svelte
+<script>
+  import { SystemConsole } from '@mrintel/villain-ui';
+
+  let messages = $state([
+    { id: '1', role: 'system', content: 'System initialized...', timestamp: new Date() },
+    { id: '2', role: 'user', content: 'help', timestamp: new Date() },
+    { id: '3', role: 'system', content: 'Available commands: help, status, exit', variant: 'info' }
+  ]);
+
+  function handleCommand(input) {
+    // Add user message
+    messages = [...messages, {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input,
+      timestamp: new Date()
+    }];
+
+    // Process command and add system response
+    setTimeout(() => {
+      messages = [...messages, {
+        id: (Date.now() + 1).toString(),
+        role: 'system',
+        content: `Executed: ${input}`,
+        timestamp: new Date(),
+        variant: 'success'
+      }];
+    }, 500);
+  }
+</script>
+
+<SystemConsole
+  {messages}
+  prompt="$"
+  showTimestamps={true}
+  onSubmit={handleCommand}
+/>
+```
+
+**With Typewriter Effect:**
+
+```svelte
+<SystemConsole
+  {messages}
+  typewriterEffect={true}
+  typewriterSpeed={80}
+  showScanlines={true}
+  glowEffect={true}
+  height="600px"
+  onSubmit={handleCommand}
+/>
+```
+
+**SystemInterface** - Advanced system interface with panels
+
+A sophisticated system interface component with multi-panel layout, staged message revelation, and processing states. Ideal for AI assistants, command centers, and advanced terminal interfaces.
+
+**Key Features:**
+- Multi-panel layout (left, right, top, bottom)
+- Staged message revelation with delays
+- Processing animation states
+- Tiered message system (informational, analysis, directive, warning, critical)
+- Rich message content types (text, code, data, status)
+- Timestamp display with millisecond precision
+- Auto-scroll support
+- Customizable height
+
+**Props:**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `messages` | `SystemMessage[]` | `[]` | Array of system messages |
+| `onSubmit` | `(input: string) => void` | - | Called when directive is submitted |
+| `processing` | `boolean` | `false` | Show processing animation |
+| `placeholder` | `string` | `'ENTER DIRECTIVE'` | Input placeholder text |
+| `height` | `string` | `'600px'` | Interface height |
+| `autoScroll` | `boolean` | `true` | Auto-scroll to new messages |
+| `stagingDelay` | `number` | `150` | Delay (ms) between message reveals |
+| `leftPanel` | `Snippet` | - | Left sidebar content |
+| `rightPanel` | `Snippet` | - | Right sidebar content |
+| `topPanel` | `Snippet` | - | Top panel content |
+| `bottomPanel` | `Snippet` | - | Bottom panel content |
+| `class` | `string` | `''` | Additional CSS classes |
+
+**SystemMessage Interface:**
+```typescript
+interface SystemMessage {
+  id: string;
+  content: string | MessageContentType;
+  timestamp?: number;
+  tier?: 'informational' | 'analysis' | 'directive' | 'warning' | 'critical';
+}
+
+type MessageContentType =
+  | { type: 'text'; value: string }
+  | { type: 'code'; value: string; language?: string }
+  | { type: 'data'; value: Record<string, any> }
+  | { type: 'status'; label: string; value: string; status: 'ok' | 'warning' | 'error' | 'info' };
+```
+
+**Basic Usage:**
+
+```svelte
+<script>
+  import { SystemInterface } from '@mrintel/villain-ui';
+
+  let messages = $state([
+    {
+      id: '1',
+      content: 'SYSTEM ONLINE',
+      timestamp: Date.now(),
+      tier: 'directive'
+    },
+    {
+      id: '2',
+      content: 'Analyzing input parameters...',
+      timestamp: Date.now() + 100,
+      tier: 'analysis'
+    }
+  ]);
+
+  let processing = $state(false);
+
+  function handleDirective(input) {
+    processing = true;
+
+    messages = [...messages, {
+      id: Date.now().toString(),
+      content: { type: 'text', value: input },
+      timestamp: Date.now(),
+      tier: 'directive'
+    }];
+
+    // Simulate processing
+    setTimeout(() => {
+      messages = [...messages, {
+        id: (Date.now() + 1).toString(),
+        content: `Directive executed: ${input}`,
+        timestamp: Date.now(),
+        tier: 'informational'
+      }];
+      processing = false;
+    }, 1500);
+  }
+</script>
+
+<SystemInterface
+  {messages}
+  {processing}
+  onSubmit={handleDirective}
+/>
+```
+
+**With Side Panels:**
+
+```svelte
+<SystemInterface {messages} onSubmit={handleDirective}>
+  {#snippet leftPanel()}
+    <div class="panel-content">
+      <h3>System Status</h3>
+      <div>CPU: 45%</div>
+      <div>Memory: 2.1GB</div>
+    </div>
+  {/snippet}
+
+  {#snippet rightPanel()}
+    <div class="panel-content">
+      <h3>Active Processes</h3>
+      <div>Process 1: Running</div>
+      <div>Process 2: Idle</div>
+    </div>
+  {/snippet}
+</SystemInterface>
+```
+
+**With Rich Content Types:**
+
+```svelte
+<script>
+  const messages = [
+    {
+      id: '1',
+      content: { type: 'text', value: 'Starting analysis...' },
+      tier: 'informational'
+    },
+    {
+      id: '2',
+      content: {
+        type: 'code',
+        value: 'const result = await analyze(data);',
+        language: 'javascript'
+      },
+      tier: 'analysis'
+    },
+    {
+      id: '3',
+      content: {
+        type: 'status',
+        label: 'Analysis',
+        value: 'Complete',
+        status: 'ok'
+      },
+      tier: 'directive'
+    },
+    {
+      id: '4',
+      content: {
+        type: 'data',
+        value: { accuracy: 0.95, confidence: 0.88 }
+      },
+      tier: 'informational'
+    }
+  ];
+</script>
+
+<SystemInterface {messages} onSubmit={handleDirective} />
 ```
 
 ## 🎨 Theming
@@ -2812,6 +3405,9 @@ The following component prop types are exported for TypeScript users:
 - `CheckboxProps` - Checkbox input
 - `SwitchProps` - Toggle switch
 - `RadioGroupProps` - Radio button group
+- `DatePickerProps` - Date picker component
+- `TimePickerProps` - Time picker component
+- `DateTimePickerProps` - Combined date and time picker
 
 **Layout Types:**
 - `CardProps` - Content card
@@ -2827,6 +3423,9 @@ The following component prop types are exported for TypeScript users:
 
 **Utility Types:**
 - `AccordionProps` - Accordion container
+
+**Data Types:**
+- `SparklineProps` - Sparkline chart component
 
 **Note:** Additional component prop types may be added in future releases. Components without exported prop types can still be used with TypeScript through Svelte's built-in type inference.
 

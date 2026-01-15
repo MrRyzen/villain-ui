@@ -28,7 +28,7 @@ export { Modal, Alert, Spinner, Tooltip, ProgressBar, SkeletonLoader, Toast, Dra
 export { Heading, Text, Code } from './components/typography';
 
 // ===== Data Display Components =====
-export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat, CalendarGrid } from './components/data';
+export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat, CalendarGrid, Sparkline } from './components/data';
 export type { TableColumn, SortDirection, CalendarEvent } from './components/data';
 
 // ===== Utility Components =====
@@ -58,6 +58,7 @@ import type Drawer from './components/overlays/Drawer.svelte';
 import type Alert from './components/overlays/Alert.svelte';
 import type Tooltip from './components/overlays/Tooltip.svelte';
 import type Accordion from './components/utilities/Accordion.svelte';
+import type Sparkline from './components/data/Sparkline.svelte';
 
 // Button Component Types
 export type ButtonProps = ComponentProps<Button>;
@@ -90,3 +91,6 @@ export type TooltipProps = ComponentProps<Tooltip>;
 
 // Utility Component Types
 export type AccordionProps = ComponentProps<Accordion>;
+
+// Data Component Types
+export type SparklineProps = ComponentProps<Sparkline>;

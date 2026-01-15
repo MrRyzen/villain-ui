@@ -50,7 +50,7 @@
 		<IconButton
 			variant="ghost"
 			size="md"
-			onclick={() => window.open('https://github.com/mrintel/villain-ui', '_blank', 'noopener,noreferrer')}
+			onclick={() => window.open('https://github.com/mrryzen/villain-ui', '_blank', 'noopener,noreferrer')}
 			ariaLabel="GitHub repository"
 		>
 			<Icon icon="lucide:github" width="20" height="20" />

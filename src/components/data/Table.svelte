@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { Column, SortDirection } from './Table.types';
+	import type { Column, SortDirection, RowKey } from './Table.types';
+	import Checkbox from '../forms/Checkbox.svelte';
 
 	interface Props {
 		// Dynamic data mode
@@ -21,6 +22,11 @@
 		// Callbacks for user-implemented features
 		onSort?: (columnKey: string, direction: SortDirection) => void;
 		onRowClick?: (row: Record<string, any>) => void;
+		// Multi-select
+		selectable?: boolean;
+		selectedKeys?: Set<RowKey>;
+		rowKey?: string;
+		onSelectionChange?: (selectedKeys: Set<RowKey>, rows: Record<string, any>[]) => void;
 		// Manual markup mode
 		children?: Snippet;
 		// Column-specific snippets for hybrid mode
@@ -43,6 +49,10 @@
 		filterFn,
 		onSort,
 		onRowClick,
+		selectable = false,
+		selectedKeys = $bindable(new Set<RowKey>()),
+		rowKey = 'id',
+		onSelectionChange,
 		class: className = '',
 		children,
 		...restProps
@@ -86,6 +96,56 @@
 			onRowClick(row);
 		}
 	}
+
+	// Selection logic
+	function getRowKey(row: Record<string, any>, index: number): RowKey {
+		return row[rowKey] ?? index;
+	}
+
+	const allSelected = $derived.by(() => {
+		if (!selectable || filteredData.length === 0) return false;
+		return filteredData.every((row, i) => selectedKeys.has(getRowKey(row, i)));
+	});
+
+	const someSelected = $derived.by(() => {
+		if (!selectable || filteredData.length === 0) return false;
+		const selectedCount = filteredData.filter((row, i) => selectedKeys.has(getRowKey(row, i))).length;
+		return selectedCount > 0 && selectedCount < filteredData.length;
+	});
+
+	function toggleSelectAll() {
+		if (allSelected) {
+			// Deselect all
+			selectedKeys = new Set();
+		} else {
+			// Select all filtered rows
+			selectedKeys = new Set(filteredData.map((row, i) => getRowKey(row, i)));
+		}
+		notifySelectionChange();
+	}
+
+	function toggleRowSelection(row: Record<string, any>, index: number) {
+		const key = getRowKey(row, index);
+		const newSet = new Set(selectedKeys);
+		if (newSet.has(key)) {
+			newSet.delete(key);
+		} else {
+			newSet.add(key);
+		}
+		selectedKeys = newSet;
+		notifySelectionChange();
+	}
+
+	function isRowSelected(row: Record<string, any>, index: number): boolean {
+		return selectedKeys.has(getRowKey(row, index));
+	}
+
+	function notifySelectionChange() {
+		if (onSelectionChange) {
+			const selectedRows = filteredData.filter((row, i) => selectedKeys.has(getRowKey(row, i)));
+			onSelectionChange(selectedKeys, selectedRows);
+		}
+	}
 </script>
 
 <div class="panel-raised rounded-[var(--radius-xl)] overflow-hidden {className}" {...restProps}>
@@ -94,6 +154,15 @@
 			<!-- Dynamic mode: render from columns and data -->
 			<thead>
 				<tr>
+					{#if selectable}
+						<th class="select-cell">
+							<Checkbox
+								checked={allSelected}
+								onchange={toggleSelectAll}
+								class={someSelected ? 'indeterminate' : ''}
+							/>
+						</th>
+					{/if}
 					{#each columns as column}
 						<th
 							style:text-align={column.align || 'left'}
@@ -163,7 +232,7 @@
 				{#if loading}
 					<!-- Loading state -->
 					<tr class="state-row">
-						<td colspan={columns?.length} class="text-center">
+						<td colspan={(columns?.length || 0) + (selectable ? 1 : 0)} class="text-center">
 							<div class="loading-container">
 								<svg
 									class="loading-spinner"
@@ -186,7 +255,7 @@
 				{:else if filteredData.length === 0}
 					<!-- Empty state -->
 					<tr class="state-row">
-						<td colspan={columns?.length} class="text-center">
+						<td colspan={(columns?.length || 0) + (selectable ? 1 : 0)} class="text-center">
 							{#if emptyState}
 								{@render emptyState()}
 							{:else}
@@ -213,11 +282,20 @@
 					</tr>
 				{:else}
 					<!-- Data rows -->
-					{#each filteredData as row}
+					{#each filteredData as row, index}
 						<tr
 							class:clickable={onRowClick}
+							class:selected={selectable && isRowSelected(row, index)}
 							onclick={() => handleRowClick(row)}
 						>
+							{#if selectable}
+								<td class="select-cell" onclick={(e) => e.stopPropagation()}>
+									<Checkbox
+										checked={isRowSelected(row, index)}
+										onchange={() => toggleRowSelection(row, index)}
+									/>
+								</td>
+							{/if}
 							{#each columns as column}
 								<td style:text-align={column.align || 'left'}>
 									{#if restProps[`cell_${column.key}`]}
@@ -331,6 +409,43 @@
 	/* Clickable row styles */
 	.mrdv-table tbody tr.clickable {
 		cursor: pointer;
+	}
+
+	/* Selection styles */
+	.select-cell {
+		width: 3rem;
+		padding-left: 1rem !important;
+		padding-right: 0.5rem !important;
+	}
+
+	.mrdv-table tbody tr.selected {
+		background: var(--color-accent-overlay-10);
+	}
+
+	.mrdv-table tbody tr.selected:hover {
+		background: var(--color-accent-overlay-15);
+	}
+
+	.mrdv-table.striped tbody tr.selected:nth-child(even) {
+		background: var(--color-accent-overlay-10);
+	}
+
+	/* Indeterminate checkbox styling */
+	.select-cell :global(.indeterminate input[type="checkbox"]) {
+		background: var(--color-accent);
+		border-color: var(--color-accent);
+	}
+
+	.select-cell :global(.indeterminate input[type="checkbox"])::after {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 10px;
+		height: 2px;
+		background: white;
+		border-radius: 1px;
 	}
 
 	/* Sticky header */
