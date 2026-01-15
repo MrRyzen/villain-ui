@@ -4,14 +4,6 @@ on:
   release:
     types: [created]
 
-  push:
-    branches:
-      - main
-  
-  pull_request:
-    branches:
-      - main
-
 permissions:
   contents: read
   id-token: write
@@ -44,7 +36,6 @@ jobs:
           path: dist
 
   publish:
-    if: github.event_name == 'release'
     needs: build
     runs-on: ubuntu-latest
     steps:
