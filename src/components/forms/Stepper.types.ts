@@ -1,4 +1,6 @@
-export type StepState = 'idle' | 'active' | 'completed' | 'error';
+import type { Snippet } from "svelte";
+
+export type StepState = 'idle' | 'active' | 'completed' | 'error' | 'loading';
 export type ValidationMode = 'strict' | 'loose' | 'submit-only';
 
 export interface StepRegistration {
@@ -45,4 +47,13 @@ export interface StepperFormContext {
 	// Validation
 	validateCurrentStep: () => Promise<boolean>;
 	getStepErrors: (stepId: string) => string[];
+}
+
+export interface StepConfig {
+	id: string;
+	label: string;
+	description?: string;
+	icon?: Snippet;
+	state?: StepState;
+	disabled?: boolean;
 }

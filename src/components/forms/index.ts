@@ -12,6 +12,7 @@ export { default as TimePicker } from './TimePicker.svelte';
 export { default as DateTimePicker } from './DateTimePicker.svelte';
 export { default as Step } from './Step.svelte';
 export { default as StepperForm } from './StepperForm.svelte';
+export { default as Stepper } from './Stepper.svelte';
 
 // Re-export types for consumers
-export type { StepState, ValidationMode, StepRegistration, StepperFormContext, StepMeta, StepContext } from './Stepper.types';
+export type { StepState, ValidationMode, StepRegistration, StepperFormContext, StepMeta, StepContext, StepConfig } from './Stepper.types';

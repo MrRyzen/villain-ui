@@ -13,13 +13,13 @@ export const version = '0.7.1';
 export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } from './components/buttons';
 
 // ===== Form Components =====
-export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker, StepperForm, Step} from './components/forms';
-export type { StepState, ValidationMode, StepRegistration, StepperFormContext, StepMeta, StepContext } from './components/forms';
+export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker, StepperForm, Step, Stepper } from './components/forms';
+export type { StepState, ValidationMode, StepRegistration, StepperFormContext, StepMeta, StepContext, StepConfig } from './components/forms';
 // ===== Layout Components =====
 export { Card, Panel, Grid, Container, SectionHeader, Divider } from './components/cards';
 
 // ===== Navigation Components =====
-export { Navbar, Sidebar, Tabs, Breadcrumbs, Menu, DropdownMenu, ContextMenu, Stepper } from './components/navigation';
+export { Navbar, Sidebar, Tabs, Breadcrumbs, Menu, DropdownMenu, ContextMenu } from './components/navigation';
 
 // ===== Overlay & Feedback Components =====
 export { Modal, Alert, Spinner, Tooltip, ProgressBar, SkeletonLoader, Toast, Drawer, Popover, Dropdown, CommandPalette } from './components/overlays';
@@ -61,7 +61,7 @@ import type Alert from './components/overlays/Alert.svelte';
 import type Tooltip from './components/overlays/Tooltip.svelte';
 import type Accordion from './components/utilities/Accordion.svelte';
 import type Sparkline from './components/data/Sparkline.svelte';
-import type Stepper from './components/navigation/Stepper.svelte';
+import type Stepper from './components/forms/Stepper.svelte';
 
 // Button Component Types
 export type ButtonProps = ComponentProps<Button>;
@@ -81,6 +81,7 @@ export type TimePickerProps = ComponentProps<TimePicker>;
 export type DateTimePickerProps = ComponentProps<DateTimePicker>;
 export type StepperFormProps = ComponentProps<StepperForm>;
 export type StepProps = ComponentProps<Step>;
+export type StepperProps = ComponentProps<Stepper>;
 
 // Layout Component Types
 export type CardProps = ComponentProps<Card>;
@@ -99,4 +100,3 @@ export type AccordionProps = ComponentProps<Accordion>;
 
 // Data Component Types
 export type SparklineProps = ComponentProps<Sparkline>;
-export type StepperProps = ComponentProps<Stepper>;

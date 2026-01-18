@@ -22,7 +22,10 @@
 		Divider,
 		Button,
 		Hero,
-		Code
+		Code,
+		StepperForm,
+		Step,
+		Stepper
 	} from '@mrintel/villain-ui';
 	import { codeToHtml } from 'shiki';
 	import { onMount } from 'svelte';
@@ -206,6 +209,82 @@ let selectedDateTime = $state<Date | null>(null);
   placeholder="Choose date and time"
 />`;
 
+	const stepperFormCode = `import { StepperForm, Step, Stepper, Input, Select, Checkbox, Button } from '@mrintel/villain-ui';
+
+// Form object for validation (e.g., from superforms)
+const form = { errors: {} };
+
+function handleComplete() {
+  console.log('Form completed!');
+}
+
+<StepperForm form={form} onComplete={handleComplete}>
+  {#snippet header(ctx)}
+    <Stepper
+      steps={ctx.steps.map(s => ({ id: s.id, label: s.label }))}
+      current={ctx.currentStep}
+      showProgress
+      clickable
+      onStepClick={(i) => ctx.goto(ctx.steps[i].id)}
+    />
+  {/snippet}
+
+  {#snippet children(ctx)}
+    <Step id="account" label="Account">
+      <Input type="email" label="Email" placeholder="you@example.com" />
+      <Input type="password" label="Password" placeholder="Create a password" />
+    </Step>
+
+    <Step id="profile" label="Profile">
+      <Input label="First Name" placeholder="John" />
+      <Input label="Last Name" placeholder="Doe" />
+    </Step>
+
+    <Step id="preferences" label="Preferences">
+      <Select label="Theme" options={themeOptions} />
+      <Checkbox label="Subscribe to newsletter" />
+    </Step>
+
+    <Step id="confirm" label="Confirm">
+      <p>Review your information and submit.</p>
+    </Step>
+  {/snippet}
+
+  {#snippet footer(ctx)}
+    <Button variant="secondary" disabled={ctx.isFirstStep} onclick={() => ctx.back()}>
+      Back
+    </Button>
+    <Button variant="primary" onclick={() => ctx.next()}>
+      {ctx.isLastStep ? 'Submit' : 'Next'}
+    </Button>
+  {/snippet}
+</StepperForm>`;
+
+	const stepperCode = `import { Stepper } from '@mrintel/villain-ui';
+
+let currentStep = $state(1);
+
+// Simple string array
+<Stepper
+  steps={['Account', 'Profile', 'Preferences', 'Confirm']}
+  current={currentStep}
+  showProgress
+/>
+
+// With step configs
+<Stepper
+  steps={[
+    { id: 'account', label: 'Account', description: 'Create your account' },
+    { id: 'profile', label: 'Profile', description: 'Add your details' },
+    { id: 'prefs', label: 'Preferences' },
+    { id: 'confirm', label: 'Confirm' }
+  ]}
+  current={currentStep}
+  orientation="vertical"
+  clickable
+  onStepClick={(i) => currentStep = i}
+/>`;
+
 	// State for highlighted code
 	let inputHtml = $state('');
 	let textareaHtml = $state('');
@@ -219,6 +298,8 @@ let selectedDateTime = $state<Date | null>(null);
 	let datePickerHtml = $state('');
 	let timePickerHtml = $state('');
 	let dateTimePickerHtml = $state('');
+	let stepperFormHtml = $state('');
+	let stepperHtml = $state('');
 
 	// Demo state
 	let email = $state('');
@@ -246,6 +327,24 @@ let selectedDateTime = $state<Date | null>(null);
 	let selectedDate = $state<Date | null>(null);
 	let selectedTime = $state<string>('');
 	let selectedDateTime = $state<Date | null>(null);
+
+	// Stepper demo state
+	let standaloneStep = $state(1);
+
+	// Mock form object for StepperForm demo (in real usage, use superforms or similar)
+	const mockForm = {
+		errors: {}
+	};
+
+	function handleStepperComplete() {
+		alert('Form completed! In a real app, this would submit the form data.');
+	}
+
+	const themeOptions = [
+		{ value: 'dark', label: 'Dark Mode' },
+		{ value: 'light', label: 'Light Mode' },
+		{ value: 'system', label: 'System Default' }
+	];
 
 	const countries = [
 		{ value: 'us', label: 'United States' },
@@ -282,6 +381,8 @@ let selectedDateTime = $state<Date | null>(null);
 		datePickerHtml = await codeToHtml(datePickerCode, { lang: 'svelte', theme: 'github-dark' });
 		timePickerHtml = await codeToHtml(timePickerCode, { lang: 'svelte', theme: 'github-dark' });
 		dateTimePickerHtml = await codeToHtml(dateTimePickerCode, { lang: 'svelte', theme: 'github-dark' });
+		stepperFormHtml = await codeToHtml(stepperFormCode, { lang: 'svelte', theme: 'github-dark' });
+		stepperHtml = await codeToHtml(stepperCode, { lang: 'svelte', theme: 'github-dark' });
 	});
 </script>
 
@@ -902,6 +1003,239 @@ let selectedDateTime = $state<Date | null>(null);
 			</Grid>
 		</Card>
 
+		<!-- Stepper -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Stepper</Heading>
+				<Text variant="body" color="soft">
+					Visual progress indicator for multi-step processes
+				</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Horizontal with Progress Bar</Text>
+					<div class="py-4">
+						<Stepper
+							steps={['Account', 'Profile', 'Preferences', 'Confirm']}
+							current={standaloneStep}
+							showProgress
+						/>
+					</div>
+					<div class="flex gap-2 mt-4">
+						<Button
+							variant="secondary"
+							size="sm"
+							disabled={standaloneStep === 0}
+							onclick={() => (standaloneStep = Math.max(0, standaloneStep - 1))}
+						>
+							Previous
+						</Button>
+						<Button
+							variant="primary"
+							size="sm"
+							disabled={standaloneStep === 3}
+							onclick={() => (standaloneStep = Math.min(3, standaloneStep + 1))}
+						>
+							Next
+						</Button>
+					</div>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Vertical with Descriptions</Text>
+					<div class="py-4">
+						<Stepper
+							steps={[
+								{ id: 'account', label: 'Account', description: 'Create your account credentials' },
+								{ id: 'profile', label: 'Profile', description: 'Add your personal details' },
+								{ id: 'prefs', label: 'Preferences', description: 'Customize your experience' },
+								{ id: 'confirm', label: 'Confirm', description: 'Review and submit' }
+							]}
+							current={standaloneStep}
+							orientation="vertical"
+						/>
+					</div>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Compact Variant</Text>
+					<div class="py-4">
+						<Stepper
+							steps={['Step 1', 'Step 2', 'Step 3', 'Step 4']}
+							current={standaloneStep}
+							variant="compact"
+							showProgress
+						/>
+					</div>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Clickable Steps</Text>
+					<div class="py-4">
+						<Stepper
+							steps={['Account', 'Profile', 'Preferences', 'Confirm']}
+							current={standaloneStep}
+							showProgress
+							clickable
+							onStepClick={(i) => (standaloneStep = i)}
+						/>
+					</div>
+					<Text variant="caption" color="muted">
+						Click on completed steps to navigate back
+					</Text>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Error State</Text>
+					<div class="py-4">
+						<Stepper
+							steps={['Account', 'Verification', 'Payment', 'Complete']}
+							current={1}
+							states={['completed', 'error', 'idle', 'idle']}
+							showProgress
+						/>
+					</div>
+					<Text variant="caption" color="muted">
+						Shows validation errors with shake animation and red glow
+					</Text>
+				</div>
+
+				<CodeBlock
+					filename="Stepper.svelte"
+					showLineNumbers
+					lineCount={stepperCode.split('\n').length}
+					showCopy
+					code={stepperCode}
+				>
+					{@html stepperHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- StepperForm -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>StepperForm</Heading>
+				<Text variant="body" color="soft">
+					Multi-step form wizard with built-in navigation and validation
+				</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Complete Registration Form</Text>
+					<div class="stepper-form-demo">
+						<StepperForm
+							form={mockForm}
+							onComplete={handleStepperComplete}
+						>
+							{#snippet header(ctx)}
+								<div class="mb-6">
+									<Stepper
+										steps={ctx.steps.map((s) => ({ id: s.id, label: s.label }))}
+										current={ctx.currentStep}
+										showProgress
+										clickable
+										onStepClick={(i) => ctx.goto(ctx.steps[i].id)}
+									/>
+								</div>
+							{/snippet}
+
+							{#snippet children(ctx)}
+								<Step id="account" label="Account">
+									<div class="step-content">
+										<Input
+											type="email"
+											label="Email Address"
+											placeholder="you@example.com"
+										/>
+										<Input
+											type="password"
+											label="Password"
+											placeholder="Create a secure password"
+										/>
+										<Input
+											type="password"
+											label="Confirm Password"
+											placeholder="Confirm your password"
+										/>
+									</div>
+								</Step>
+
+								<Step id="profile" label="Profile">
+									<div class="step-content">
+										<Input label="First Name" placeholder="John" />
+										<Input label="Last Name" placeholder="Doe" />
+										<Input type="tel" label="Phone Number" placeholder="+1 (555) 000-0000" />
+									</div>
+								</Step>
+
+								<Step id="preferences" label="Preferences">
+									<div class="step-content">
+										<Select
+											label="Theme Preference"
+											options={themeOptions}
+											placeholder="Select a theme"
+										/>
+										<Checkbox label="Subscribe to newsletter" />
+										<Checkbox label="Enable push notifications" />
+									</div>
+								</Step>
+
+								<Step id="confirm" label="Confirm">
+									<div class="step-content">
+										<div class="confirm-message">
+											<Icon icon="lucide:check-circle" width="48" height="48" class="text-success" />
+											<Heading level={4}>Ready to Submit</Heading>
+											<Text variant="body" color="soft">
+												Review your information and click Submit to complete registration.
+											</Text>
+										</div>
+									</div>
+								</Step>
+							{/snippet}
+
+							{#snippet footer(ctx)}
+								<div class="stepper-nav">
+									<Button
+										variant="secondary"
+										disabled={ctx.isFirstStep}
+										onclick={() => ctx.back()}
+									>
+										<Icon icon="lucide:arrow-left" width="16" height="16" />
+										Back
+									</Button>
+									<Button
+										variant="primary"
+										onclick={() => ctx.next()}
+									>
+										{#if ctx.isLastStep}
+											Submit
+											<Icon icon="lucide:check" width="16" height="16" />
+										{:else}
+											Next
+											<Icon icon="lucide:arrow-right" width="16" height="16" />
+										{/if}
+									</Button>
+								</div>
+							{/snippet}
+						</StepperForm>
+					</div>
+				</div>
+
+				<CodeBlock
+					filename="StepperForm.svelte"
+					showLineNumbers
+					lineCount={stepperFormCode.split('\n').length}
+					showCopy
+					code={stepperFormCode}
+				>
+					{@html stepperFormHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
 		<Divider />
 
 		<!-- Usage Tips -->
@@ -988,5 +1322,37 @@ let selectedDateTime = $state<Date | null>(null);
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
+	}
+
+	.stepper-form-demo {
+		padding: 1.5rem;
+		background: var(--color-base-1);
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--color-border);
+	}
+
+	.step-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.5rem 0;
+	}
+
+	.confirm-message {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 2rem;
+		text-align: center;
+	}
+
+	.stepper-nav {
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+		padding-top: 1.5rem;
+		border-top: 1px solid var(--color-border);
+		margin-top: 1rem;
 	}
 </style>
