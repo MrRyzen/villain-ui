@@ -8,6 +8,7 @@
 
 	export interface Props {
 		type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'color' | 'search';
+		name?: string;
 		value?: string | number;
 		placeholder?: string;
 		disabled?: boolean;
@@ -25,6 +26,7 @@
 
 	let {
 		type = 'text',
+		name,
 		value = $bindable(''),
 		placeholder,
 		disabled = false,
@@ -135,6 +137,7 @@
 			<!-- INPUT FIELD -->
 			<input
 				{type}
+				{name}
 				{id}
 				{placeholder}
 				{disabled}
@@ -197,6 +200,7 @@
 
 			<input
 				{type}
+				{name}
 				{id}
 				{placeholder}
 				{disabled}
