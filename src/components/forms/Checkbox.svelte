@@ -6,6 +6,7 @@
     disabled?: boolean;
     label?: string;
     id?: string;
+    name?: string;
     onchange?: (event: Event) => void;
     iconBefore?: import('svelte').Snippet;
     class?: string;
@@ -16,6 +17,7 @@
     disabled = false,
     label,
     id = createId('checkbox'),
+    name,
     onchange,
     iconBefore,
     class: className = ''
@@ -26,6 +28,7 @@
   <input
     type="checkbox"
     {id}
+    name={name}
     {disabled}
     bind:checked
     onchange={onchange}

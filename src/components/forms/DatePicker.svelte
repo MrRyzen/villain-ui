@@ -15,6 +15,7 @@
 		error?: boolean;
 		label?: string;
 		id?: string;
+		name?: string;
 		onchange?: (event: Event) => void;
 		class?: string;
 	}
@@ -28,6 +29,7 @@
 		error = false,
 		label,
 		id = createId('datepicker'),
+		name,
 		onchange,
 		class: className = '',
 	}: Props = $props();
@@ -43,6 +45,7 @@
 		<input
 			type="date"
 			{id}
+			name={name}
 			{placeholder}
 			{disabled}
 			{min}
@@ -58,6 +61,7 @@
 	<input
 		type="date"
 		{id}
+		name={name}
 		{placeholder}
 		{disabled}
 		{min}

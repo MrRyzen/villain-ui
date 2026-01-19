@@ -10,6 +10,7 @@
     error?: boolean;
     label?: string;
     id?: string;
+    name?: string;
     oninput?: (event: Event) => void;
     iconBefore?: import('svelte').Snippet;
     class?: string;
@@ -23,6 +24,7 @@
     error = false,
     label,
     id = createId('textarea'),
+    name,
     oninput,
     iconBefore,
     class: className = ''
@@ -48,6 +50,7 @@
       {/if}
       <textarea
         {id}
+        name={name}
         {placeholder}
         {disabled}
         {rows}
@@ -67,6 +70,7 @@
     {/if}
     <textarea
       {id}
+      name={name}
       {placeholder}
       {disabled}
       {rows}

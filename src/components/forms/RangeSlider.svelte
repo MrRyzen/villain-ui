@@ -10,6 +10,7 @@
     label?: string;
     showValue?: boolean;
     id?: string;
+    name?: string;
     oninput?: (event: Event) => void;
   }
 
@@ -22,6 +23,7 @@
     label,
     showValue = true,
     id = createId('range'),
+    name,
     oninput
   }: Props = $props();
 
@@ -46,6 +48,7 @@
   <input
     type="range"
     {id}
+    name={name}
     {min}
     {max}
     {step}

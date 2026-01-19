@@ -14,6 +14,7 @@
 		error?: boolean;
 		label?: string;
 		id?: string;
+		name?: string;
 		onchange?: (event: Event) => void;
 		iconBefore?: import('svelte').Snippet;
 		class?: string;
@@ -27,6 +28,7 @@
 		error = false,
 		label,
 		id = createId('select'),
+		name,
 		onchange,
 		iconBefore,
 		class: className = '',
@@ -56,6 +58,7 @@
 
 			<select
 				{id}
+				name={name}
 				{disabled}
 				bind:value
 				{onchange}
@@ -89,6 +92,7 @@
 
 		<select
 			{id}
+			name={name}
 			{disabled}
 			bind:value
 			{onchange}

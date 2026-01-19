@@ -16,6 +16,7 @@
 		error?: boolean;
 		label?: string;
 		id?: string;
+		name?: string;
 		onchange?: (event: Event) => void;
 		class?: string;
 	}
@@ -30,6 +31,7 @@
 		error = false,
 		label,
 		id = createId('datetimepicker'),
+		name,
 		onchange,
 		class: className = '',
 	}: Props = $props();
@@ -45,6 +47,7 @@
 		<input
 			type="datetime-local"
 			{id}
+			name={name}
 			{placeholder}
 			{disabled}
 			{min}
@@ -61,6 +64,7 @@
 	<input
 		type="datetime-local"
 		{id}
+		name={name}
 		{placeholder}
 		{disabled}
 		{min}

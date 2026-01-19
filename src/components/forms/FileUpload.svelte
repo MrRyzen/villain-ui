@@ -14,6 +14,7 @@
     disabled?: boolean;
     label?: string;
     id?: string;
+    name?: string;
     onchange?: (event: { target: { files: FileList } }) => void;
     icon?: import('svelte').Snippet;
   }
@@ -25,6 +26,7 @@
     disabled = false,
     label,
     id = createId('file-upload'),
+    name,
     onchange,
     icon
   }: Props = $props();
@@ -83,6 +85,7 @@
   <input
     type="file"
     {id}
+    name={name}
     {accept}
     {multiple}
     {disabled}
