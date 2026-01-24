@@ -11,7 +11,7 @@
   }
 
   let {
-    value = $bindable(''),
+    value = $bindable(),
     options,
     name,
     disabled = false,

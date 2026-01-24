@@ -34,6 +34,30 @@ export type { TableColumn, SortDirection, CalendarEvent } from './components/dat
 export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero, SystemConsole, SystemInterface } from './components/utilities';
 export type { ConsoleMessage, SystemMessage, MessageContentType } from './components/utilities';
 
+// ===== Wizard Components =====
+export {
+	StepForm,
+	StepRail,
+	createStepController,
+} from './components/wizard';
+export type {
+	StepState,
+	StepOrientation,
+	StepDefinition,
+	StepRuntime,
+	StepNavigationRules,
+	StepChangeContext,
+	StepGuard,
+	StepCallbacks,
+	StepValidator,
+	StepControllerOptions,
+	StepController,
+	StepRailSnippetContext,
+	StepPanelSnippetContext,
+	StepActionsSnippetContext,
+	SuperFormLike,
+} from './components/wizard';
+
 // ===== Component Prop Type Exports =====
 
 import type { ComponentProps } from 'svelte';
@@ -58,6 +82,8 @@ import type Alert from './components/overlays/Alert.svelte';
 import type Tooltip from './components/overlays/Tooltip.svelte';
 import type Accordion from './components/utilities/Accordion.svelte';
 import type Sparkline from './components/data/Sparkline.svelte';
+import type StepForm from './components/wizard/StepForm.svelte';
+import type StepRail from './components/wizard/StepRail.svelte';
 
 // Button Component Types
 export type ButtonProps = ComponentProps<Button>;
@@ -93,3 +119,7 @@ export type AccordionProps = ComponentProps<Accordion>;
 
 // Data Component Types
 export type SparklineProps = ComponentProps<Sparkline>;
+
+// Wizard Component Types
+export type StepFormProps = ComponentProps<StepForm>;
+export type StepRailProps = ComponentProps<StepRail>;

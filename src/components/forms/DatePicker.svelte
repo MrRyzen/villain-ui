@@ -21,7 +21,7 @@
 	}
 
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		min,
 		max,
 		placeholder,

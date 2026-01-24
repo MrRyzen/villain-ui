@@ -17,7 +17,7 @@
   }
 
   let {
-    value = $bindable(''),
+    value = $bindable(),
     placeholder,
     rows = 4,
     disabled = false,

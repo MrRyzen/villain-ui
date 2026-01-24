@@ -13,7 +13,7 @@
   }
 
   let {
-    checked = $bindable(false),
+    checked = $bindable<boolean>(),
     disabled = false,
     label,
     id = createId('checkbox'),

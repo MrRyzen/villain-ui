@@ -27,7 +27,7 @@
 	let {
 		type = 'text',
 		name,
-		value = $bindable(''),
+		value = $bindable(),
 		placeholder,
 		disabled = false,
 		error = false,
@@ -98,9 +98,12 @@
 		return true;
 	}
 
-	// Validate on value change
+	// Validate on value change (only when no external validation message is provided)
 	$effect(() => {
-		if (value !== undefined && value !== '') {
+		if (validationMessage !== undefined) {
+			// External validation takes precedence
+			validationError = validationMessage || null;
+		} else if (value !== undefined && value !== '') {
 			performValidation(value);
 		}
 	});

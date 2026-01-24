@@ -406,6 +406,131 @@
 			transform: translateY(0);
 		}
 	}
+
+	/* ===== StepWizard Variables ===== */
+
+	/* Step Node Sizes */
+	--step-node-sm: 24px;
+	--step-node-md: 32px;
+	--step-node-lg: 40px;
+
+	/* Step State Colors - Idle */
+	--step-idle-border: var(--color-base-3);
+	--step-idle-bg: var(--color-base-1);
+	--step-idle-text: var(--color-text-muted);
+
+	/* Step State Colors - Visited */
+	--step-visited-border: var(--color-border-strong);
+	--step-visited-bg: var(--color-base-1);
+	--step-visited-text: var(--color-text-soft);
+
+	/* Step State Colors - Active */
+	--step-active-border: var(--color-accent-soft);
+	--step-active-bg: var(--color-accent-soft);
+	--step-active-text: var(--color-text);
+	--step-active-glow: color-mix(in srgb, var(--color-accent-soft) 50%, transparent);
+
+	/* Step State Colors - Completed */
+	--step-completed-border: var(--color-success);
+	--step-completed-bg: var(--color-success);
+	--step-completed-text: var(--color-text);
+
+	/* Step State Colors - Loading */
+	--step-loading-border: var(--color-accent-soft);
+	--step-loading-bg: var(--color-accent-overlay-10);
+	--step-loading-text: var(--color-text-soft);
+	--step-loading-spinner: var(--color-accent-soft);
+
+	/* Step State Colors - Error */
+	--step-error-border: var(--color-error);
+	--step-error-bg: var(--color-error-overlay-15);
+	--step-error-text: var(--color-error);
+	--step-error-glow: color-mix(in srgb, var(--color-error) 40%, transparent);
+
+	/* Step State Colors - Disabled */
+	--step-disabled-border: var(--color-base-2);
+	--step-disabled-bg: var(--color-base-2);
+	--step-disabled-text: var(--color-text-muted);
+
+	/* Step Hover State */
+	--step-hover-border: var(--color-accent-soft);
+	--step-hover-bg: var(--color-accent-overlay-10);
+
+	/* Step Connector Colors */
+	--step-connector-track: var(--color-base-2);
+	--step-connector-progress: var(--color-accent);
+
+	/* Step Timing */
+	--step-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+	--step-fast: 120ms;
+	--step-med: 200ms;
+	--step-slow: 280ms;
+
+	/* StepWizard Keyframes */
+	@keyframes step-pulse {
+		0%,
+		100% {
+			transform: scale(1);
+			box-shadow: 0 0 0 0 var(--step-active-glow);
+		}
+		50% {
+			transform: scale(1.08);
+			box-shadow: 0 0 20px 4px var(--step-active-glow);
+		}
+	}
+
+	@keyframes step-loading-ring {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes step-error-shake {
+		0%,
+		100% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(-4px);
+		}
+		75% {
+			transform: translateX(4px);
+		}
+	}
+
+	@keyframes step-complete-lock {
+		0% {
+			transform: scale(1.05);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	@keyframes content-slide-left {
+		from {
+			opacity: 0;
+			transform: translateX(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes content-slide-right {
+		from {
+			opacity: 0;
+			transform: translateX(-20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
 }
 
 /* ===== Global Base Styles ===== */

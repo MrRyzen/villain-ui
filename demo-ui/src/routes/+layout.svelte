@@ -44,6 +44,7 @@
 		<LinkButton href="/typography" variant="ghost" size="sm">Typography</LinkButton>
 		<LinkButton href="/utilities" variant="ghost" size="sm">Utilities</LinkButton>
 		<LinkButton href="/theme" variant="ghost" size="sm">Theme</LinkButton>
+		<LinkButton href="/wizard" variant="ghost" size="sm">Wizard</LinkButton>
 	{/snippet}
 
 	{#snippet actions()}
@@ -111,6 +112,11 @@
 	<a href="/theme" class="sidebar-item">
 		<Icon icon="mdi:palette" class="sidebar-item-icon" width="20" height="20" />
 		<span class="sidebar-item-label">Theme</span>
+	</a>
+
+	<a href="/wizard" class="sidebar-item">
+		<Icon icon="mdi:magic-wand" class="sidebar-item-icon" width="20" height="20" />
+		<span class="sidebar-item-label">Wizard</span>
 	</a>
 </Sidebar>
 

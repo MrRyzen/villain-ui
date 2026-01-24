@@ -22,7 +22,7 @@
 	}
 
 	let {
-		value = $bindable(''),
+		value = $bindable(),
 		min,
 		max,
 		step,
