@@ -15,6 +15,7 @@
 		error?: boolean;
 		label?: string;
 		id?: string;
+		autocomplete?: HTMLInputElement['autocomplete'];
 		oninput?: (event: Event) => void;
 		iconBefore?: import('svelte').Snippet;
 		iconAfter?: import('svelte').Snippet;
@@ -33,6 +34,7 @@
 		error = false,
 		label,
 		id = createId('input'),
+		autocomplete,
 		oninput,
 		iconBefore,
 		iconAfter,
@@ -144,6 +146,7 @@
 				{id}
 				{placeholder}
 				{disabled}
+				{autocomplete}
 				bind:value
 				{oninput}
 				class="{baseInputClasses} {focusClasses} {errorClasses} {disabled
@@ -207,6 +210,7 @@
 				{id}
 				{placeholder}
 				{disabled}
+				{autocomplete}
 				bind:value
 				{oninput}
 				class="{baseInputClasses} {focusClasses} {errorClasses} {disabled

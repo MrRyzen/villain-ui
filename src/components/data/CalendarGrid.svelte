@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { CalendarEvent } from './CalendarGrid.types';
+	import SelectMenu from '../forms/SelectMenu.svelte';
 
 	interface CellData {
 		date: Date;
@@ -207,7 +208,45 @@
 		'December'
 	];
 
-	const currentMonthYear = $derived(`${monthNames[month.getMonth()]} ${month.getFullYear()}`);
+	// Current values as strings for Select component
+	let selectedMonthValue = $state(String(month.getMonth()));
+	let selectedYearValue = $state(String(month.getFullYear()));
+
+	// Sync selected values when month changes
+	$effect(() => {
+		selectedMonthValue = String(month.getMonth());
+		selectedYearValue = String(month.getFullYear());
+	});
+
+	// Month options for Select component
+	const monthOptions = monthNames.map((name, index) => ({
+		value: String(index),
+		label: name
+	}));
+
+	// Generate year options (current year ± 50 years)
+	const yearOptions = $derived.by(() => {
+		const current = new Date().getFullYear();
+		const options: Array<{ value: string; label: string }> = [];
+		for (let y = current - 50; y <= current + 50; y++) {
+			options.push({ value: String(y), label: String(y) });
+		}
+		return options;
+	});
+
+	function handleMonthChange() {
+		const newMonthIndex = parseInt(selectedMonthValue, 10);
+		const newMonth = new Date(month.getFullYear(), newMonthIndex, 1);
+		month = newMonth;
+		onMonthChange?.(newMonth);
+	}
+
+	function handleYearChange() {
+		const newYear = parseInt(selectedYearValue, 10);
+		const newMonth = new Date(newYear, month.getMonth(), 1);
+		month = newMonth;
+		onMonthChange?.(newMonth);
+	}
 
 	const variantColors = {
 		default: 'var(--color-base-3)',
@@ -232,7 +271,21 @@
 			</svg>
 		</button>
 
-		<h2 class="month-title">{currentMonthYear}</h2>
+		<div class="month-year-selectors" onclick={(e) => e.stopPropagation()}>
+			<SelectMenu
+				bind:value={selectedMonthValue}
+				options={monthOptions}
+				onchange={handleMonthChange}
+				class="calendar-select"
+			/>
+
+			<SelectMenu
+				bind:value={selectedYearValue}
+				options={yearOptions}
+				onchange={handleYearChange}
+				class="calendar-select"
+			/>
+		</div>
 
 		<button
 			type="button"
@@ -328,12 +381,27 @@
 		border-bottom: 1px solid var(--color-border);
 	}
 
-	.month-title {
-		font-family: var(--font-heading);
-		font-size: 1.5rem;
-		font-weight: 700;
-		color: var(--color-text);
-		margin: 0;
+	.month-year-selectors {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	/* Compact styling for calendar selects */
+	.month-year-selectors :global(.select-menu-wrapper) {
+		width: auto;
+	}
+
+	.month-year-selectors :global(button[aria-haspopup="listbox"]) {
+		padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+		font-size: 0.9375rem;
+		min-height: auto;
+		height: 2.25rem;
+	}
+
+	.month-year-selectors :global(.select-menu-option) {
+		padding: 0.5rem 0.75rem;
+		font-size: 0.875rem;
 	}
 
 	.nav-button {

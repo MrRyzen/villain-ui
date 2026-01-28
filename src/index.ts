@@ -13,7 +13,7 @@ export const version = '0.7.1';
 export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } from './components/buttons';
 
 // ===== Form Components =====
-export { Input, Textarea, Select, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker } from './components/forms';
+export { Input, Textarea, Select, SelectMenu, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker } from './components/forms';
 // ===== Layout Components =====
 export { Card, Panel, Grid, Container, SectionHeader, Divider } from './components/cards';
 
@@ -68,6 +68,7 @@ import type LinkButton from './components/buttons/LinkButton.svelte';
 import type Input from './components/forms/Input.svelte';
 import type Textarea from './components/forms/Textarea.svelte';
 import type Select from './components/forms/Select.svelte';
+import type SelectMenu from './components/forms/SelectMenu.svelte';
 import type Checkbox from './components/forms/Checkbox.svelte';
 import type Switch from './components/forms/Switch.svelte';
 import type RadioGroup from './components/forms/RadioGroup.svelte';
@@ -95,6 +96,7 @@ export type LinkButtonProps = ComponentProps<LinkButton>;
 export type InputProps = ComponentProps<Input>;
 export type TextareaProps = ComponentProps<Textarea>;
 export type SelectProps = ComponentProps<Select>;
+export type SelectMenuProps = ComponentProps<SelectMenu>;
 export type CheckboxProps = ComponentProps<Checkbox>;
 export type SwitchProps = ComponentProps<Switch>;
 export type RadioGroupProps = ComponentProps<RadioGroup>;

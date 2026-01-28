@@ -15,6 +15,7 @@
 		label?: string;
 		id?: string;
 		name?: string;
+		autocomplete?: HTMLSelectElement['autocomplete'];
 		onchange?: (event: Event) => void;
 		iconBefore?: import('svelte').Snippet;
 		class?: string;
@@ -29,15 +30,13 @@
 		label,
 		id = createId('select'),
 		name,
+		autocomplete,
 		onchange,
 		iconBefore,
 		class: className = '',
 	}: Props = $props();
 
-	const chevronIcon =
-		"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%23A855F7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
-
-	const selectClasses = `${baseInputClasses} pr-12 appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:16px] cursor-pointer`;
+	const selectClasses = `${baseInputClasses} pr-12 appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:16px] cursor-pointer select-with-chevron`;
 
 	const errorClasses = $derived(error ? 'error-state' : '');
 </script>
@@ -60,13 +59,13 @@
 				{id}
 				name={name}
 				{disabled}
+				{autocomplete}
 				bind:value
 				{onchange}
 				class="{selectClasses} {focusClasses} {errorClasses} {disabled
 					? disabledClasses
 					: ''} {className}"
 				class:pl-12={iconBefore}
-				style={`background-image: url('${chevronIcon}')`}
 			>
 				{#if placeholder}
 					<option disabled value="" aria-hidden="true" hidden
@@ -94,13 +93,13 @@
 			{id}
 			name={name}
 			{disabled}
+			{autocomplete}
 			bind:value
 			{onchange}
 			class="{selectClasses} {focusClasses} {errorClasses} {disabled
 				? disabledClasses
 				: ''} {className}"
 			class:pl-12={iconBefore}
-			style={`background-image: url('${chevronIcon}')`}
 		>
 			{#if placeholder}
 				<option disabled value="" aria-hidden="true" hidden
@@ -116,6 +115,18 @@
 {/if}
 
 <style>
+	/* Chevron styling using background-image with accent color via CSS filter */
+	.select-with-chevron {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%239b87f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+		background-repeat: no-repeat;
+		background-position: right 1rem center;
+		background-size: 16px;
+	}
+
+	.select-with-chevron:disabled {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	}
+
 	/* Force dark dropdown (Firefox + Chromium) */
 	select {
 		color-scheme: var(--color-base-0);

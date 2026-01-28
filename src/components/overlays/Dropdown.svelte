@@ -6,6 +6,7 @@
     open?: boolean;
     placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
     closeOnClickOutside?: boolean;
+    fullWidth?: boolean;
     trigger?: Snippet;
     children?: Snippet;
   }
@@ -14,12 +15,15 @@
     open = $bindable(false),
     placement = 'bottom-start',
     closeOnClickOutside = true,
+    fullWidth = false,
     trigger,
     children
   }: Props = $props();
 
   let dropdownElement = $state<HTMLDivElement>();
   let wrapperElement = $state<HTMLDivElement>();
+  let triggerElement = $state<HTMLDivElement>();
+  let triggerWidth = $state(0);
 
   const dropdownId = createId('dropdown');
 
@@ -59,17 +63,42 @@
       };
     }
   });
+
+  // Measure trigger width for fullWidth mode with ResizeObserver
+  $effect(() => {
+    if (fullWidth && triggerElement) {
+      // Initial measurement
+      triggerWidth = triggerElement.offsetWidth;
+
+      // Set up ResizeObserver to track size changes
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target === triggerElement) {
+            triggerWidth = entry.contentRect.width;
+          }
+        }
+      });
+
+      resizeObserver.observe(triggerElement);
+
+      // Cleanup observer on destroy
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  });
 </script>
 
-<div bind:this={wrapperElement} class="relative inline-block">
+<div bind:this={wrapperElement} class="relative {fullWidth ? 'w-full block' : 'inline-block'}">
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
+    bind:this={triggerElement}
     onclick={toggleOpen}
     onkeydown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleOpen(); } }}
     aria-haspopup="true"
     aria-expanded={open}
     aria-controls={open ? dropdownId : undefined}
-    class="inline-block"
+    class="{fullWidth ? 'block w-full' : 'inline-block'}"
   >
     {@render trigger?.()}
   </div>
@@ -79,6 +108,7 @@
       bind:this={dropdownElement}
       id={dropdownId}
       class="absolute {placementClasses[placement]} z-[var(--z-50)] panel-floating rounded-[var(--radius-lg)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[fade-up_0.2s_var(--ease-luxe)]"
+      style={fullWidth && triggerWidth > 0 ? `width: ${triggerWidth}px` : ''}
       role="menu"
     >
       {@render children?.()}

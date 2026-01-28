@@ -11,6 +11,7 @@
     label?: string;
     id?: string;
     name?: string;
+    autocomplete?: HTMLTextAreaElement['autocomplete'];
     oninput?: (event: Event) => void;
     iconBefore?: import('svelte').Snippet;
     class?: string;
@@ -25,6 +26,7 @@
     label,
     id = createId('textarea'),
     name,
+    autocomplete,
     oninput,
     iconBefore,
     class: className = ''
@@ -54,6 +56,7 @@
         {placeholder}
         {disabled}
         {rows}
+        {autocomplete}
         bind:value
         oninput={oninput}
         class="{textareaClasses} {focusClasses} {errorClasses} {disabled ? disabledClasses : ''} {className}"
@@ -74,6 +77,7 @@
       {placeholder}
       {disabled}
       {rows}
+      {autocomplete}
       bind:value
       oninput={oninput}
       class="{textareaClasses} {focusClasses} {errorClasses} {disabled ? disabledClasses : ''} {className}"

@@ -3,6 +3,7 @@
 		Input,
 		Textarea,
 		Select,
+		SelectMenu,
 		Checkbox,
 		Switch,
 		RadioGroup,
@@ -243,7 +244,7 @@ let selectedDateTime = $state<Date | null>(null);
 	let customValidatedUsername = $state('');
 	let urlInput = $state('');
 	let phoneInput = $state('');
-	let selectedDate = $state<Date | null>(null);
+	let selectedDate = $state<string>();
 	let selectedTime = $state<string>('');
 	let selectedDateTime = $state<Date | null>(null);
 
@@ -552,6 +553,55 @@ let selectedDateTime = $state<Date | null>(null);
 			</Grid>
 		</Card>
 
+		<!-- SelectMenu -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>SelectMenu</Heading>
+				<Text variant="body" color="soft">Dropdown select fully custom no native</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="lg">
+				<div>
+					<Text variant="caption" color="soft">Custom SelectMenu</Text>
+					<SelectMenu
+						bind:value={country}
+						options={countries}
+						label="Country"
+						placeholder="Select a country"
+					/>
+					{#if country}
+						<Text variant="caption" color="soft">
+							Selected: {countries.find((c) => c.value === country)?.label}
+						</Text>
+					{/if}
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">With Icon</Text>
+					<SelectMenu bind:value={country} options={countries} placeholder="Choose country">
+						{#snippet iconBefore()}
+							<Icon icon="lucide:globe" width="16" height="16" />
+						{/snippet}
+					</SelectMenu>
+				</div>
+
+				<div>
+					<Text variant="caption" color="soft">Disabled State</Text>
+					<SelectMenu options={countries} placeholder="Disabled select" disabled />
+				</div>
+
+				<CodeBlock
+					filename="Select.svelte"
+					showLineNumbers
+					lineCount={selectCode.split('\n').length}
+					showCopy
+					code={selectCode}
+				>
+					{@html selectHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
 		<!-- Checkbox -->
 		<Card padding="lg">
 			{#snippet header()}
@@ -776,7 +826,7 @@ let selectedDateTime = $state<Date | null>(null);
 					/>
 					{#if selectedDate}
 						<Text variant="caption" color="soft">
-							Selected: {selectedDate.toLocaleDateString()}
+							Selected: {new Date(selectedDate + 'T00:00:00').toLocaleDateString()}
 						</Text>
 					{/if}
 				</div>
@@ -804,9 +854,11 @@ let selectedDateTime = $state<Date | null>(null);
 				<div>
 					<Text variant="caption" color="soft">Basic Time Picker</Text>
 					<TimePicker
+						variant="floating"
 						bind:value={selectedTime}
 						label="Select a time"
 						placeholder="Choose a time"
+						is24Hour={false}
 					/>
 					{#if selectedTime}
 						<Text variant="caption" color="soft">
