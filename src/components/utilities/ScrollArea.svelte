@@ -3,13 +3,37 @@
 
   interface Props {
     height?: string;
+    scrollPercent?: number;
     children?: Snippet;
   }
 
-  let { height = '400px', children }: Props = $props();
+  let { height = '400px', scrollPercent = $bindable(0), children }: Props = $props();
+
+  let containerRef: HTMLDivElement | undefined = $state();
+
+  function handleScroll() {
+    if (!containerRef) return;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef;
+    const maxScroll = scrollHeight - clientHeight;
+    scrollPercent = maxScroll > 0 ? (scrollTop / maxScroll) * 100 : 0;
+  }
+
+  $effect(() => {
+    if (!containerRef) return;
+    const { scrollHeight, clientHeight } = containerRef;
+    const maxScroll = scrollHeight - clientHeight;
+    if (maxScroll > 0) {
+      const targetScroll = (scrollPercent / 100) * maxScroll;
+      if (Math.abs(containerRef.scrollTop - targetScroll) > 1) {
+        containerRef.scrollTop = targetScroll;
+      }
+    }
+  });
 </script>
 
 <div
+  bind:this={containerRef}
+  onscroll={handleScroll}
   class="overflow-y-auto"
   style="
     height: {height};

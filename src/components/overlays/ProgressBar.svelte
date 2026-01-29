@@ -35,7 +35,7 @@
   <div
     class="h-full bg-[var(--color-accent)] accent-glow transition-all duration-500 ease-[var(--ease-luxe)]"
     style="width: {percentage}%"
-  />
+  ></div>
 
   {#if showLabel}
     <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-[var(--color-text)] text-glow">
