@@ -28,7 +28,7 @@ export { Heading, Text, Code } from './components/typography';
 
 // ===== Data Display Components =====
 export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat, CalendarGrid, Sparkline } from './components/data';
-export type { TableColumn, SortDirection, CalendarEvent } from './components/data';
+export type { TableColumn, SortDirection, RowKey, SelectionState, CalendarEvent, ListItem } from './components/data';
 
 // ===== Utility Components =====
 export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero, SystemConsole, SystemInterface } from './components/utilities';
