@@ -1,11 +1,5 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-
-	interface ListItem {
-		id: string;
-		content: string | Snippet;
-		icon?: Snippet;
-	}
+	import type { ListItem } from './Data.types';
 
 	interface Props {
 		variant?: 'plain' | 'bordered' | 'divided';

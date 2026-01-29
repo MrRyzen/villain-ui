@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { Column, SortDirection, RowKey } from './Table.types';
+	import type { Column, SortDirection, RowKey } from './Data.types';
 	import Checkbox from '../forms/Checkbox.svelte';
 
 	interface Props {
