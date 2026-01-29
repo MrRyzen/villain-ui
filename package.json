@@ -1,6 +1,6 @@
 {
   "name": "@mrintel/villain-ui",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "type": "module",
   "private": false,
   "description": "A luxury Svelte 5 component library with a distinctive dark aesthetic, built with TypeScript and Tailwind CSS v4",
