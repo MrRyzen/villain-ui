@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { CalendarEvent } from './CalendarGrid.types';
+	import type { CalendarEvent } from './Data.types';
 	import SelectMenu from '../forms/SelectMenu.svelte';
 
 	interface CellData {
