@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createId } from '../../lib/internal/id.js';
+	import { createId } from '../../lib/internal/id';
 	import {
 		baseInputClasses,
 		focusClasses,

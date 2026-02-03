@@ -4,47 +4,58 @@
   export interface Props {
     checked?: boolean;
     disabled?: boolean;
+    error?: boolean;
     label?: string;
     id?: string;
     name?: string;
     onchange?: (event: Event) => void;
     iconBefore?: import('svelte').Snippet;
+    validationMessage?: string;
     class?: string;
   }
 
   let {
     checked = $bindable<boolean>(),
     disabled = false,
+    error = false,
     label,
     id = createId('checkbox'),
     name,
     onchange,
     iconBefore,
+    validationMessage,
     class: className = ''
   }: Props = $props();
+
+  const hasError = $derived(error || !!validationMessage);
 </script>
 
-<label for={id} class="flex items-center gap-2 cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : ''} {className}">
-  <input
-    type="checkbox"
-    {id}
-    name={name}
-    {disabled}
-    bind:checked
-    onchange={onchange}
-    class="w-6 h-6 rounded-sm border-2 border-border-strong bg-transparent appearance-none transition-all duration-200 ease-luxe cursor-pointer checked:bg-accent checked:border-accent checked:accent-glow focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {disabled ? 'cursor-not-allowed' : ''}"
-  />
-  {#if iconBefore}
-    <span class="inline-flex items-center justify-center text-text-soft">
-      {@render iconBefore()}
-    </span>
+<div>
+  <label for={id} class="flex items-center gap-2 cursor-pointer {disabled ? 'opacity-50 cursor-not-allowed' : ''} {className}">
+    <input
+      type="checkbox"
+      {id}
+      name={name}
+      {disabled}
+      bind:checked
+      onchange={onchange}
+      class="w-6 h-6 rounded-sm border-2 bg-transparent appearance-none transition-all duration-200 ease-luxe cursor-pointer checked:bg-accent checked:border-accent checked:accent-glow focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {hasError ? 'border-error' : 'border-border-strong'} {disabled ? 'cursor-not-allowed' : ''}"
+    />
+    {#if iconBefore}
+      <span class="inline-flex items-center justify-center text-text-soft">
+        {@render iconBefore()}
+      </span>
+    {/if}
+    {#if label}
+      <span class="text-text text-sm select-none">
+        {label}
+      </span>
+    {/if}
+  </label>
+  {#if validationMessage}
+    <p class="text-error text-xs mt-1.5 ml-8">{validationMessage}</p>
   {/if}
-  {#if label}
-    <span class="text-text text-sm select-none">
-      {label}
-    </span>
-  {/if}
-</label>
+</div>
 
 <style>
   input[type="checkbox"]:checked::after {

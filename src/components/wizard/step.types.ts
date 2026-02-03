@@ -308,6 +308,7 @@ export interface StepRailSnippetContext<TId extends string = string> {
 export interface StepPanelSnippetContext<TId extends string = string> {
 	/** The current step being displayed */
 	step: StepRuntime<TId>;
+	isLoading: boolean;
 }
 
 /**

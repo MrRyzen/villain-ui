@@ -7,11 +7,13 @@
     max?: number;
     step?: number;
     disabled?: boolean;
+    error?: boolean;
     label?: string;
     showValue?: boolean;
     id?: string;
     name?: string;
     oninput?: (event: Event) => void;
+    validationMessage?: string;
   }
 
   let {
@@ -20,13 +22,16 @@
     max = 100,
     step = 1,
     disabled = false,
+    error = false,
     label,
     showValue = true,
     id = createId('range'),
     name,
-    oninput
+    oninput,
+    validationMessage
   }: Props = $props();
 
+  const hasError = $derived(error || !!validationMessage);
   const percentage = $derived(max === min ? 0 : ((value - min) / (max - min)) * 100);
 </script>
 
@@ -59,8 +64,11 @@
     aria-valuemax={max}
     aria-valuenow={value}
     class="w-full h-2 rounded-pill appearance-none cursor-pointer transition-opacity duration-200 {disabled ? 'opacity-50 cursor-not-allowed' : ''}"
-    style="background: linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) {percentage}%, var(--color-base-3) {percentage}%, var(--color-base-3) 100%); border: 1px solid var(--color-border);"
+    style="background: linear-gradient(to right, var(--color-accent) 0%, var(--color-accent) {percentage}%, var(--color-base-3) {percentage}%, var(--color-base-3) 100%); border: 1px solid {hasError ? 'var(--color-error)' : 'var(--color-border)'};"
   />
+  {#if validationMessage}
+    <p class="text-error text-xs mt-1.5">{validationMessage}</p>
+  {/if}
 </div>
 
 <style>

@@ -18,6 +18,7 @@
 		autocomplete?: HTMLSelectElement['autocomplete'];
 		onchange?: (event: Event) => void;
 		iconBefore?: import('svelte').Snippet;
+		validationMessage?: string;
 		class?: string;
 	}
 
@@ -33,12 +34,14 @@
 		autocomplete,
 		onchange,
 		iconBefore,
+		validationMessage,
 		class: className = '',
 	}: Props = $props();
 
 	const selectClasses = `${baseInputClasses} pr-12 appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:16px] cursor-pointer select-with-chevron`;
 
-	const errorClasses = $derived(error ? 'error-state' : '');
+	const hasError = $derived(error || !!validationMessage);
+	const errorClasses = $derived(hasError ? 'error-state' : '');
 </script>
 
 {#if label}
@@ -78,39 +81,47 @@
 				{/each}
 			</select>
 		</div>
+		{#if validationMessage}
+			<p class="text-error text-xs mt-1.5">{validationMessage}</p>
+		{/if}
 	</div>
 {:else}
-	<div class="relative">
-		{#if iconBefore}
-			<span
-				class="absolute left-4 top-1/2 -translate-y-1/2 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
-			>
-				{@render iconBefore()}
-			</span>
-		{/if}
-
-		<select
-			{id}
-			name={name}
-			{disabled}
-			{autocomplete}
-			bind:value
-			{onchange}
-			class="{selectClasses} {focusClasses} {errorClasses} {disabled
-				? disabledClasses
-				: ''} {className}"
-			class:pl-12={iconBefore}
-		>
-			{#if placeholder}
-				<option disabled value="" aria-hidden="true" hidden
-					>{placeholder}</option
+	<div>
+		<div class="relative">
+			{#if iconBefore}
+				<span
+					class="absolute left-4 top-1/2 -translate-y-1/2 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
+					{@render iconBefore()}
+				</span>
 			{/if}
 
-			{#each options as option}
-				<option value={option.value}>{option.label}</option>
-			{/each}
-		</select>
+			<select
+				{id}
+				name={name}
+				{disabled}
+				{autocomplete}
+				bind:value
+				{onchange}
+				class="{selectClasses} {focusClasses} {errorClasses} {disabled
+					? disabledClasses
+					: ''} {className}"
+				class:pl-12={iconBefore}
+			>
+				{#if placeholder}
+					<option disabled value="" aria-hidden="true" hidden
+						>{placeholder}</option
+					>
+				{/if}
+
+				{#each options as option}
+					<option value={option.value}>{option.label}</option>
+				{/each}
+			</select>
+		</div>
+		{#if validationMessage}
+			<p class="text-error text-xs mt-1.5">{validationMessage}</p>
+		{/if}
 	</div>
 {/if}
 

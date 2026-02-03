@@ -103,6 +103,7 @@
 
 	const stepContext = $derived<StepPanelSnippetContext<TId>>({
 		step: currentStep,
+		isLoading: isLoading,
 	});
 
 	const actionsContext = $derived<StepActionsSnippetContext<TId>>({

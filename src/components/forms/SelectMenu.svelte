@@ -18,6 +18,7 @@
 		name?: string;
 		iconBefore?: import('svelte').Snippet;
 		onchange?: (value: string) => void;
+		validationMessage?: string;
 		class?: string;
 	}
 
@@ -32,8 +33,11 @@
 		name,
 		iconBefore,
 		onchange,
+		validationMessage,
 		class: className = '',
 	}: Props = $props();
+
+	const hasError = $derived(error || !!validationMessage);
 
 	let open = $state(false);
 	let highlightedIndex = $state(-1);
@@ -149,7 +153,7 @@
 	const triggerClasses = $derived(`
 		${baseInputClasses}
 		${focusClasses}
-		${error ? 'error-state' : ''}
+		${hasError ? 'error-state' : ''}
 		${disabled ? disabledClasses : ''}
 		${iconBefore ? 'pl-12' : ''}
 		${className}
@@ -233,6 +237,10 @@
 			{/each}
 		</div>
 	</Dropdown>
+
+	{#if validationMessage}
+		<p class="text-error text-xs mt-1.5">{validationMessage}</p>
+	{/if}
 </div>
 
 <style>

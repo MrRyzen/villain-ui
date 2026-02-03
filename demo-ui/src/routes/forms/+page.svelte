@@ -654,6 +654,7 @@ let selectedDateTime = $state<Date | null>(null);
 						<Switch bind:checked={darkMode} label="Dark Mode" />
 						<Switch bind:checked={notifications} label="Enable Notifications" />
 						<Switch checked={false} label="Disabled switch" disabled />
+						<Switch checked={true} label="Auto-save enabled" error={false} validationMessage={""} />
 					</div>
 				</div>
 

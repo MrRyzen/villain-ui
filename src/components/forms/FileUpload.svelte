@@ -3,7 +3,7 @@
 
   /**
    * FileUpload component props.
-   * 
+   *
    * The `onchange` callback receives an event object with the following shape:
    * `{ target: { files: FileList } }` for both drag-and-drop and click-based selection.
    */
@@ -12,11 +12,13 @@
     accept?: string;
     multiple?: boolean;
     disabled?: boolean;
+    error?: boolean;
     label?: string;
     id?: string;
     name?: string;
     onchange?: (event: { target: { files: FileList } }) => void;
     icon?: import('svelte').Snippet;
+    validationMessage?: string;
   }
 
   let {
@@ -24,12 +26,16 @@
     accept,
     multiple = false,
     disabled = false,
+    error = false,
     label,
     id = createId('file-upload'),
     name,
     onchange,
-    icon
+    icon,
+    validationMessage
   }: Props = $props();
+
+  const hasError = $derived(error || !!validationMessage);
 
   let isDragging = $state(false);
   let inputElement: HTMLInputElement;
@@ -104,7 +110,7 @@
     ondrop={handleDrop}
     onclick={handleClick}
     onkeydown={(e) => e.key === 'Enter' && handleClick()}
-    class="panel-raised rounded-[var(--radius-lg)] p-8 text-center cursor-pointer transition-all duration-300 ease-luxe {isDragging ? 'border-2 border-accent accent-glow bg-base-2' : ''} {disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"
+    class="panel-raised rounded-[var(--radius-lg)] p-8 text-center cursor-pointer transition-all duration-300 ease-luxe {isDragging ? 'border-2 border-accent accent-glow bg-base-2' : ''} {hasError && !isDragging ? 'border-2 border-error' : ''} {disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}"
   >
     <div class="flex flex-col items-center gap-2">
       {#if icon}
@@ -171,5 +177,9 @@
         {/each}
       </ul>
     </div>
+  {/if}
+
+  {#if validationMessage}
+    <p class="text-error text-xs mt-1.5">{validationMessage}</p>
   {/if}
 </div>

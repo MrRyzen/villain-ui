@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte';
 
   interface Props {
+    variant?: 'default' | 'accent' | 'gradient';
     title?: string;
     level?: 1 | 2 | 3 | 4 | 5 | 6;
     glow?: boolean;
@@ -11,6 +12,7 @@
   }
 
   let {
+    variant = 'default',
     title,
     level = 2,
     glow = true,
@@ -19,11 +21,19 @@
     children
   }: Props = $props();
 
+  const variantClasses = {
+		default: '',
+		accent: 'text-accent',
+		gradient: 'text-gradient'
+	};
+
   const headingTag = $derived(`h${level}`);
-  const glowClasses = $derived(glow ? 'text-glow' : '');
+	const baseClasses = $derived(
+		`transition-all duration-300 ${glow ? 'text-glow' : ''} ${variantClasses[variant]}`
+	);
   const alignClasses = $derived(`text-${align}`);
 
-  const headingClasses = $derived(`font-[var(--font-heading)] text-[length:var(--text-h${level}-size)] font-[number:var(--text-h${level}-weight)] leading-[var(--text-h${level}-line-height)] text-[var(--color-text)] ${glowClasses} ${alignClasses}`);
+  const headingClasses = $derived(`font-[var(--font-heading)] text-[length:var(--text-h${level}-size)] font-[number:var(--text-h${level}-weight)] leading-[var(--text-h${level}-line-height)] text-[var(--color-text)] ${baseClasses} ${alignClasses}`);
   const subtitleClasses = $derived(`mt-2 font-[var(--font-body)] text-[length:var(--text-body-size)] text-[var(--color-text-soft)] ${alignClasses}`);
 </script>
 

@@ -23,6 +23,7 @@
 		autocomplete?: HTMLInputElement['autocomplete'];
 		is24Hour?: boolean;
 		onchange?: (event: Event) => void;
+		validationMessage?: string;
 		class?: string;
 	}
 
@@ -41,6 +42,7 @@
 		autocomplete,
 		is24Hour = true,
 		onchange,
+		validationMessage,
 		class: className = '',
 	}: Props = $props();
 
@@ -161,7 +163,8 @@
 		}
 	});
 
-	const errorClasses = $derived(error ? 'error-state' : '');
+	const hasError = $derived(error || !!validationMessage);
+	const errorClasses = $derived(hasError ? 'error-state' : '');
 </script>
 
 <div class="time-picker-wrapper w-full">
@@ -234,6 +237,10 @@
 			/>
 		</div>
 	</Dropdown>
+
+	{#if validationMessage}
+		<p class="text-error text-xs mt-1.5">{validationMessage}</p>
+	{/if}
 </div>
 
 <style>
