@@ -8,7 +8,6 @@ import type {
 	StepChangeContext,
 	SuperFormLike,
 } from './step.types';
-import { arrayHasValueInArray } from '$lib/internal/util';
 
 /**
  * Internal step data without the computed `state` property.
@@ -54,6 +53,11 @@ export function createStepController<TId extends string>(
 	 * Internal loading state.
 	 */
 	const $loading = atom(false);
+
+	/**
+	 * Per-step error messages, keyed by step id.
+	 */
+	const $stepErrors = atom<Partial<Record<TId, string[]>>>({});
 
 	/**
 	 * Base step store (authoritative mutable data).
@@ -162,6 +166,22 @@ export function createStepController<TId extends string>(
 	 * @param step Runtime step
 	 * @returns Whether validation passed
 	 */
+	/**
+	 * Assigns a step's validator to the attached form's options.validators.
+	 * Steps without a validator leave whatever is currently set — matches the
+	 * behavior for wizards that configure a single schema up front.
+	 *
+	 * @param step Step whose validator should become active
+	 */
+	function applyStepValidator(
+		step: StepRuntime<TId> | StepInternalData<TId>,
+	): void {
+		if (!formIntegration?.options) return;
+		if (step.validator !== undefined) {
+			formIntegration.options.validators = step.validator;
+		}
+	}
+
 	async function validateStep(step: StepRuntime<TId>): Promise<boolean> {
 		setLoading(true);
 
@@ -223,6 +243,7 @@ export function createStepController<TId extends string>(
 		);
 
 		$currentIndex.set(targetIndex);
+		applyStepValidator(target);
 		onStepChange?.(target);
 		return true;
 	}
@@ -244,7 +265,16 @@ export function createStepController<TId extends string>(
 
 		// Validate current step before proceeding only if not a submit step
 		// Submit steps are expected to handle validation via form submission (user handled but we react to it)
-		if (!(await validateStep(current))) {
+		// Validate against the step being LEFT, with its own validator active.
+		const shouldValidate =
+			current.validateOnNext ?? current.validator !== undefined;
+		if (shouldValidate) {
+			applyStepValidator(current);
+			if (!(await validateStep(current))) {
+				onError?.(current);
+				return false;
+			}
+		} else if (!(await validateStep(current))) {
 			onError?.(current);
 			return false;
 		}
@@ -346,6 +376,34 @@ export function createStepController<TId extends string>(
 	}
 
 	/**
+	 * Sets human-readable error messages on a step and flips its rail state.
+	 *
+	 * @param id Step identifier
+	 * @param error Message or list of messages
+	 */
+	function setStepError(id: TId, error: string | string[]): void {
+		$stepErrors.set({
+			...$stepErrors.get(),
+			[id]: Array.isArray(error) ? error : [error],
+		});
+		setStepState(id, 'error');
+		const step = $runtimeSteps.get().find((s) => s.id === id);
+		if (step) onError?.(step, $stepErrors.get()[id]);
+	}
+
+	/**
+	 * Clears a step's error messages and its rail error state.
+	 *
+	 * @param id Step identifier
+	 */
+	function clearStepError(id: TId): void {
+		const next = { ...$stepErrors.get() };
+		delete next[id];
+		$stepErrors.set(next);
+		clearStepState(id);
+	}
+
+	/**
 	 * Marks a step as completed.
 	 *
 	 * @param id Step identifier
@@ -374,6 +432,8 @@ export function createStepController<TId extends string>(
 			})),
 		);
 
+		$stepErrors.set({});
+
 		if (toStepId) {
 			const idx = stepDefs.findIndex((s) => s.id === toStepId);
 			$currentIndex.set(idx >= 0 ? idx : 0);
@@ -398,45 +458,63 @@ export function createStepController<TId extends string>(
 		}),
 	);
 
-	const hasErrors = (value: unknown): boolean => {
+	/**
+	 * Flattens a superforms nested error object into dot-path keys → messages.
+	 * e.g. { user: { email: ['Invalid'] } } → { 'user.email': ['Invalid'] }.
+	 */
+	const flattenErrorMessages = (
+		value: unknown,
+		prefix = '',
+	): Record<string, string[]> => {
 		if (Array.isArray(value)) {
-			return value.length > 0;
+			return value.length > 0 && prefix ? { [prefix]: value } : {};
 		}
 
 		if (value && typeof value === 'object') {
-			return Object.values(value).some(hasErrors);
+			return Object.entries(value).reduce<Record<string, string[]>>(
+				(acc, [key, child]) => {
+					const path = prefix ? `${prefix}.${key}` : key;
+					return { ...acc, ...flattenErrorMessages(child, path) };
+				},
+				{},
+			);
 		}
 
-		return false;
+		return {};
 	};
 
 	const attachFormIntegration = (form: SuperFormLike<any>) => {
 		// Implementation for attaching form integration
 		formIntegration = form;
 
+		// Apply the initial step's validator so the first next() validates
+		// against the right schema even before any step change fires.
+		applyStepValidator($currentStep.get());
+
 		// Subscribe to form submitting state
 		unsubSubmitting = formIntegration.submitting.subscribe((submitting) => {
-			// Clear any error state on submit start
+			// Clear any error on submit start (user is fixing things)
 			if (submitting) {
-				clearStepState($currentStep.get().id);
+				clearStepError($currentStep.get().id);
 			}
 			setLoading(submitting);
 		});
 
 		unsubErrors = formIntegration.errors.subscribe((errors) => {
-			// If there are errors, set current step to error state
-			const keys = Object.keys(errors || {});
-			if (!hasErrors(errors)) {
-				stepDefs.forEach((step) => {
-					clearStepState(step.id);
-				});
-			} else {
-				stepDefs.forEach((step) => {
-					if (arrayHasValueInArray(keys, step.data || [])) {
-						setStepState(step.id, 'error');
-					}
-				});
+			const flat = flattenErrorMessages(errors);
+			if (Object.keys(flat).length === 0) {
+				stepDefs.forEach((step) => clearStepError(step.id));
+				return;
 			}
+			stepDefs.forEach((step) => {
+				const messages = Object.entries(flat)
+					.filter(([key]) =>
+						(step.data ?? []).includes(key.split('.')[0]),
+					)
+					.flatMap(([, msgs]) => msgs);
+				if (messages.length > 0) setStepError(step.id, messages);
+				else clearStepError(step.id);
+			});
 		});
 	};
 
@@ -446,6 +524,7 @@ export function createStepController<TId extends string>(
 		current: $currentStep,
 		currentIndex: $currentIndex,
 		isLastStep: $isLastStep,
+		stepErrors: $stepErrors,
 		debug: $debug,
 
 		/** Navigation */
@@ -460,6 +539,8 @@ export function createStepController<TId extends string>(
 		/** State control */
 		setStepState,
 		clearStepState,
+		setStepError,
+		clearStepError,
 		markCompleted,
 		setLoading,
 		reset,

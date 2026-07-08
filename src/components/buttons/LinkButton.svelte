@@ -3,7 +3,7 @@
 
   export interface Props {
     href: string;
-    variant?: 'primary' | 'secondary' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
     size?: 'sm' | 'md' | 'lg';
     disabled?: boolean;
     target?: '_self' | '_blank' | '_parent' | '_top';

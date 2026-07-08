@@ -2,7 +2,7 @@
   import { variantClasses, disabledClasses } from './buttonClasses';
 
   export interface Props {
-    variant?: 'primary' | 'secondary' | 'ghost';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
     size?: 'sm' | 'md' | 'lg';
     shape?: 'circle' | 'square';
     disabled?: boolean;

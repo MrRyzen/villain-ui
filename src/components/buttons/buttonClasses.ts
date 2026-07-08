@@ -1,8 +1,11 @@
 export const variantClasses = {
   primary: 'bg-[var(--color-accent)] text-[var(--color-text)] accent-glow hover-lift',
   secondary: 'bg-transparent text-[var(--color-text)] border border-[var(--color-border-strong)] hover:border-[var(--color-accent)] hover-lift',
-  ghost: 'bg-transparent text-[var(--color-text)] hover:bg-[var(--color-base-2)] hover-lift'
+  ghost: 'bg-transparent text-[var(--color-text)] hover:bg-[var(--color-base-2)] hover-lift',
+  danger: 'bg-[var(--color-error)] text-[var(--color-text)] shadow-[0_0_20px_var(--color-error-overlay-30)] hover-lift'
 };
+
+export type ButtonVariant = keyof typeof variantClasses;
 
 export const sizeClasses = {
 	sm: 'px-3 py-1.5 text-sm font-medium',

@@ -31,3 +31,14 @@ export interface SelectionState {
 	allSelected: boolean;
 	someSelected: boolean;
 }
+
+export interface WeekHeatmapCell {
+	/** Matrix row index (0 = Sunday, matching the SDK PeakTimesHeatmap contract) */
+	day: number;
+	/** Hour of day, 0–23 */
+	hour: number;
+	/** Raw matrix value */
+	value: number;
+	/** 0–100, after normalization */
+	intensity: number;
+}

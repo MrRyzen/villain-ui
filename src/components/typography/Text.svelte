@@ -5,9 +5,18 @@
 		weight?: 'normal' | 'bold' | 'semibold';
 		as?: 'p' | 'span' | 'div';
 		children?: import('svelte').Snippet;
+		class?: string;
 	}
 
-	let { variant = 'body', color = 'default', weight = 'normal', as = 'p', children }: Props = $props();
+	let {
+		variant = 'body',
+		color = 'default',
+		weight = 'normal',
+		as = 'p',
+		children,
+		class: className = '',
+		...restProps
+	}: Props = $props();
 
 	const colorMap = {
 		default: 'var(--color-text)',
@@ -29,6 +38,6 @@
 	);
 </script>
 
-<svelte:element this={as} class="transition-colors duration-300" style={styles}>
+<svelte:element this={as} class="transition-colors duration-300 {className}" style={styles} {...restProps}>
 	{@render children?.()}
 </svelte:element>

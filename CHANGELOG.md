@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`danger` button variant** on `Button`, `LinkButton`, and `IconButton` — error-colored fill
+  with a red glow for destructive actions (cancel membership, delete). Also exports the
+  `ButtonVariant` type from `buttonClasses`.
+- **`ToastHost` + `toast()` store** (`overlays/toast.store.ts`): mount one `<ToastHost />` in the
+  root layout, then call `toast('Saved')` / `toast.success(...)` / `toast.error(...)` from
+  anywhere. Exposes `toasts` atom and `dismissToast(id)`; `maxVisible` prop queues overflow.
+  Built on the existing `Toast` component (stacking via its `index` prop).
+- **`EmptyState`** (data): centered icon/title/message/action block with `sm|md|lg` sizes, for
+  empty lists, empty search results, and error placeholders.
+- **`Stat` count-up**: `countUp` prop animates numeric values from 0 with easeOutCubic
+  (`countUpDuration`, `format` for e.g. `toLocaleString`). Respects `prefers-reduced-motion`;
+  re-animates from the current displayed value when `value` changes.
+- **`Input` password reveal**: `revealable` prop on `type="password"` renders an eye toggle
+  (replaces `iconAfter` while active) with proper `aria-label`/`aria-pressed`.
+- **`Input` number bounds**: `min`, `max`, `step` props — stepper arrows clamp to bounds and the
+  attributes are forwarded to the native input.
+- **`WeekHeatmap`** (data): 7-day × 24-hour traffic heatmap consolidating the hand-rolled grid.
+  `matrix` (row 0 = Sunday) with `color-mix` intensity fill; opt-in `rowOrder` (Monday-first),
+  `hourLabel`/`hourLabelEvery`, `normalize`, `highlight` outline, `markNow` ring, `selected`, and
+  `onCellSelect` (cells become buttons, consumer owns the readout). Reduced-motion aware; exports
+  the `WeekHeatmapCell` type.
+- **Wizard per-step validators**: `validator` / `validateOnNext` on `StepDefinition`. The
+  controller assigns a step's validator to `superForm.options.validators` on entry and validates
+  the step being left in `next()` — no consumer `$effect` schema-swapping needed.
+- **Wizard per-step errors**: `stepErrors` store plus `setStepError(id, error)` /
+  `clearStepError(id)` on the controller. Superforms field errors auto-map to steps via `data`;
+  `StepForm` gains an `error` snippet, a `showErrors` prop, and an `errors` field on the step
+  panel context, rendering a default `role="alert"` block.
+
+### Changed
+
+- **`class` passthrough + rest props on `Text` and `Heading`.** Layout/spacing utilities
+  (`mt-4`, `truncate`, `flex-1`, …) now compose. Note: typographic properties (color, size,
+  family) are still applied via inline `style` from the theme tokens, so they intentionally win
+  over classes — use the `color`/`variant` props for those.
+- Synced the exported `version` const with package.json (was stale at `0.7.1`).
+
+### Deprecated
+
+- **`StepValidator`** interface — use `validator` / `validateOnNext` on `StepDefinition` instead;
+  the controller now wires per-step validators automatically.
+
 ## [0.2.0] - 2025-12-01
 
 ### Breaking Changes

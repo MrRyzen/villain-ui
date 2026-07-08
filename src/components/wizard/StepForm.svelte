@@ -9,6 +9,7 @@
 		StepRailSnippetContext,
 		StepPanelSnippetContext,
 		StepActionsSnippetContext,
+		StepRuntime,
 	} from './step.types';
 	import { createStepController } from './step.service';
 
@@ -37,6 +38,10 @@
 		step?: Snippet<[StepPanelSnippetContext<TId>]>;
 		/** Actions snippet */
 		actions?: Snippet<[StepActionsSnippetContext<TId>]>;
+		/** Custom error rendering between step content and actions. */
+		error?: Snippet<[{ step: StepRuntime<TId>; errors: string[] }]>;
+		/** Render the default error block when no `error` snippet given. Default true. */
+		showErrors?: boolean;
 		/** Additional CSS classes */
 		class?: string;
 	}
@@ -56,6 +61,8 @@
 		rail,
 		step: stepSnippet,
 		actions,
+		error: errorSnippet,
+		showErrors = true,
 		class: className = '',
 		...restProps
 	}: Props = $props();
@@ -74,11 +81,13 @@
 	const stepsStore = ctrl.steps;
 	const currentStore = ctrl.current;
 	const indexStore = ctrl.currentIndex;
+	const errorsStore = ctrl.stepErrors;
 
 	// Use $ prefix to subscribe to nanostores (Svelte store contract)
 	const runtimeSteps = $derived($stepsStore);
 	const currentStep = $derived($currentStore);
 	const currentIndex = $derived($indexStore);
+	const currentErrors = $derived($errorsStore[currentStep.id] ?? []);
 
 	// Computed loading state
 	const isLoading = $derived($currentStore.state === 'loading');
@@ -104,6 +113,7 @@
 	const stepContext = $derived<StepPanelSnippetContext<TId>>({
 		step: currentStep,
 		isLoading: isLoading,
+		errors: currentErrors,
 	});
 
 	const actionsContext = $derived<StepActionsSnippetContext<TId>>({
@@ -148,6 +158,23 @@
 			<div class="animate-[content-fade-in_var(--step-med)_var(--step-ease)]">
 				{@render stepSnippet(stepContext)}
 			</div>
+		{/if}
+
+		<!-- Error Section -->
+		{#if currentErrors.length > 0}
+			{#if errorSnippet}
+				{@render errorSnippet({ step: currentStep, errors: currentErrors })}
+			{:else if showErrors}
+				<div
+					class="mt-4 rounded-[var(--radius-lg)] border-l-4 border-[var(--color-error)] bg-[var(--color-error-overlay-10)] px-4 py-3"
+					role="alert"
+					aria-live="polite"
+				>
+					{#each currentErrors as message (message)}
+						<p class="text-sm text-[var(--color-error)]">{message}</p>
+					{/each}
+				</div>
+			{/if}
 		{/if}
 
 		<!-- Actions Section -->

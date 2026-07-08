@@ -7,7 +7,7 @@
 // Import theme CSS to ensure it's bundled
 import './theme.css';
 
-export const version = '0.7.1';
+export const version = '0.7.9';
 
 // ===== Button Components =====
 export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } from './components/buttons';
@@ -21,14 +21,15 @@ export { Card, Panel, Grid, Container, SectionHeader, Divider } from './componen
 export { Navbar, Sidebar, Tabs, Breadcrumbs, Menu, DropdownMenu, ContextMenu } from './components/navigation';
 
 // ===== Overlay & Feedback Components =====
-export { Modal, Alert, Spinner, Tooltip, ProgressBar, SkeletonLoader, Toast, Drawer, Popover, Dropdown, CommandPalette } from './components/overlays';
+export { Modal, Alert, Spinner, Tooltip, ProgressBar, SkeletonLoader, Toast, ToastHost, toast, toasts, dismissToast, Drawer, Popover, Dropdown, CommandPalette } from './components/overlays';
+export type { ToastItem, ToastOptions, ToastVariant } from './components/overlays';
 
 // ===== Typography Components =====
 export { Heading, Text, Code } from './components/typography';
 
 // ===== Data Display Components =====
-export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat, CalendarGrid, Sparkline } from './components/data';
-export type { TableColumn, SortDirection, RowKey, SelectionState, CalendarEvent, ListItem } from './components/data';
+export { Table, Pagination, Badge, Tag, List, Avatar, CodeBlock, Stat, CalendarGrid, Sparkline, EmptyState, WeekHeatmap } from './components/data';
+export type { TableColumn, SortDirection, RowKey, SelectionState, CalendarEvent, ListItem, WeekHeatmapCell } from './components/data';
 
 // ===== Utility Components =====
 export { Portal, Collapse, Accordion, Carousel, ScrollArea, Hero, SystemConsole, SystemInterface } from './components/utilities';
@@ -83,6 +84,7 @@ import type Alert from './components/overlays/Alert.svelte';
 import type Tooltip from './components/overlays/Tooltip.svelte';
 import type Accordion from './components/utilities/Accordion.svelte';
 import type Sparkline from './components/data/Sparkline.svelte';
+import type WeekHeatmap from './components/data/WeekHeatmap.svelte';
 import type StepForm from './components/wizard/StepForm.svelte';
 import type StepRail from './components/wizard/StepRail.svelte';
 
@@ -121,6 +123,7 @@ export type AccordionProps = ComponentProps<Accordion>;
 
 // Data Component Types
 export type SparklineProps = ComponentProps<Sparkline>;
+export type WeekHeatmapProps = ComponentProps<WeekHeatmap>;
 
 // Wizard Component Types
 export type StepFormProps = ComponentProps<StepForm>;

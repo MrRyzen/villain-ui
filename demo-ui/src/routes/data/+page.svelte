@@ -18,10 +18,11 @@
 		Input,
 		Hero,
 		Code,
-		Sparkline
+		Sparkline,
+		WeekHeatmap
 
 	} from '@mrintel/villain-ui';
-	import type { TableColumn, SortDirection, RowKey } from '@mrintel/villain-ui';
+	import type { TableColumn, SortDirection, RowKey, WeekHeatmapCell } from '@mrintel/villain-ui';
 	import { codeToHtml } from 'shiki';
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
@@ -281,6 +282,37 @@ const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
   </div>
 </Stat>`;
 
+	const weekHeatmapCode = `import { WeekHeatmap } from '@mrintel/villain-ui';
+import type { WeekHeatmapCell } from '@mrintel/villain-ui';
+
+// 7 rows (row 0 = Sunday) x 24 hours of raw check-in counts
+const matrix: number[][] = checkInCounts;
+const myCells = new Set(['1-18', '3-18', '5-7']); // "\${day}-\${hour}"
+
+let selected = $state<WeekHeatmapCell | null>(null);
+
+<!-- Percentage matrix, Monday-first, no normalization -->
+<WeekHeatmap
+  {matrix}
+  rowOrder={[1, 2, 3, 4, 5, 6, 0]}
+  normalize={false}
+  hourLabel={(h) => (h === 0 ? '12a' : h < 12 ? h + 'a' : h === 12 ? '12p' : (h - 12) + 'p')}
+  hourLabelEvery={6}
+/>
+
+<!-- Normalized counts with "my times" outline + now ring -->
+<WeekHeatmap
+  {matrix}
+  highlight={(d, h) => myCells.has(d + '-' + h)}
+  markNow
+/>
+
+<!-- Interactive: cells become buttons, consumer owns the readout -->
+<WeekHeatmap {matrix} {selected} onCellSelect={(c) => (selected = c)} />
+{#if selected}
+  <p>{selected.value} check-ins</p>
+{/if}`;
+
 	// State for highlighted code
 	let tableHtml = $state('');
 	let badgeHtml = $state('');
@@ -296,6 +328,7 @@ const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
 	let sparklineHtml = $state('');
 	let sparklineFillHtml = $state('');
 	let sparklineStatHtml = $state('');
+	let weekHeatmapHtml = $state('');
 
 	// Demo data
 	interface UserData {
@@ -337,6 +370,22 @@ const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
 	const activityData = [42, 55, 48, 62, 71, 65, 78];
 	const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
 	const downtrendData = [180, 175, 165, 158, 150, 145, 138];
+
+	// WeekHeatmap demo data: 7 rows (row 0 = Sunday) x 24 hours of check-in counts.
+	// Peaks at ~6-8am and ~5-7pm on weekdays, lighter on weekends.
+	const heatmapMatrix: number[][] = Array.from({ length: 7 }, (_, day) =>
+		Array.from({ length: 24 }, (_, hour) => {
+			const weekend = day === 0 || day === 6;
+			const morning = Math.max(0, 10 - Math.abs(hour - 7) * 3);
+			const evening = Math.max(0, 14 - Math.abs(hour - 18) * 3);
+			const base = morning + evening;
+			return Math.round(base * (weekend ? 0.5 : 1) + (hour >= 6 && hour <= 21 ? 2 : 0));
+		})
+	);
+	const heatmapMyCells = new Set(['1-18', '2-18', '3-7', '4-18', '5-7']);
+	let heatmapSelected = $state<WeekHeatmapCell | null>(null);
+	const twelveHour = (h: number) =>
+		h === 0 ? '12a' : h < 12 ? `${h}a` : h === 12 ? '12p' : `${h - 12}p`;
 
 	// Custom table data with more fields
 	interface CustomUserData {
@@ -490,6 +539,7 @@ const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
 		sparklineHtml = await codeToHtml(sparklineCode, { lang: 'svelte', theme: 'github-dark' });
 		sparklineFillHtml = await codeToHtml(sparklineFillCode, { lang: 'svelte', theme: 'github-dark' });
 		sparklineStatHtml = await codeToHtml(sparklineStatCode, { lang: 'svelte', theme: 'github-dark' });
+		weekHeatmapHtml = await codeToHtml(weekHeatmapCode, { lang: 'svelte', theme: 'github-dark' });
 
 		exampleCodeHtml = await codeToHtml(
 			`function greet(name: string): void {\n  console.log(\`Hello, \${name}!\`);\n}`,
@@ -1260,6 +1310,95 @@ const volumeTrend = [12500, 13200, 12800, 14100, 15200, 14800, 16000];
 					code={sparklineStatCode}
 				>
 					{@html sparklineStatHtml}
+				</CodeBlock>
+			</Grid>
+		</Card>
+
+		<!-- WeekHeatmap -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>WeekHeatmap</Heading>
+				<Text variant="body" color="soft">
+					7-day × 24-hour traffic heatmap — one grid, opt-in overlays
+				</Text>
+			{/snippet}
+
+			<Grid cols={1} gap="xl">
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">
+							Percentage matrix (Monday-first, no normalization, 6-hour axis labels)
+						</Text>
+					</div>
+					<div
+						class="p-4 rounded-lg"
+						style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+					>
+						<WeekHeatmap
+							matrix={heatmapMatrix}
+							rowOrder={[1, 2, 3, 4, 5, 6, 0]}
+							normalize={false}
+							hourLabel={twelveHour}
+							hourLabelEvery={6}
+						/>
+					</div>
+				</div>
+
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">
+							Normalized counts with "my times" outline + now ring
+						</Text>
+					</div>
+					<div
+						class="p-4 rounded-lg"
+						style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+					>
+						<WeekHeatmap
+							matrix={heatmapMatrix}
+							hourLabel={twelveHour}
+							hourLabelEvery={6}
+							highlight={(d, h) => heatmapMyCells.has(`${d}-${h}`)}
+							markNow
+						/>
+					</div>
+				</div>
+
+				<div>
+					<div class="section-label">
+						<Text variant="caption" color="soft">Interactive — tap a cell to read it out</Text>
+					</div>
+					<div
+						class="p-4 rounded-lg"
+						style="background: var(--color-base-2); border: 1px solid var(--color-border);"
+					>
+						<WeekHeatmap
+							matrix={heatmapMatrix}
+							hourLabel={twelveHour}
+							hourLabelEvery={6}
+							selected={heatmapSelected}
+							onCellSelect={(c) => (heatmapSelected = c)}
+						/>
+						<div class="mt-3">
+							{#if heatmapSelected}
+								<Text variant="caption" color="soft">
+									{heatmapSelected.value} check-ins at day {heatmapSelected.day}, hour {heatmapSelected.hour}
+								</Text>
+							{:else}
+								<Text variant="caption" color="soft">No cell selected</Text>
+							{/if}
+						</div>
+					</div>
+				</div>
+
+				<CodeBlock
+					filename="WeekHeatmap.svelte"
+					showLineNumbers
+					lineCount={weekHeatmapCode.split('\n').length}
+					showCopy
+					code={weekHeatmapCode}
+				>
+					{@html weekHeatmapHtml}
 				</CodeBlock>
 			</Grid>
 		</Card>

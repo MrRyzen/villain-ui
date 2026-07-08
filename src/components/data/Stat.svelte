@@ -6,9 +6,28 @@
 		trend?: 'up' | 'down' | 'neutral';
 		icon?: import('svelte').Snippet;
 		description?: string;
+		/**
+		 * Animate numeric values counting up from 0 on mount (easeOutCubic).
+		 * Ignored for string values; disabled under prefers-reduced-motion.
+		 */
+		countUp?: boolean;
+		/** Count-up duration in ms. @default 800 */
+		countUpDuration?: number;
+		/** Formatter for the displayed number while counting (e.g. toLocaleString). */
+		format?: (value: number) => string;
 	}
 
-	let { label, value, change, trend, icon, description }: Props = $props();
+	let {
+		label,
+		value,
+		change,
+		trend,
+		icon,
+		description,
+		countUp = false,
+		countUpDuration = 800,
+		format
+	}: Props = $props();
 
 	const trendColors = {
 		up: 'var(--color-success)',
@@ -18,6 +37,40 @@
 
 	const trendColor = $derived(trend ? trendColors[trend] : 'var(--color-text-muted)');
 	const showGlow = $derived(trend === 'up');
+
+	// Count-up: animate toward the current numeric value; re-runs when value changes.
+	let animatedValue = $state(0);
+
+	$effect(() => {
+		if (!countUp || typeof value !== 'number') return;
+		const target = value;
+
+		const reduced =
+			typeof window !== 'undefined' &&
+			window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+		if (reduced) {
+			animatedValue = target;
+			return;
+		}
+
+		const from = animatedValue;
+		const start = performance.now();
+		let raf = 0;
+		const tick = (t: number) => {
+			const p = Math.min(1, (t - start) / countUpDuration);
+			const eased = 1 - Math.pow(1 - p, 3);
+			animatedValue = Math.round(from + (target - from) * eased);
+			if (p < 1) raf = requestAnimationFrame(tick);
+		};
+		raf = requestAnimationFrame(tick);
+		return () => cancelAnimationFrame(raf);
+	});
+
+	const displayValue = $derived(
+		countUp && typeof value === 'number'
+			? (format ? format(animatedValue) : animatedValue)
+			: value
+	);
 </script>
 
 <div class="panel-spectral rounded-[var(--radius-xl)] p-6">
@@ -45,7 +98,7 @@
 		class:text-glow={showGlow}
 		style="color: var(--color-text); font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; line-height: 1.2;"
 	>
-		{value}
+		{displayValue}
 	</div>
 
 	<!-- Change Indicator & Description -->

@@ -1,5 +1,5 @@
 export { default as Table } from './Table.svelte';
-export type { Column as TableColumn, SortDirection, RowKey, SelectionState, CalendarEvent, ListItem } from './Data.types';
+export type { Column as TableColumn, SortDirection, RowKey, SelectionState, CalendarEvent, ListItem, WeekHeatmapCell } from './Data.types';
 export { default as Pagination } from './Pagination.svelte';
 export { default as Badge } from './Badge.svelte';
 export { default as Tag } from './Tag.svelte';
@@ -9,3 +9,5 @@ export { default as CodeBlock } from './CodeBlock.svelte';
 export { default as Stat } from './Stat.svelte';
 export { default as CalendarGrid } from './CalendarGrid.svelte';
 export { default as Sparkline } from './Sparkline.svelte';
+export { default as EmptyState } from './EmptyState.svelte';
+export { default as WeekHeatmap } from './WeekHeatmap.svelte';

@@ -68,6 +68,17 @@ export interface StepDefinition<TId extends string = string> {
 
 	/** Handles jump policy logic */
 	jumpPolicy?: JumpPolicy;
+
+	/**
+	 * Validation adapter for this step (e.g. zod4(step1Schema)).
+	 * When set, the controller assigns it to the attached superForm's
+	 * options.validators on entering the step, and next() validates the
+	 * CURRENT step against it before navigating.
+	 */
+	validator?: unknown;
+
+	/** Validate on next(). Default true when `validator` is set. */
+	validateOnNext?: boolean;
 }
 
 /**
@@ -157,6 +168,9 @@ export interface StepCallbacks<TId extends string = string> {
 /**
  * Validator configuration for a step.
  * Used for Superforms integration.
+ *
+ * @deprecated Use {@link StepDefinition.validator} / {@link StepDefinition.validateOnNext}
+ * on the step definition instead; the controller wires per-step validators automatically.
  */
 export interface StepValidator {
 	/** Adapter-specific validator (zod4, valibot, etc.) */
@@ -202,6 +216,9 @@ export interface StepController<TId extends string = string> {
 
 	/** Whether the current step is the last step */
 	isLastStep: ReadableAtom<boolean>;
+
+	/** Reactive map of step id → error messages */
+	stepErrors: ReadableAtom<Partial<Record<TId, string[]>>>;
 
 	/** Debug info store */
 	debug: ReadableAtom<any>;
@@ -251,6 +268,19 @@ export interface StepController<TId extends string = string> {
 	 * @param id - The step ID
 	 */
 	clearStepState(id: TId): void;
+
+	/**
+	 * Set a human-readable error on a step (also flips its rail state to 'error').
+	 * @param id - The step ID
+	 * @param error - A message or list of messages
+	 */
+	setStepError(id: TId, error: string | string[]): void;
+
+	/**
+	 * Clear a step's error messages and rail error state.
+	 * @param id - The step ID
+	 */
+	clearStepError(id: TId): void;
 
 	/**
 	 * Mark a step as completed.
@@ -309,6 +339,8 @@ export interface StepPanelSnippetContext<TId extends string = string> {
 	/** The current step being displayed */
 	step: StepRuntime<TId>;
 	isLoading: boolean;
+	/** Current step's error messages ([] when none) */
+	errors: string[];
 }
 
 /**
@@ -374,6 +406,9 @@ export type SuperFormLike<T = any, M = any> = {
 	validateForm: (opts?: {
 		update?: boolean;
 	}) => Promise<{ valid: boolean }>;
+
+	/** superforms options bag; the controller only touches .validators */
+	options?: { validators?: unknown } & Record<string, unknown>;
 };
 
 type Nested<T, V> =

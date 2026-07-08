@@ -22,6 +22,14 @@
 		validate?: (value: string | number) => boolean | string;
 		validationMessage?: string;
 		showValidation?: boolean;
+		/** Password inputs only: show an eye toggle to reveal the value. Replaces iconAfter. */
+		revealable?: boolean;
+		/** Number inputs only: lower bound enforced by the stepper arrows. */
+		min?: number;
+		/** Number inputs only: upper bound enforced by the stepper arrows. */
+		max?: number;
+		/** Number inputs only: stepper arrow increment. @default 1 */
+		step?: number;
 		class?: string;
 	}
 
@@ -41,8 +49,17 @@
 		validate,
 		validationMessage,
 		showValidation = true,
+		revealable = false,
+		min,
+		max,
+		step = 1,
 		class: className = '',
 	}: Props = $props();
+
+	// Password reveal toggle (revealable only applies to type="password")
+	let revealed = $state(false);
+	const showReveal = $derived(revealable && type === 'password');
+	const effectiveType = $derived(showReveal && revealed ? 'text' : type);
 
 	// Built-in validation patterns
 	const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -113,14 +130,20 @@
 	const hasError = $derived(error || (validationError !== null));
 	const errorClasses = $derived(hasError ? 'error-state' : '');
 
+	function clamp(n: number): number {
+		if (min !== undefined && n < min) return min;
+		if (max !== undefined && n > max) return max;
+		return n;
+	}
+
 	function increment() {
 		if (disabled || type !== 'number') return;
-		value = Number(value || 0) + 1;
+		value = clamp(Number(value || 0) + step);
 	}
 
 	function decrement() {
 		if (disabled || type !== 'number') return;
-		value = Number(value || 0) - 1;
+		value = clamp(Number(value || 0) - step);
 	}
 </script>
 
@@ -141,23 +164,60 @@
 
 			<!-- INPUT FIELD -->
 			<input
-				{type}
+				type={effectiveType}
 				{name}
 				{id}
 				{placeholder}
 				{disabled}
 				{autocomplete}
+				min={type === 'number' ? min : undefined}
+				max={type === 'number' ? max : undefined}
+				step={type === 'number' ? step : undefined}
 				bind:value
 				{oninput}
 				class="{baseInputClasses} {focusClasses} {errorClasses} {disabled
 					? disabledClasses
 					: ''} {className}"
 				class:pl-12={iconBefore}
-				class:pr-12={iconAfter || type === 'number'}
+				class:pr-12={iconAfter || showReveal || type === 'number'}
 			/>
 
 			<!-- AFTER ICON (non-number) -->
-			{#if iconAfter && type !== 'number'}
+			{#if showReveal}
+				<button
+					type="button"
+					onclick={() => (revealed = !revealed)}
+					class="absolute right-4 z-10 inline-flex cursor-pointer items-center justify-center text-text-soft transition-colors hover:text-[var(--color-text)]"
+					aria-label={revealed ? 'Hide password' : 'Show password'}
+					aria-pressed={revealed}
+				>
+					{#if revealed}
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+							/>
+						</svg>
+					{:else}
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+							/>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+							/>
+						</svg>
+					{/if}
+				</button>
+			{:else if iconAfter && type !== 'number'}
 				<span
 					class="absolute right-4 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
@@ -205,22 +265,59 @@
 			{/if}
 
 			<input
-				{type}
+				type={effectiveType}
 				{name}
 				{id}
 				{placeholder}
 				{disabled}
 				{autocomplete}
+				min={type === 'number' ? min : undefined}
+				max={type === 'number' ? max : undefined}
+				step={type === 'number' ? step : undefined}
 				bind:value
 				{oninput}
 				class="{baseInputClasses} {focusClasses} {errorClasses} {disabled
 					? disabledClasses
 					: ''} {className}"
 				class:pl-12={iconBefore}
-				class:pr-12={iconAfter || type === 'number'}
+				class:pr-12={iconAfter || showReveal || type === 'number'}
 			/>
 
-			{#if iconAfter && type !== 'number'}
+			{#if showReveal}
+				<button
+					type="button"
+					onclick={() => (revealed = !revealed)}
+					class="absolute right-4 z-10 inline-flex cursor-pointer items-center justify-center text-text-soft transition-colors hover:text-[var(--color-text)]"
+					aria-label={revealed ? 'Hide password' : 'Show password'}
+					aria-pressed={revealed}
+				>
+					{#if revealed}
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+							/>
+						</svg>
+					{:else}
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+							/>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+							/>
+						</svg>
+					{/if}
+				</button>
+			{:else if iconAfter && type !== 'number'}
 				<span
 					class="absolute right-4 z-10 inline-flex items-center justify-center text-text-soft pointer-events-none"
 				>
