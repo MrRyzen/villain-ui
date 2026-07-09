@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { WeekHeatmapCell } from './Data.types';
+	import Tooltip from '../overlays/Tooltip.svelte';
 
 	interface Props {
 		/** 7 rows × 24 cols. Row index 0 = Sunday. */
@@ -79,7 +80,7 @@
 	}
 
 	function labelFor(cell: WeekHeatmapCell, dayLabel: string, isNow: boolean): string {
-		const text = cellLabel ? cellLabel(cell) : `${dayLabel} ${hourLabel(cell.hour)} — ${cell.value}`;
+		const text = cellLabel ? cellLabel(cell) : `${dayLabel} ${hourLabel(cell.hour)}: ${cell.value}`;
 		return isNow ? `${text} (now)` : text;
 	}
 
@@ -111,27 +112,30 @@
 					{@const isNow = markNow && row.day === nowDay && hour === nowHour}
 					{@const isSel = !!selected && selected.day === row.day && selected.hour === hour}
 					{@const label = labelFor(cell, row.label, isNow)}
-					{#if onCellSelect}
-						<button
-							type="button"
-							class="heatmap-cell"
-							class:is-highlight={hl}
-							class:is-ring={isNow || isSel}
-							style="background-color: {fill(cell.intensity)}"
-							aria-label={label}
-							aria-pressed={isSel}
-							onclick={() => onCellSelect(cell)}
-						></button>
-					{:else}
-						<div
-							class="heatmap-cell"
-							class:is-highlight={hl}
-							class:is-ring={isNow || isSel}
-							style="background-color: {fill(cell.intensity)}"
-							title={label}
-							aria-hidden="true"
-						></div>
-					{/if}
+					<!-- ponytail: one Tooltip per cell (168 total). Fine for a heatmap rendered
+					     once per page; swap for a single hovered-cell-driven tooltip if it ever bites. -->
+					<Tooltip content={label}>
+						{#if onCellSelect}
+							<button
+								type="button"
+								class="heatmap-cell"
+								class:is-highlight={hl}
+								class:is-ring={isNow || isSel}
+								style="background-color: {fill(cell.intensity)}"
+								aria-label={label}
+								aria-pressed={isSel}
+								onclick={() => onCellSelect(cell)}
+							></button>
+						{:else}
+							<div
+								class="heatmap-cell"
+								class:is-highlight={hl}
+								class:is-ring={isNow || isSel}
+								style="background-color: {fill(cell.intensity)}"
+								aria-hidden="true"
+							></div>
+						{/if}
+					</Tooltip>
 				{/each}
 			{/each}
 		</div>
@@ -164,6 +168,8 @@
 	}
 
 	.heatmap-cell {
+		display: block;
+		width: 100%;
 		height: var(--heatmap-cell-size, 1.5rem);
 		min-width: var(--heatmap-cell-size, 1.5rem);
 		border-radius: 2px;

@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the `WeekHeatmapCell` type.
 - **Wizard per-step validators**: `validator` / `validateOnNext` on `StepDefinition`. The
   controller assigns a step's validator to `superForm.options.validators` on entry and validates
-  the step being left in `next()` — no consumer `$effect` schema-swapping needed.
+  the step being left in `next()`, so no consumer `$effect` schema-swapping is needed.
 - **Wizard per-step errors**: `stepErrors` store plus `setStepError(id, error)` /
   `clearStepError(id)` on the controller. Superforms field errors auto-map to steps via `data`;
   `StepForm` gains an `error` snippet, a `showErrors` prop, and an `errors` field on the step
@@ -48,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
-- **`StepValidator`** interface — use `validator` / `validateOnNext` on `StepDefinition` instead;
+- **`StepValidator`** interface: use `validator` / `validateOnNext` on `StepDefinition` instead;
   the controller now wires per-step validators automatically.
 
 ## [0.2.0] - 2025-12-01
