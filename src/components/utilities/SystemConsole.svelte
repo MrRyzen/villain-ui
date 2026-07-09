@@ -29,7 +29,7 @@
 		typewriterEffect = false,
 		typewriterSpeed = 50,
 		showScanlines = true,
-		glowEffect = true,
+		glowEffect = false,
 		onSubmit,
 		disabled = false,
 		class: className = '',

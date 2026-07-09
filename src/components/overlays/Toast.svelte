@@ -76,7 +76,7 @@
 
   const animationClasses = $derived(
     position.startsWith('bottom')
-      ? 'animate-[fade-up_0.3s_var(--ease-luxe)]'
+      ? 'animate-[scale-in_0.2s_var(--ease-sharp)]'
       : 'animate-[fade-in_0.3s_var(--ease-luxe)]'
   );
 
@@ -115,7 +115,7 @@
     style="transform: {stackOffset}"
   >
     <div
-      class="panel-floating rounded-[var(--radius-lg)] p-4 min-w-[20rem] max-w-md flex gap-3 items-start {variantBorderClasses[variant]}"
+      class="panel-floating rounded-[var(--radius-sm)] p-4 min-w-[20rem] max-w-md flex gap-3 items-start {variantBorderClasses[variant]}"
       role={roleMap[variant]}
       aria-live={ariaLiveMap[variant]}
       aria-atomic="true"

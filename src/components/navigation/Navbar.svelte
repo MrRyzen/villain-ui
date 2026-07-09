@@ -111,6 +111,15 @@
 </nav>
 
 <style>
+  /* System text: navigation is mono, uppercase, tracked */
+  nav :global(a),
+  nav :global(button) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
   nav :global(.navbar-logo) {
     color: var(--color-accent);
     font-weight: 600;
@@ -133,7 +142,6 @@
     right: 0;
     height: 2px;
     background: var(--color-accent);
-    box-shadow: var(--shadow-accent-glow);
   }
 
   nav :global(a:not(.active):hover),

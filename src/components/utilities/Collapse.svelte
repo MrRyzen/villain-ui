@@ -25,7 +25,7 @@
   let maxHeight = $derived(effectiveOpen && contentElement ? `${contentElement.scrollHeight}px` : '0px');
 </script>
 
-<div class="border border-border rounded-md overflow-hidden {effectiveOpen ? 'panel-raised' : ''}">
+<div class="border border-border rounded-[var(--radius-sm)] overflow-hidden {effectiveOpen ? 'panel-raised' : ''}">
   <button
     id={headerId}
     type="button"

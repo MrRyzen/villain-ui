@@ -27,7 +27,7 @@
 	};
 
 	const classes = $derived(
-		`${sizeClasses[size]} rounded-full overflow-hidden inline-flex items-center justify-center transition-all duration-300 hover:scale-105 ${glow ? 'border-2 border-[var(--color-accent)] accent-glow' : ''}`
+		`${sizeClasses[size]} rounded-[var(--radius-sm)] overflow-hidden inline-flex items-center justify-center transition-all duration-300 ${glow ? 'border-2 border-[var(--color-accent)] accent-glow' : ''}`
 	);
 
 	const fallbackText = $derived(

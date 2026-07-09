@@ -509,7 +509,6 @@
 		background: var(--color-accent);
 		border-color: var(--color-accent);
 		color: var(--color-text);
-		box-shadow: 0 0 20px var(--color-accent-glow);
 	}
 
 	.calendar-cell.is-selected .day-number {

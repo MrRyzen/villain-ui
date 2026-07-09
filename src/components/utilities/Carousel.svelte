@@ -94,7 +94,7 @@
 </script>
 
 <div class="relative">
-  <div class="panel-raised rounded-[var(--radius-lg)] overflow-hidden">
+  <div class="panel-raised rounded-none overflow-hidden">
     <div
       class="flex transition-transform duration-300 ease-luxe"
       style="transform: translateX(-{currentIndex * 100}%);"
@@ -118,7 +118,7 @@
     <button
       type="button"
       onclick={goToPrev}
-      class="absolute left-2 top-1/2 -translate-y-1/2 obsidian-surface metal-edge rounded-full p-2 text-text hover:accent-glow transition-all"
+      class="absolute left-2 top-1/2 -translate-y-1/2 obsidian-surface metal-edge rounded-[var(--radius-sm)] p-2 text-text hover:border-[var(--color-border-strong)] transition-all"
       aria-label="Previous item"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,7 +129,7 @@
     <button
       type="button"
       onclick={goToNext}
-      class="absolute right-2 top-1/2 -translate-y-1/2 obsidian-surface metal-edge rounded-full p-2 text-text hover:accent-glow transition-all"
+      class="absolute right-2 top-1/2 -translate-y-1/2 obsidian-surface metal-edge rounded-[var(--radius-sm)] p-2 text-text hover:border-[var(--color-border-strong)] transition-all"
       aria-label="Next item"
     >
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,7 +144,7 @@
         <button
           type="button"
           onclick={() => goToIndex(index)}
-          class="w-2 h-2 rounded-full transition-all {index === currentIndex ? 'accent-glow bg-accent w-8' : 'bg-text-muted'}"
+          class="w-2 h-2 rounded-full transition-all {index === currentIndex ? 'bg-accent w-8' : 'bg-text-muted'}"
           aria-label="Go to item {index + 1}"
         >
         </button>

@@ -166,7 +166,7 @@
 				{@render errorSnippet({ step: currentStep, errors: currentErrors })}
 			{:else if showErrors}
 				<div
-					class="mt-4 rounded-[var(--radius-lg)] border-l-4 border-[var(--color-error)] bg-[var(--color-error-overlay-10)] px-4 py-3"
+					class="mt-4 rounded-[var(--radius-sm)] border-l-4 border-[var(--color-error)] bg-[var(--color-error-overlay-10)] px-4 py-3"
 					role="alert"
 					aria-live="polite"
 				>

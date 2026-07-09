@@ -72,7 +72,7 @@
   });
 </script>
 
-<div bind:this={menuContainer} role="menu" tabindex="-1" onkeydown={handleMenuKeyDown} class="glass-panel rounded-[var(--radius-lg)] p-3 shadow-[var(--shadow-deep)]">
+<div bind:this={menuContainer} role="menu" tabindex="-1" onkeydown={handleMenuKeyDown} class="glass-panel rounded-[var(--radius-sm)] p-3 shadow-[var(--shadow-deep)]">
   {#if children}
     {@render children()}
   {:else if items}
@@ -83,7 +83,7 @@
         tabindex={index === selectedIndex ? 0 : -1}
         onclick={() => handleItemClick(item)}
         disabled={item.disabled}
-        class="flex items-center gap-2 w-full px-4 py-3 rounded-[var(--radius-md)] text-[var(--color-text)] text-sm font-[var(--font-body)] hover:bg-[var(--color-base-3)] hover-lift transition-all duration-200 ease-[var(--ease-luxe)] {item.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
+        class="flex items-center gap-2 w-full px-4 py-3 rounded-[var(--radius-sm)] text-[var(--color-text)] text-xs font-[var(--font-mono)] uppercase tracking-[0.08em] hover:bg-[var(--color-base-3)] hover-lift transition-all duration-200 ease-[var(--ease-luxe)] {item.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
       >
         {#if item.icon}
           {@render item.icon()}

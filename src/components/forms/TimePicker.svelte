@@ -224,7 +224,7 @@
 			role="dialog"
 			aria-modal="true"
 			aria-label="Choose time"
-			class="time-picker-dropdown {variant === 'glass' ? 'glass-panel' : 'panel-floating'} rounded-lg overflow-hidden"
+			class="time-picker-dropdown {variant === 'glass' ? 'glass-panel' : 'panel-floating'} rounded-[var(--radius-sm)] overflow-hidden"
 		>
 			<TimePickerGrid
 				bind:hours={selectedHours}

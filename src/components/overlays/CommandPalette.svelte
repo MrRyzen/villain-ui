@@ -141,7 +141,7 @@
     role="presentation"
   >
     <div
-      class="panel-floating rounded-xl shadow-deep w-full max-w-[36rem] animate-[fade-up_0.3s_var(--ease-luxe)]"
+      class="panel-floating rounded-[var(--radius-md)] shadow-deep w-full max-w-[36rem] animate-[scale-in_0.2s_var(--ease-sharp)]"
       role="combobox"
       aria-expanded="true"
       aria-haspopup="listbox"

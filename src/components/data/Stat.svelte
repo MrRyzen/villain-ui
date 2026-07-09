@@ -36,7 +36,6 @@
 	};
 
 	const trendColor = $derived(trend ? trendColors[trend] : 'var(--color-text-muted)');
-	const showGlow = $derived(trend === 'up');
 
 	// Count-up: animate toward the current numeric value; re-runs when value changes.
 	let animatedValue = $state(0);
@@ -73,13 +72,13 @@
 	);
 </script>
 
-<div class="panel-spectral rounded-[var(--radius-xl)] p-6">
+<div class="panel-spectral rounded-[var(--radius-sm)] p-6">
 	<!-- Top Row: Icon & Label -->
 	<div class="flex items-start justify-between mb-4">
 		<div class="flex-1">
 			<div
 				class="uppercase tracking-wider"
-				style="color: var(--color-text-soft); font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;"
+				style="color: var(--color-text-soft); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500;"
 			>
 				{label}
 			</div>
@@ -95,8 +94,7 @@
 	<!-- Value Display -->
 	<div
 		class="mb-2"
-		class:text-glow={showGlow}
-		style="color: var(--color-text); font-family: var(--font-heading); font-size: 2.5rem; font-weight: 700; line-height: 1.2;"
+		style="color: var(--color-text); font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; line-height: 1.2;"
 	>
 		{displayValue}
 	</div>

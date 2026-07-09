@@ -66,10 +66,10 @@
   };
 
   const animationClasses = {
-    left: 'animate-[slide-in-left_0.3s_var(--ease-luxe)]',
-    right: 'animate-[slide-in-right_0.3s_var(--ease-luxe)]',
-    top: 'animate-[slide-in-top_0.3s_var(--ease-luxe)]',
-    bottom: 'animate-[slide-in-bottom_0.3s_var(--ease-luxe)]'
+    left: 'animate-[slide-in-left_0.2s_var(--ease-sharp)]',
+    right: 'animate-[slide-in-right_0.2s_var(--ease-sharp)]',
+    top: 'animate-[slide-in-top_0.2s_var(--ease-sharp)]',
+    bottom: 'animate-[slide-in-bottom_0.2s_var(--ease-sharp)]'
   };
 
   function handleClose() {

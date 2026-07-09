@@ -55,7 +55,7 @@
 	};
 
 	const classes = $derived(
-		`inline-flex items-center justify-center rounded-[var(--radius-pill)] border font-[var(--font-body)] font-semibold transition-all duration-[var(--duration-300)] ease-[var(--ease-sharp)] ${variantClasses[variant]} ${sizeClasses[size]} ${hover ? hoverClasses[variant] : ''} ${glow ? 'accent-glow' : ''} ${uppercase ? 'uppercase tracking-wider' : ''} ${className}`.trim()
+		`inline-flex items-center justify-center rounded-[var(--radius-pill)] border font-[var(--font-mono)] font-medium transition-all duration-[var(--duration-300)] ease-[var(--ease-sharp)] ${variantClasses[variant]} ${sizeClasses[size]} ${hover ? hoverClasses[variant] : ''} ${glow ? 'accent-glow' : ''} ${uppercase ? 'uppercase tracking-wider' : ''} ${className}`.trim()
 	);
 </script>
 

@@ -202,7 +202,7 @@
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: var(--radius-pill);
+    border-radius: var(--radius-sm);
     background: var(--color-accent-overlay-20);
     color: var(--color-accent);
     font-weight: 600;
@@ -235,11 +235,6 @@
     font-weight: 600;
   }
 
-  aside :global(a.active),
-  aside :global(button.active) {
-    box-shadow: var(--shadow-accent-glow);
-  }
-
   aside :global(a:not(.active):hover),
   aside :global(button:not(.active):hover) {
     background: var(--color-base-3);
@@ -253,7 +248,7 @@
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     margin: 0.25rem 0.5rem;
-    border-radius: var(--radius-md);
+    border-radius: 0;
     color: var(--color-text-soft);
     text-decoration: none;
     transition: all 0.2s var(--ease-luxe);
@@ -262,7 +257,9 @@
     background: transparent;
     width: calc(100% - 1rem);
     text-align: left;
-    font-family: var(--font-body);
-    font-size: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 </style>

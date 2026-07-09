@@ -23,7 +23,7 @@
   aria-label={label || 'Loading'}
 >
   <div
-    class="{sizeClasses[size]} border-[var(--color-base-3)] border-t-[var(--color-accent)] rounded-[var(--radius-pill)] accent-glow animate-spin"
+    class="{sizeClasses[size]} border-[var(--color-base-3)] border-t-[var(--color-accent)] rounded-[var(--radius-pill)] animate-spin"
   ></div>
   <span class="sr-only">{label || 'Loading'}</span>
 </div>

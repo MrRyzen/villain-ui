@@ -16,7 +16,7 @@
   let {
     variant = 'ghost',
     size = 'md',
-    shape = 'circle',
+    shape = 'square',
     disabled = false,
     type = 'button',
     ariaLabel,
@@ -33,7 +33,7 @@
 
   const shapeClasses = {
     circle: 'rounded-[var(--radius-pill)]',
-    square: 'rounded-[var(--radius-lg)]'
+    square: 'rounded-[var(--radius-sm)]'
   };
 
   const baseClasses = 'inline-flex items-center justify-center font-[var(--font-body)] transition-all duration-300 ease-[var(--ease-luxe)] cursor-pointer hover-lift';

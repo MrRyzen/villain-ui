@@ -41,7 +41,7 @@
       {disabled}
       bind:checked
       onchange={onchange}
-      class="w-14 h-7 rounded-pill bg-base-3 border appearance-none transition-all duration-300 ease-luxe cursor-pointer checked:bg-accent checked:accent-glow focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {hasError ? 'border-error' : 'border-border'} {disabled ? 'cursor-not-allowed' : ''}"
+      class="w-14 h-7 rounded-pill bg-base-3 border appearance-none transition-all duration-300 ease-luxe cursor-pointer checked:bg-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {hasError ? 'border-error' : 'border-border'} {disabled ? 'cursor-not-allowed' : ''}"
     />
     {#if iconBefore}
       <span class="inline-flex items-center justify-center text-text-soft">

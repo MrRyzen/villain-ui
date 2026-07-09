@@ -25,7 +25,7 @@
 </script>
 
 <div
-  class="relative bg-[var(--color-base-3)] border border-[var(--color-border)] rounded-[var(--radius-pill)] overflow-hidden shadow-[var(--shadow-deep)] {heightClasses[size]}"
+  class="relative bg-[var(--color-base-3)] border border-[var(--color-border)] rounded-none overflow-hidden shadow-[var(--shadow-deep)] {heightClasses[size]}"
   role="progressbar"
   aria-valuenow={value}
   aria-valuemin="0"
@@ -33,12 +33,12 @@
   aria-label={label || `${percentage.toFixed(0)}% complete`}
 >
   <div
-    class="h-full bg-[var(--color-accent)] accent-glow transition-all duration-500 ease-[var(--ease-luxe)]"
+    class="h-full bg-[var(--color-accent)] transition-all duration-500 ease-[var(--ease-luxe)]"
     style="width: {percentage}%"
   ></div>
 
   {#if showLabel}
-    <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-[var(--color-text)] text-glow">
+    <div class="absolute inset-0 flex items-center justify-center text-xs font-semibold text-[var(--color-text)]">
       {label || `${percentage.toFixed(0)}%`}
     </div>
   {/if}

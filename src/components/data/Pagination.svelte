@@ -82,7 +82,7 @@
 <nav role="navigation" aria-label="Pagination" class="flex items-center gap-2">
 	<!-- Previous Button -->
 	<button
-		class="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-body)] hover:bg-[var(--color-secondary-overlay-10)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
+		class="flex items-center gap-2 px-3 py-2 rounded-none border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-mono)] hover:bg-[var(--color-secondary-overlay-10)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
 		onclick={() => goToPage(currentPage - 1)}
 		disabled={currentPage === 1}
 		aria-disabled={currentPage === 1}
@@ -101,7 +101,7 @@
 			<span class="px-3 py-2 text-[var(--color-text-muted)]">...</span>
 		{:else}
 			<button
-				class="px-3 py-2 rounded-[var(--radius-md)] transition-all duration-300 font-[var(--font-body)]"
+				class="px-3 py-2 rounded-none transition-all duration-300 font-[var(--font-mono)]"
 				class:active={page === currentPage}
 				class:inactive={page !== currentPage}
 				onclick={() => goToPage(page)}
@@ -114,7 +114,7 @@
 
 	<!-- Next Button -->
 	<button
-		class="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-body)] hover:bg-[var(--color-secondary-overlay-10)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
+		class="flex items-center gap-2 px-3 py-2 rounded-none border border-[var(--color-border)] bg-transparent transition-all duration-300 font-[var(--font-mono)] hover:bg-[var(--color-secondary-overlay-10)] hover:border-[var(--color-accent)] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:border-[var(--color-border)]"
 		onclick={() => goToPage(currentPage + 1)}
 		disabled={currentPage === totalPages}
 		aria-disabled={currentPage === totalPages}

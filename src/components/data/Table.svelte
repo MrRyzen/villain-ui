@@ -148,7 +148,7 @@
 	}
 </script>
 
-<div class="panel-raised rounded-[var(--radius-xl)] overflow-hidden {className}" {...restProps}>
+<div class="panel-raised rounded-none overflow-hidden {className}" {...restProps}>
 	<table class="mrdv-table w-full" class:striped class:hoverable class:compact class:sticky-header={stickyHeader}>
 		{#if isDynamicMode}
 			<!-- Dynamic mode: render from columns and data -->
@@ -326,7 +326,8 @@
 
 	.mrdv-table :global(thead th) {
 		color: var(--color-text);
-		font-weight: 600;
+		font-family: var(--font-mono);
+		font-weight: 500;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		text-align: left;
@@ -354,10 +355,6 @@
 
 	.mrdv-table.hoverable :global(tbody tr:hover) {
 		background: var(--color-accent-overlay-5);
-		transform: translateY(-1px);
-		box-shadow:
-			0 2px 8px var(--color-shadow-overlay-20),
-			var(--shadow-accent-glow);
 	}
 
 	.mrdv-table.striped :global(tbody tr:nth-child(even)) {
@@ -366,10 +363,6 @@
 
 	.mrdv-table.striped.hoverable :global(tbody tr:nth-child(even):hover) {
 		background: var(--color-accent-overlay-5);
-		transform: translateY(-1px);
-		box-shadow:
-			0 2px 8px var(--color-shadow-overlay-20),
-			var(--shadow-accent-glow);
 	}
 
 	.mrdv-table :global(th),

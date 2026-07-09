@@ -685,8 +685,7 @@
 	}
 
 	.input-wrapper:focus-within {
-		border-color: var(--color-accent-overlay-50);
-		box-shadow: 0 0 20px var(--color-accent-overlay-20);
+		border-color: var(--color-accent);
 	}
 
 	.input-prompt {

@@ -15,7 +15,7 @@
     variant = 'default',
     title,
     level = 2,
-    glow = true,
+    glow = false,
     subtitle,
     align = 'left',
     children

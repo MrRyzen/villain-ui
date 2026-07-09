@@ -89,7 +89,7 @@
     vertical: 'flex flex-col'
   };
 
-  const radiusClass = variant === 'pills' ? 'rounded-pill' : 'rounded-[var(--radius-md)]';
+  const radiusClass = variant === 'pills' ? 'rounded-pill' : 'rounded-none';
 </script>
 
 <div role="tablist" class="{orientationClasses[orientation]} gap-1 p-1 {className}">
@@ -102,7 +102,7 @@
       onclick={() => handleTabClick(tab.id, tab.disabled)}
       onkeydown={(e) => handleKeyDown(e, tab.id)}
       disabled={tab.disabled}
-      class="flex items-center gap-2 px-6 py-3 {radiusClass} font-body text-sm transition-all duration-300 ease-luxe {activeTab === tab.id ? 'bg-accent text-text accent-glow' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
+      class="flex items-center gap-2 px-6 py-3 {radiusClass} font-mono text-xs uppercase tracking-[0.08em] transition-all duration-150 ease-luxe {activeTab === tab.id ? 'bg-accent text-text' : 'text-text-soft hover:bg-base-3'} {tab.disabled ? 'opacity-50 pointer-events-none' : 'cursor-pointer'}"
     >
       {#if tab.iconBefore}
         <span class="inline-flex items-center justify-center">

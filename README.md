@@ -3,16 +3,17 @@
 [![npm version](https://img.shields.io/npm/v/@mrintel/villain-ui.svg)](https://www.npmjs.com/package/@mrintel/villain-ui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A luxury Svelte 5 component library featuring a **Modern Villain Luxury** aesthetic. Built on Onyx Black backgrounds with Royal Purple accents, glass morphism, and neon edges for modern web applications that demand commanding elegance and exceptional user experience.
+An opinionated Svelte 5 design system built around **Modern Villain** design: square geometry, crisp 1px borders, heavy editorial typography, and disciplined use of accent color. Onyx Black surfaces with a Royal Purple accent. Engineered, not decorative.
 
 ## ✨ Features
 
 - **🚀 Svelte 5 with Runes** - Built on the latest Svelte 5 reactivity system with full TypeScript support
-- **🎨 Modern Villain Luxury** - Onyx Black base with Royal Purple accents, glass morphism, and commanding neon edges
+- **⬛ Modern Villain** - Square geometry (0-8px radii), border-driven hierarchy, minimal shadow, glow reserved for primary CTAs and active states
+- **🔤 Editorial Typography** - Archivo display (weight 900 headlines) with IBM Plex Mono for all system text: buttons, navigation, labels, metadata
 - **🎭 Tailwind CSS v4** - Powered by the latest Tailwind with CSS variable theming
 - **🌳 Tree-Shakeable** - Import only what you need for optimal bundle size
 - **🎯 Fully Typed** - Strict TypeScript mode with complete type definitions
-- **🎬 Premium Motion** - Smooth animations with custom luxury easing curves
+- **🎬 Mechanical Motion** - Fade, precision slide, and 0.98→1 scale; no bounce, no float
 - **🔧 Highly Customizable** - Theme via CSS variables without touching component code
 - **♿ Accessible** - ARIA-compliant components following WAI-ARIA best practices
 
@@ -55,6 +56,39 @@ This explicit import strategy gives you full control over styling and allows you
 - Use a custom theme instead of the default
 - Conditionally load themes
 - Override theme variables before or after the default theme loads
+
+### Load Fonts
+
+The library references fonts by name but does not bundle them - your app loads them. Add to your `app.html` / `index.html`:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+```
+
+Required fonts:
+
+| Font | Role |
+|------|------|
+| **Archivo** (400-900) | Display headlines and body copy |
+| **IBM Plex Mono** (400-600) | System text: buttons, navigation, labels, metadata, tables |
+
+If the fonts are not loaded, the library falls back to the browser's default `sans-serif` / `monospace`.
+
+### Display Themes
+
+Archivo is the default display font. Two alternate display modes are available by setting `data-display` on any ancestor element (typically `<html>` or `<body>`):
+
+```html
+<!-- Luxury editorial (italic accent words welcome) -->
+<html data-display="bodoni">
+
+<!-- Condensed performance aesthetic -->
+<html data-display="oswald">
+```
+
+Load the matching font when using a display mode: `Bodoni Moda` (400-900, incl. italic) or `Oswald` (400-700).
 
 ## 🚀 Quick Start
 

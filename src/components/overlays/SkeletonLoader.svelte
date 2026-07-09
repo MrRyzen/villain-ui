@@ -22,7 +22,7 @@
   const roundingClasses = {
     text: 'rounded-[var(--radius-sm)]',
     circular: 'rounded-[var(--radius-pill)]',
-    rectangular: 'rounded-[var(--radius-lg)]'
+    rectangular: 'rounded-[var(--radius-sm)]'
   };
 
   const finalWidth = width || defaultDimensions[variant].width;

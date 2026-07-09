@@ -31,7 +31,7 @@
       : 'panel-raised'
   );
   
-  const roundedClasses = $derived(rounded ? 'rounded-[var(--radius-lg)]' : '');
+  const roundedClasses = $derived(rounded ? 'rounded-[var(--radius-sm)]' : '');
   const baseClasses = 'transition-all duration-300 ease-[var(--ease-luxe)]';
 </script>
 

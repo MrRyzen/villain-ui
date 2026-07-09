@@ -45,7 +45,7 @@
   const isInteractive = $derived(!!href || !!onclick);
 
   const baseClasses = $derived(
-    `panel-raised rounded-[var(--radius-lg)] transition-all duration-300 ease-[var(--ease-luxe)]` +
+    `panel-raised rounded-[var(--radius-sm)] transition-all duration-300 ease-[var(--ease-luxe)]` +
     `${href ? ' no-underline' : ''}` +
     `${isInteractive ? ' cursor-pointer hover-lift' : ''}` +
     `${selected ? ' ring-2 ring-accent ring-offset-2 ring-offset-base-0' : ''}` +

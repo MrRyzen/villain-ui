@@ -77,8 +77,7 @@
     width: 1.25rem;
     height: 1.25rem;
     border-radius: var(--radius-pill);
-    background: var(--color-accent);
-    box-shadow: var(--shadow-accent-glow);
+    background: var(--color-accent);
     cursor: pointer;
     transition: transform 0.2s var(--ease-luxe);
   }
@@ -92,8 +91,7 @@
     width: 1.25rem;
     height: 1.25rem;
     border-radius: var(--radius-pill);
-    background: var(--color-accent);
-    box-shadow: var(--shadow-accent-glow);
+    background: var(--color-accent);
     cursor: pointer;
     transition: transform 0.2s var(--ease-luxe);
     border: none;
@@ -104,15 +102,13 @@
   }
 
   input[type="range"]:focus::-webkit-slider-thumb {
-    box-shadow: 
-      var(--shadow-accent-glow),
+    box-shadow:
       0 0 0 3px var(--color-base-1),
       0 0 0 5px var(--color-accent);
   }
 
   input[type="range"]:focus::-moz-range-thumb {
-    box-shadow: 
-      var(--shadow-accent-glow),
+    box-shadow:
       0 0 0 3px var(--color-base-1),
       0 0 0 5px var(--color-accent);
   }

@@ -476,7 +476,6 @@
 		border-color: var(--color-accent);
 		color: var(--color-base-0);
 		font-weight: 700;
-		box-shadow: 0 0 12px var(--color-accent-glow);
 	}
 
 	.time-option.disabled,
@@ -513,8 +512,6 @@
 
 	.confirm-button:hover:not(:disabled) {
 		background: var(--color-accent-hover);
-		box-shadow: 0 0 20px var(--color-accent-glow);
-		transform: translateY(-1px);
 	}
 
 	.confirm-button:active:not(:disabled) {

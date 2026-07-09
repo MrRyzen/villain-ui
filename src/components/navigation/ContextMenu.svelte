@@ -147,7 +147,7 @@
     role="menu"
     tabindex="-1"
     onkeydown={handleMenuKeyDown}
-    class="fixed z-[var(--z-50)] glass-panel rounded-[var(--radius-lg)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[fade-in_0.15s_var(--ease-luxe)]"
+    class="fixed z-[var(--z-50)] glass-panel rounded-[var(--radius-sm)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[fade-in_0.15s_var(--ease-luxe)]"
     style="left: {x}px; top: {y}px;"
   >
     {#each items as item, index}
@@ -157,7 +157,7 @@
         tabindex={index === selectedIndex ? 0 : -1}
         onclick={() => handleItemClick(item)}
         disabled={item.disabled}
-        class="w-full text-left px-4 py-2 text-sm text-text hover:bg-base-3 transition-colors duration-200 flex items-center gap-2 {item.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}"
+        class="w-full text-left px-4 py-2 font-[var(--font-mono)] text-xs uppercase tracking-[0.08em] text-text hover:bg-base-3 transition-colors duration-200 flex items-center gap-2 {item.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}"
       >
         {#if item.icon}
           {@render item.icon()}

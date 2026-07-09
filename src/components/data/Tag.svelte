@@ -30,7 +30,7 @@
 	};
 
 	const classes = $derived(
-		`inline-flex items-center rounded-[var(--radius-pill)] border font-[var(--font-body)] font-medium transition-all duration-300 hover:scale-[1.02] ${sizeClasses[size]} ${variantClasses[variant]}`
+		`inline-flex items-center rounded-[var(--radius-sm)] border font-[var(--font-mono)] font-medium transition-all duration-150 ${sizeClasses[size]} ${variantClasses[variant]}`
 	);
 
 	function handleDismiss() {

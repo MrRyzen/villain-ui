@@ -191,7 +191,7 @@
 	.heatmap-cell {
 		height: var(--heatmap-cell-size, 1.5rem);
 		min-width: var(--heatmap-cell-size, 1.5rem);
-		border-radius: 2px;
+		border-radius: 0;
 		border: 0;
 		padding: 0;
 	}
@@ -203,7 +203,7 @@
 		pointer-events: none;
 		white-space: nowrap;
 		padding: 0.4rem 0.75rem;
-		border-radius: var(--radius-md);
+		border-radius: var(--radius-sm);
 		font-size: 0.8rem;
 		color: var(--color-text);
 	}

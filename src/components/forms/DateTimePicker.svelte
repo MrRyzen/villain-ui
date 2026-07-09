@@ -315,7 +315,7 @@
 			role="dialog"
 			aria-modal="true"
 			aria-label="Choose date and time"
-			class="datetime-picker-dropdown {variant === 'glass' ? 'glass-panel' : 'panel-floating'} rounded-lg overflow-hidden"
+			class="datetime-picker-dropdown {variant === 'glass' ? 'glass-panel' : 'panel-floating'} rounded-[var(--radius-sm)] overflow-hidden"
 			onclick={(e) => e.stopPropagation()}
 		>
 			<!-- Tab navigation -->

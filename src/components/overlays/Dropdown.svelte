@@ -107,7 +107,7 @@
     <div
       bind:this={dropdownElement}
       id={dropdownId}
-      class="absolute {placementClasses[placement]} z-[var(--z-50)] panel-floating rounded-[var(--radius-lg)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[fade-up_0.2s_var(--ease-luxe)]"
+      class="absolute {placementClasses[placement]} z-[var(--z-50)] panel-floating rounded-[var(--radius-sm)] shadow-[var(--shadow-deep)] min-w-[12rem] animate-[scale-in_0.15s_var(--ease-sharp)]"
       style={fullWidth && triggerWidth > 0 ? `width: ${triggerWidth}px` : ''}
       role="menu"
     >

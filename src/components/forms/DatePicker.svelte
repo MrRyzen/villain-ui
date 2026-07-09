@@ -301,7 +301,7 @@
 			role="dialog"
 			aria-modal="true"
 			aria-label="Choose date"
-			class="calendar-dropdown {variant === 'glass' ? 'glass-panel' : 'panel-floating'} rounded-lg overflow-hidden"
+			class="calendar-dropdown {variant === 'glass' ? 'glass-panel' : 'panel-floating'} rounded-[var(--radius-sm)] overflow-hidden"
 			onclick={(e) => e.stopPropagation()}
 		>
 			<CalendarGrid
