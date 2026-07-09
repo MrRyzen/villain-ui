@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { WeekHeatmapCell } from './Data.types';
-	import Tooltip from '../overlays/Tooltip.svelte';
+	import Portal from '../utilities/Portal.svelte';
 
 	interface Props {
 		/** 7 rows × 24 cols. Row index 0 = Sunday. */
@@ -86,6 +86,17 @@
 
 	const fill = (intensity: number) =>
 		`color-mix(in srgb, var(--color-accent) ${intensity}%, var(--color-base-2))`;
+
+	// Single branded tooltip, portaled to <body> so it escapes the overflow-x
+	// scroll wrapper (a per-cell absolute tooltip would expand/scroll the grid).
+	let tip = $state<{ label: string; x: number; y: number } | null>(null);
+
+	function showTip(el: HTMLElement, label: string): void {
+		const r = el.getBoundingClientRect();
+		tip = { label, x: r.left + r.width / 2, y: r.top };
+	}
+
+	const hideTip = () => (tip = null);
 </script>
 
 {#if matrix.length > 0}
@@ -112,34 +123,44 @@
 					{@const isNow = markNow && row.day === nowDay && hour === nowHour}
 					{@const isSel = !!selected && selected.day === row.day && selected.hour === hour}
 					{@const label = labelFor(cell, row.label, isNow)}
-					<!-- ponytail: one Tooltip per cell (168 total). Fine for a heatmap rendered
-					     once per page; swap for a single hovered-cell-driven tooltip if it ever bites. -->
-					<Tooltip content={label}>
-						{#if onCellSelect}
-							<button
-								type="button"
-								class="heatmap-cell"
-								class:is-highlight={hl}
-								class:is-ring={isNow || isSel}
-								style="background-color: {fill(cell.intensity)}"
-								aria-label={label}
-								aria-pressed={isSel}
-								onclick={() => onCellSelect(cell)}
-							></button>
-						{:else}
-							<div
-								class="heatmap-cell"
-								class:is-highlight={hl}
-								class:is-ring={isNow || isSel}
-								style="background-color: {fill(cell.intensity)}"
-								aria-hidden="true"
-							></div>
-						{/if}
-					</Tooltip>
+					{#if onCellSelect}
+						<button
+							type="button"
+							class="heatmap-cell"
+							class:is-highlight={hl}
+							class:is-ring={isNow || isSel}
+							style="background-color: {fill(cell.intensity)}"
+							aria-label={label}
+							aria-pressed={isSel}
+							onclick={() => onCellSelect(cell)}
+							onmouseenter={(e) => showTip(e.currentTarget, label)}
+							onmouseleave={hideTip}
+							onfocus={(e) => showTip(e.currentTarget, label)}
+							onblur={hideTip}
+						></button>
+					{:else}
+						<div
+							class="heatmap-cell"
+							class:is-highlight={hl}
+							class:is-ring={isNow || isSel}
+							style="background-color: {fill(cell.intensity)}"
+							aria-hidden="true"
+							onmouseenter={(e) => showTip(e.currentTarget, label)}
+							onmouseleave={hideTip}
+						></div>
+					{/if}
 				{/each}
 			{/each}
 		</div>
 	</div>
+
+	{#if tip}
+		<Portal>
+			<div class="heatmap-tip panel-floating" style="left: {tip.x}px; top: {tip.y}px;">
+				{tip.label}
+			</div>
+		</Portal>
+	{/if}
 {/if}
 
 <style>
@@ -168,13 +189,23 @@
 	}
 
 	.heatmap-cell {
-		display: block;
-		width: 100%;
 		height: var(--heatmap-cell-size, 1.5rem);
 		min-width: var(--heatmap-cell-size, 1.5rem);
 		border-radius: 2px;
 		border: 0;
 		padding: 0;
+	}
+
+	.heatmap-tip {
+		position: fixed;
+		transform: translate(-50%, calc(-100% - 8px));
+		z-index: var(--z-50, 50);
+		pointer-events: none;
+		white-space: nowrap;
+		padding: 0.4rem 0.75rem;
+		border-radius: var(--radius-md);
+		font-size: 0.8rem;
+		color: var(--color-text);
 	}
 
 	button.heatmap-cell {
