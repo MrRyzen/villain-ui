@@ -130,17 +130,18 @@
 		}
 	}
 
-	function scrollOptionIntoView(index: number) {
+	function scrollOptionIntoView(index: number, block: ScrollLogicalPosition = 'nearest') {
 		requestAnimationFrame(() => {
 			const optionEl = listboxElement?.querySelector(`[data-index="${index}"]`) as HTMLElement;
-			optionEl?.scrollIntoView({ block: 'nearest' });
+			optionEl?.scrollIntoView({ block });
 		});
 	}
 
-	// Set highlighted index and focus listbox when dropdown opens
+	// Set highlighted index, scroll it into view, and focus listbox when dropdown opens
 	$effect(() => {
 		if (open) {
 			highlightedIndex = selectedIndex >= 0 ? selectedIndex : 0;
+			scrollOptionIntoView(highlightedIndex, 'center');
 			if (listboxElement) {
 				requestAnimationFrame(() => listboxElement?.focus());
 			}

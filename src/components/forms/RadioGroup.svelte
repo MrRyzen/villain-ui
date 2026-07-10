@@ -107,6 +107,6 @@
     width: 0.75rem;
     height: 0.75rem;
     border-radius: var(--radius-pill);
-    background: var(--color-accent);
+    background: var(--color-accent);
   }
 </style>

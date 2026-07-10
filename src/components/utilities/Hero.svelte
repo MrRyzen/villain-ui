@@ -52,7 +52,8 @@
 
 	.hero-section {
 		text-align: center;
-		padding-bottom: 3rem;
-		margin-bottom: 3rem;
+		padding-top: 2rem;
+		padding-bottom: 4rem;
+		margin-bottom: 4rem;
 	}
 </style>

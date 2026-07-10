@@ -309,6 +309,8 @@
 				selectedDate={selectedDate}
 				onDateSelect={handleDateSelect}
 				highlightToday={true}
+				minDate={minDate}
+				maxDate={maxDate}
 				class="calendar-picker"
 			/>
 		</div>

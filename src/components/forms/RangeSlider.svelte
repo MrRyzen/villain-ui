@@ -77,7 +77,7 @@
     width: 1.25rem;
     height: 1.25rem;
     border-radius: var(--radius-pill);
-    background: var(--color-accent);
+    background: var(--color-accent);
     cursor: pointer;
     transition: transform 0.2s var(--ease-luxe);
   }
@@ -91,7 +91,7 @@
     width: 1.25rem;
     height: 1.25rem;
     border-radius: var(--radius-pill);
-    background: var(--color-accent);
+    background: var(--color-accent);
     cursor: pointer;
     transition: transform 0.2s var(--ease-luxe);
     border: none;

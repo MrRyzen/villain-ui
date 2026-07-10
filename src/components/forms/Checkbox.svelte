@@ -39,7 +39,7 @@
       {disabled}
       bind:checked
       onchange={onchange}
-      class="w-6 h-6 rounded-sm border-2 bg-transparent appearance-none transition-all duration-200 ease-luxe cursor-pointer checked:bg-accent checked:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {hasError ? 'border-error' : 'border-border-strong'} {disabled ? 'cursor-not-allowed' : ''}"
+      class="w-6 h-6 rounded-sm border-2 bg-transparent appearance-none transition-all duration-200 ease-luxe cursor-pointer checked:bg-accent checked:border-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-base-1 relative {hasError ? 'border-error' : 'border-[var(--color-border-bright)]'} {disabled ? 'cursor-not-allowed' : ''}"
     />
     {#if iconBefore}
       <span class="inline-flex items-center justify-center text-text-soft">

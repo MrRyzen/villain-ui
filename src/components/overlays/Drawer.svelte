@@ -152,7 +152,7 @@
 
 {#if open}
   <div
-    class="fixed inset-0 z-[var(--z-50)] bg-overlay backdrop-blur-md animate-[fade-in_0.2s_var(--ease-luxe)]"
+    class="fixed inset-0 z-[var(--z-50)] bg-overlay animate-[fade-in_0.2s_var(--ease-luxe)]"
     onclick={handleBackdropClick}
     role="presentation"
   >

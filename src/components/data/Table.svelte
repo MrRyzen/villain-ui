@@ -333,9 +333,14 @@
 		text-align: left;
 	}
 
+	/* Dense mode: information density over spaciousness */
 	.mrdv-table.compact :global(th),
 	.mrdv-table.compact :global(td) {
-		padding: 0.5rem 1rem;
+		padding: 0.375rem 0.75rem;
+	}
+
+	.mrdv-table.compact :global(td) {
+		font-size: var(--text-sm);
 	}
 
 	.mrdv-table:not(.compact) :global(th),
@@ -354,7 +359,7 @@
 	}
 
 	.mrdv-table.hoverable :global(tbody tr:hover) {
-		background: var(--color-accent-overlay-5);
+		background: var(--color-accent-overlay-10);
 	}
 
 	.mrdv-table.striped :global(tbody tr:nth-child(even)) {
@@ -362,7 +367,7 @@
 	}
 
 	.mrdv-table.striped.hoverable :global(tbody tr:nth-child(even):hover) {
-		background: var(--color-accent-overlay-5);
+		background: var(--color-accent-overlay-10);
 	}
 
 	.mrdv-table :global(th),
@@ -378,7 +383,7 @@
 	}
 
 	.mrdv-table th.sortable:hover {
-		background: var(--color-accent-overlay-5);
+		background: var(--color-accent-overlay-10);
 		color: var(--color-accent);
 	}
 

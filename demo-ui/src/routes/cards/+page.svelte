@@ -527,6 +527,45 @@
 
 		<Divider />
 
+		<!-- Pattern Variants -->
+		<Card padding="lg">
+			{#snippet header()}
+				<Heading level={2}>Pattern Variants</Heading>
+				<Text variant="body" color="soft">Opinionated patterns: command cards, metric readouts, and panels with integrated command bars</Text>
+			{/snippet}
+
+			<Grid cols={2} gap="lg" responsive>
+				<Card variant="command" eyebrow="SYS / DEPLOYMENTS">
+					{#snippet actions()}
+						<Button size="sm" variant="ghost">View All</Button>
+					{/snippet}
+					<Text variant="body" color="soft">
+						Command cards carry an integrated command bar: a mono system label plus actions, separated from content.
+					</Text>
+				</Card>
+
+				<Card variant="metric" eyebrow="ACTIVE SESSIONS">
+					<div style="font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800; line-height: 1.2;">
+						1,284
+					</div>
+					<Text variant="caption" color="soft">+12% vs last week</Text>
+				</Card>
+			</Grid>
+
+			<div style="margin-top: 1.5rem;">
+				<Panel title="OPERATIONS CONSOLE" status="ONLINE" statusVariant="success" padding="md">
+					{#snippet actions()}
+						<Button size="sm" variant="secondary">Restart</Button>
+					{/snippet}
+					<Text variant="body" color="soft">
+						Panels accept an integrated command bar with a title, live status indicator, and actions - no manual assembly.
+					</Text>
+				</Panel>
+			</div>
+		</Card>
+
+		<Divider />
+
 		<!-- Usage Tips -->
 		<Card padding="lg" class="accent-surface">
 			{#snippet header()}

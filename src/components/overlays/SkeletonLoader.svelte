@@ -68,7 +68,7 @@
       var(--color-accent-overlay-10),
       transparent
     );
-    animation: shimmer 1.5s ease-in-out infinite;
+    animation: shimmer 2.8s ease-in-out infinite;
   }
 
   @keyframes shimmer {

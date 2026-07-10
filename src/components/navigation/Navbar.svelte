@@ -122,7 +122,7 @@
 
   nav :global(.navbar-logo) {
     color: var(--color-accent);
-    font-weight: 600;
+    font-weight: 700;
     font-size: var(--text-lg);
   }
 

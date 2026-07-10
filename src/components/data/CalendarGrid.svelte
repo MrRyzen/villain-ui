@@ -22,6 +22,9 @@
 		weekStartsOn?: 0 | 1; // 0 = Sunday, 1 = Monday
 		showWeekNumbers?: boolean;
 		highlightToday?: boolean;
+		/** Clamp the year selector (e.g. from a DatePicker's min/max). */
+		minDate?: Date;
+		maxDate?: Date;
 		class?: string;
 	}
 
@@ -35,6 +38,8 @@
 		weekStartsOn = 0,
 		showWeekNumbers = false,
 		highlightToday = true,
+		minDate,
+		maxDate,
 		class: className = ''
 	}: Props = $props();
 
@@ -224,11 +229,14 @@
 		label: name
 	}));
 
-	// Generate year options (current year ± 50 years)
+	// Generate year options: 100 years back (birth dates), 50 forward,
+	// clamped to minDate/maxDate when provided.
 	const yearOptions = $derived.by(() => {
 		const current = new Date().getFullYear();
+		const start = minDate ? minDate.getFullYear() : current - 100;
+		const end = maxDate ? maxDate.getFullYear() : current + 50;
 		const options: Array<{ value: string; label: string }> = [];
-		for (let y = current - 50; y <= current + 50; y++) {
+		for (let y = start; y <= end; y++) {
 			options.push({ value: String(y), label: String(y) });
 		}
 		return options;

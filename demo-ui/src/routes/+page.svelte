@@ -32,7 +32,7 @@
 <Container centered padding>
 	<Hero>
 		{#snippet title()}
-			<Heading level={1} variant="accent" glow>Villain UI</Heading>
+			<Heading level={1} variant="accent">Villain UI</Heading>
 		{/snippet}
 		{#snippet text()}
 			<Text variant="body" as="p" color="soft">
@@ -50,7 +50,7 @@
 			</Badge>
 			<Badge variant="feature" size="md" hover>
 				<Icon icon="lucide:palette" class="tag-icon" />
-				Glass Morphism
+				Modern Villain
 			</Badge>
 			<Badge variant="feature" size="md" hover>
 				<Icon icon="lucide:moon" class="tag-icon" />

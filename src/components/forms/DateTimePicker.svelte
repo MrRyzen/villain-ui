@@ -367,6 +367,8 @@
 						selectedDate={selectedDate}
 						onDateSelect={handleDateSelect}
 						highlightToday={true}
+						minDate={minDateStr ? new Date(minDateStr + 'T00:00:00') : undefined}
+						maxDate={maxDateStr ? new Date(maxDateStr + 'T00:00:00') : undefined}
 						class="calendar-picker"
 					/>
 				{:else}

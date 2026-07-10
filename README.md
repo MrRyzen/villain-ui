@@ -76,6 +76,21 @@ Required fonts:
 
 If the fonts are not loaded, the library falls back to the browser's default `sans-serif` / `monospace`.
 
+### Customizing the Accent Color
+
+Royal Purple is the default accent. Every accent-derived color in the library (overlays, borders, focus rings, scrollbars, glows) is computed from three CSS variables via `color-mix`, so rebranding is a single override after the theme import:
+
+```css
+/* your app css, after importing theme.css */
+:root {
+	--color-accent: #c8102e;      /* primary accent */
+	--color-accent-soft: #e4304c; /* hover / lighter variant */
+	--color-accent-dark: #8f0b21; /* pressed / darker variant */
+}
+```
+
+No component changes needed - the entire system re-tints.
+
 ### Display Themes
 
 Archivo is the default display font. Two alternate display modes are available by setting `data-display` on any ancestor element (typically `<html>` or `<body>`):

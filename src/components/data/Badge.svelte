@@ -50,12 +50,12 @@
 	};
 
 	const sizeClasses = {
-		sm: 'px-2 py-0.5 text-[var(--text-xs)] gap-1',
-		md: 'px-3 py-1 text-[0.75rem] gap-1.5'
+		sm: 'px-2.5 py-1 text-[var(--text-xs)] gap-1',
+		md: 'px-3.5 py-1.5 text-[0.75rem] gap-1.5'
 	};
 
 	const classes = $derived(
-		`inline-flex items-center justify-center rounded-[var(--radius-pill)] border font-[var(--font-mono)] font-medium transition-all duration-[var(--duration-300)] ease-[var(--ease-sharp)] ${variantClasses[variant]} ${sizeClasses[size]} ${hover ? hoverClasses[variant] : ''} ${glow ? 'accent-glow' : ''} ${uppercase ? 'uppercase tracking-wider' : ''} ${className}`.trim()
+		`inline-flex items-center justify-center rounded-[var(--radius-sm)] border-[1.5px] font-[var(--font-mono)] font-medium transition-all duration-[var(--duration-300)] ease-[var(--ease-sharp)] ${variantClasses[variant]} ${sizeClasses[size]} ${hover ? hoverClasses[variant] : ''} ${glow ? 'accent-glow' : ''} ${uppercase ? 'uppercase tracking-wider' : ''} ${className}`.trim()
 	);
 </script>
 

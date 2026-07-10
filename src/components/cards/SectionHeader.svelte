@@ -37,7 +37,7 @@
   const subtitleClasses = $derived(`mt-2 font-[var(--font-body)] text-[length:var(--text-body-size)] text-[var(--color-text-soft)] ${alignClasses}`);
 </script>
 
-<div class="mb-8">
+<div class="mb-12">
   <svelte:element this={headingTag} class={headingClasses}>
     {#if title}
       {title}
