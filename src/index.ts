@@ -7,13 +7,13 @@
 // Import theme CSS to ensure it's bundled
 import './theme.css';
 
-export const version = '0.7.9';
+export const version = '0.9.1';
 
 // ===== Button Components =====
 export { Button, IconButton, ButtonGroup, LinkButton, FloatingActionButton } from './components/buttons';
 
 // ===== Form Components =====
-export { Input, Textarea, Select, SelectMenu, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker } from './components/forms';
+export { Input, Textarea, Select, SelectMenu, Checkbox, Switch, RadioGroup, RangeSlider, FileUpload, InputGroup, DatePicker, TimePicker, DateTimePicker, FormSection } from './components/forms';
 // ===== Layout Components =====
 export { Card, Panel, Grid, Container, SectionHeader, Divider } from './components/cards';
 

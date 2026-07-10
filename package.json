@@ -55,6 +55,7 @@
     "clean": "rimraf dist",
     "check": "npm run type-check && npm run check:circular",
     "check:circular": "madge --circular --extensions ts,svelte src/",
+    "docs:api": "node scripts/gen-api.mjs",
     "validate": "npm run check && npm run build",
     "prepack": "npm run build",
     "prepublishOnly": "npm run build"
