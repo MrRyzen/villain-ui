@@ -62,10 +62,20 @@
 	const BASE_DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	const hours = Array.from({ length: 24 }, (_, h) => h);
 
-	// Captured once at init — a long-lived page drifts; accepted (matches hand-rolled versions).
-	const now = new Date();
-	const nowDay = now.getDay();
-	const nowHour = now.getHours();
+	// Minute tick (markNow only) so the ring follows the clock on long-lived pages.
+	// Same-value assignments are no-ops, so re-renders only happen on the hour flip.
+	let nowDay = $state(new Date().getDay());
+	let nowHour = $state(new Date().getHours());
+
+	$effect(() => {
+		if (!markNow) return;
+		const tick = setInterval(() => {
+			const d = new Date();
+			nowDay = d.getDay();
+			nowHour = d.getHours();
+		}, 60_000);
+		return () => clearInterval(tick);
+	});
 
 	const order = $derived(rowOrder ?? [0, 1, 2, 3, 4, 5, 6]);
 	const labels = $derived(dayLabels ?? order.map((d) => BASE_DAY_NAMES[d] ?? String(d)));

@@ -38,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `StepForm` gains an `error` snippet, a `showErrors` prop, and an `errors` field on the step
   panel context, rendering a default `role="alert"` block.
 
+### Fixed
+
+- **`WeekHeatmap` now-ring drift**: the `markNow` ring captured `new Date()` once at mount, so a
+  long-lived tab kept ringing a stale hour. The current day/hour are now reactive on a one-minute
+  interval (running only while `markNow` is set; re-renders only when the hour actually flips).
+
 ### Changed
 
 - **`class` passthrough + rest props on `Text` and `Heading`.** Layout/spacing utilities
