@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { flip } from 'svelte/animate';
+	import { fade } from 'svelte/transition';
 	import type { Column, SortDirection, RowKey } from './Data.types';
+	import { motionDuration } from '../../lib/internal/motion.js';
 	import Checkbox from '../forms/Checkbox.svelte';
 
 	interface Props {
@@ -17,6 +20,8 @@
 		loadingMessage?: string;
 		emptyMessage?: string;
 		emptyState?: Snippet;
+		/** Animate rows on filter/sort/paginate (FLIP + fade). Off for very large tables. */
+		animateRows?: boolean;
 		// User-defined filter/search function
 		filterFn?: (row: Record<string, any>) => boolean;
 		// Callbacks for user-implemented features
@@ -46,6 +51,7 @@
 		loadingMessage = 'Loading...',
 		emptyMessage = 'No data available',
 		emptyState,
+		animateRows = true,
 		filterFn,
 		onSort,
 		onRowClick,
@@ -67,6 +73,9 @@
 		if (!filterFn) return data;
 		return data.filter(filterFn);
 	});
+
+	// Row motion duration (0 when disabled or the user prefers reduced motion).
+	const rowDuration = $derived(animateRows ? motionDuration(200) : 0);
 
 	// Track current sort state
 	let sortColumn = $state<string | null>(null);
@@ -282,11 +291,13 @@
 					</tr>
 				{:else}
 					<!-- Data rows -->
-					{#each filteredData as row, index}
+					{#each filteredData as row, index (getRowKey(row, index))}
 						<tr
 							class:clickable={onRowClick}
 							class:selected={selectable && isRowSelected(row, index)}
 							onclick={() => handleRowClick(row)}
+							animate:flip={{ duration: rowDuration }}
+							transition:fade={{ duration: rowDuration }}
 						>
 							{#if selectable}
 								<td class="select-cell" onclick={(e) => e.stopPropagation()}>

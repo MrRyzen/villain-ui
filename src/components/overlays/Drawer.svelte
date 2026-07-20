@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { createId } from '../../lib/internal/id.js';
+  import { motionDuration } from '../../lib/internal/motion.js';
   import ScrollArea from '../utilities/ScrollArea.svelte';
 
   export interface Props {
@@ -71,6 +72,38 @@
     top: 'animate-[slide-in-top_0.2s_var(--ease-sharp)]',
     bottom: 'animate-[slide-in-bottom_0.2s_var(--ease-sharp)]'
   };
+
+  const exitAnimationClasses = {
+    left: 'animate-[slide-out-left_0.2s_var(--ease-sharp)]',
+    right: 'animate-[slide-out-right_0.2s_var(--ease-sharp)]',
+    top: 'animate-[slide-out-top_0.2s_var(--ease-sharp)]',
+    bottom: 'animate-[slide-out-bottom_0.2s_var(--ease-sharp)]'
+  };
+
+  // Keep the drawer mounted through its close animation, then unmount.
+  let rendered = $state(open);
+  let exiting = $state(false);
+
+  $effect(() => {
+    if (open) {
+      rendered = true;
+      exiting = false;
+    } else if (rendered) {
+      exiting = true;
+      const timer = setTimeout(() => {
+        rendered = false;
+        exiting = false;
+      }, motionDuration(200));
+      return () => clearTimeout(timer);
+    }
+  });
+
+  const backdropAnim = $derived(
+    exiting
+      ? 'animate-[fade-out_0.2s_var(--ease-luxe)]'
+      : 'animate-[fade-in_0.2s_var(--ease-luxe)]'
+  );
+  const panelAnim = $derived(exiting ? exitAnimationClasses[side] : animationClasses[side]);
 
   function handleClose() {
     open = false;
@@ -150,15 +183,15 @@
   });
 </script>
 
-{#if open}
+{#if rendered}
   <div
-    class="fixed inset-0 z-[var(--z-50)] bg-overlay animate-[fade-in_0.2s_var(--ease-luxe)]"
+    class="fixed inset-0 z-[var(--z-50)] bg-overlay {backdropAnim}"
     onclick={handleBackdropClick}
     role="presentation"
   >
     <div
       bind:this={drawerElement}
-      class="panel-floating shadow-deep fixed {positionClasses[side]} {sizeClasses[side][size]} {animationClasses[side]} {className} flex flex-col"
+      class="panel-floating shadow-deep fixed {positionClasses[side]} {sizeClasses[side][size]} {panelAnim} {className} flex flex-col"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}

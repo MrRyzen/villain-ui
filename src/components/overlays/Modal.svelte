@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { createId } from '../../lib/internal/id.js';
+  import { motionDuration } from '../../lib/internal/motion.js';
 
   export interface Props {
     open?: boolean;
@@ -28,6 +29,35 @@
 
   let modalElement = $state<HTMLDivElement>();
   let previousFocus = $state<HTMLElement | null>(null);
+
+  // Keep the modal mounted through its close animation, then unmount.
+  let rendered = $state(open);
+  let exiting = $state(false);
+
+  $effect(() => {
+    if (open) {
+      rendered = true;
+      exiting = false;
+    } else if (rendered) {
+      exiting = true;
+      const timer = setTimeout(() => {
+        rendered = false;
+        exiting = false;
+      }, motionDuration(200));
+      return () => clearTimeout(timer);
+    }
+  });
+
+  const backdropAnim = $derived(
+    exiting
+      ? 'animate-[fade-out_0.2s_var(--ease-luxe)]'
+      : 'animate-[fade-in_0.2s_var(--ease-luxe)]'
+  );
+  const panelAnim = $derived(
+    exiting
+      ? 'animate-[scale-out_0.2s_var(--ease-sharp)]'
+      : 'animate-[scale-in_0.2s_var(--ease-sharp)]'
+  );
 
   const sizeClasses = {
     sm: 'max-w-[28rem]',
@@ -117,15 +147,15 @@
   });
 </script>
 
-{#if open}
+{#if rendered}
   <div
-    class="fixed inset-0 z-[var(--z-50)] flex items-center justify-center p-4 bg-overlay animate-[fade-in_0.2s_var(--ease-luxe)]"
+    class="fixed inset-0 z-[var(--z-50)] flex items-center justify-center p-4 bg-overlay {backdropAnim}"
     onclick={handleBackdropClick}
     role="presentation"
   >
     <div
       bind:this={modalElement}
-      class="panel-floating rounded-[var(--radius-md)] shadow-deep w-full {sizeClasses[size]} {className} animate-[scale-in_0.2s_var(--ease-sharp)] flex flex-col max-h-[90vh]"
+      class="panel-floating rounded-[var(--radius-md)] shadow-deep w-full {sizeClasses[size]} {className} {panelAnim} flex flex-col max-h-[90vh]"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}

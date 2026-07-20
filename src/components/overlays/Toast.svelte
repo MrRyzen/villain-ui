@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { motionDuration } from '../../lib/internal/motion.js';
+
   interface Props {
     message: string;
     variant?: 'info' | 'success' | 'warning' | 'error';
@@ -92,7 +94,7 @@
     setTimeout(() => {
       visible = false;
       onCloseCallback?.();
-    }, 200); // Match fade-out animation duration
+    }, motionDuration(200)); // Match fade-out animation duration (0 when reduced-motion)
   }
 
   $effect(() => {

@@ -417,6 +417,62 @@
 		}
 	}
 
+	/* Exit counterparts — overlays play these while closing before unmount. */
+	@keyframes scale-out {
+		from {
+			opacity: 1;
+			transform: scale(1);
+		}
+		to {
+			opacity: 0;
+			transform: scale(0.98);
+		}
+	}
+
+	@keyframes slide-out-left {
+		from {
+			opacity: 1;
+			transform: translateX(0);
+		}
+		to {
+			opacity: 0;
+			transform: translateX(-100%);
+		}
+	}
+
+	@keyframes slide-out-right {
+		from {
+			opacity: 1;
+			transform: translateX(0);
+		}
+		to {
+			opacity: 0;
+			transform: translateX(100%);
+		}
+	}
+
+	@keyframes slide-out-top {
+		from {
+			opacity: 1;
+			transform: translateY(0);
+		}
+		to {
+			opacity: 0;
+			transform: translateY(-100%);
+		}
+	}
+
+	@keyframes slide-out-bottom {
+		from {
+			opacity: 1;
+			transform: translateY(0);
+		}
+		to {
+			opacity: 0;
+			transform: translateY(100%);
+		}
+	}
+
 	/* ===== StepWizard Variables ===== */
 
 	/* Step Node Sizes */
@@ -557,6 +613,22 @@
 
 * {
 	box-sizing: border-box;
+}
+
+/* ===== Reduced Motion ===== */
+/* One global gate: users who ask for reduced motion get near-instant everything.
+   Covers every keyframe animation + CSS transition in the library. JS-driven
+   motion (row FLIP, overlay exit timing) gates separately via
+   lib/internal/motion.ts. */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
 
 /* ===== Scrollbar Theming ===== */
