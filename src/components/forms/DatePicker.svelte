@@ -132,9 +132,14 @@
 			if (!isNaN(date.getTime())) return date;
 		}
 
-		// Try native Date parsing as fallback
-		const nativeDate = new Date(trimmed);
-		if (!isNaN(nativeDate.getTime())) return nativeDate;
+		// Native Date parsing as a last resort — but only when the string carries a
+		// 4-digit year. Without this guard a bare autofill fragment (e.g. a day-only
+		// "5" from an `autocomplete="bday-day"` field) slips through: new Date("5")
+		// doesn't fail, it invents "May 1 2001".
+		if (/\d{4}/.test(trimmed)) {
+			const nativeDate = new Date(trimmed);
+			if (!isNaN(nativeDate.getTime())) return nativeDate;
+		}
 
 		return undefined;
 	}
